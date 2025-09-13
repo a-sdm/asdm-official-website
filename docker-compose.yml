@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: asdm-website
+    ports:
+      - "6173:3000"
+    environment:
+      # Vite build-time envs would need to be passed at build if used; runtime envs not used for static site
+      - NODE_ENV=production
+    restart: unless-stopped

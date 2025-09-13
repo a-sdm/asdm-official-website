@@ -35,11 +35,12 @@ export default function Documents() {
         setError(null);
         
         // Define the documentation files to load (just paths)
+        const DOCS_BASE = 'content';
         const docFiles = [
-          { path: 'introduction.md' },
-          { path: 'core-principles.md' },
-          { path: 'implementation-guide.md' },
-          { path: 'best-practices.md' }
+          { path: `${DOCS_BASE}/introduction.md` },
+          { path: `${DOCS_BASE}/core-principles.md` },
+          { path: `${DOCS_BASE}/implementation-guide.md` },
+          { path: `${DOCS_BASE}/best-practices.md` }
         ];
 
         const loadedDocs: DocFile[] = [];
@@ -54,8 +55,9 @@ export default function Documents() {
               const metadata = parseMetadata(content);
               const contentWithoutMetadata = removeMetadata(content);
               
-              // Extract name from path (remove .md extension)
-              const name = docFile.path.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              // Extract name from filename (remove directory and .md extension)
+              const fileName = docFile.path.split('/').pop() || docFile.path;
+              const name = fileName.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
               
               loadedDocs.push({
                 name,
