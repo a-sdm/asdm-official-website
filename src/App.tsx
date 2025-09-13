@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
-import LandingPage from './components/LandingPage';
-import DocumentationCenter from './components/DocumentationCenter';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Documents from './pages/Documents';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'docs'>('landing');
-
   return (
     <div className="min-h-screen bg-white">
-      {currentPage === 'landing' ? (
-        <LandingPage onNavigate={() => setCurrentPage('docs')} />
-      ) : (
-        <DocumentationCenter onNavigateHome={() => setCurrentPage('landing')} />
-      )}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/documents" element={<Documents />} />
+      </Routes>
     </div>
   );
 }

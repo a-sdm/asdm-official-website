@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Menu, X, FileText, ChevronRight } from 'lucide-react';
-import MarkdownRenderer from './MarkdownRenderer';
-
-interface DocumentationCenterProps {
-  onNavigateHome: () => void;
-}
+import MarkdownRenderer from '../components/MarkdownRenderer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 interface DocFile {
   name: string;
@@ -20,7 +19,8 @@ interface DocMetadata {
   tags?: string[];
 }
 
-export default function DocumentationCenter({ onNavigateHome }: DocumentationCenterProps) {
+export default function Documents() {
+  const navigate = useNavigate();
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -123,6 +123,10 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
     return content.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
   };
 
+  const handleNavigateHome = () => {
+    navigate('/');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -143,7 +147,7 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
             <span className="block sm:inline"> {error}</span>
           </div>
           <button
-            onClick={onNavigateHome}
+            onClick={handleNavigateHome}
             className="bg-gradient-to-r from-yellow-400 to-red-500 text-black px-4 py-2 rounded hover:from-yellow-500 hover:to-red-600 transition-colors font-semibold"
           >
             Return to Home
@@ -154,83 +158,89 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
   }
 
   return (
-    <div className="min-h-screen bg-black flex">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-yellow-400/20 flex flex-col overflow-hidden`}>
-        <div className="p-4 border-b border-yellow-400/20">
-          <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={onNavigateHome}
-              className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-all transform hover:scale-105 hover:-translate-x-1"
-            >
-              <Home className="w-4 h-4" />
-              <span className="text-sm">Back to Home</span>
-            </button>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-90 transition-all duration-300"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <h2 className="text-lg font-semibold text-white">Documentation</h2>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4">
-          <nav className="space-y-2">
-            {docs.map((doc, index) => (
+    <div className="min-h-screen bg-black flex flex-col">
+      <Header showDocumentationButton={false} />
+      
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-yellow-400/20 flex flex-col overflow-hidden`}>
+          <div className="p-4 border-b border-yellow-400/20">
+            <div className="flex items-center justify-between mb-4">
               <button
-                key={index}
-                onClick={() => setCurrentDoc(doc)}
-                className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-all transform hover:scale-105 hover:-translate-x-1 ${
-                  currentDoc?.path === doc.path
-                    ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
-                    : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
-                }`}
+                onClick={handleNavigateHome}
+                className="flex items-center space-x-2 text-gray-300 hover:text-yellow-400 transition-all transform hover:scale-105 hover:-translate-x-1"
               >
-                <FileText className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">{doc.name}</span>
-                <ChevronRight className={`w-3 h-3 ml-auto ${currentDoc?.path === doc.path ? 'text-yellow-400' : 'text-gray-500'}`} />
+                <Home className="w-4 h-4" />
+                <span className="text-sm">Back to Home</span>
               </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-90 transition-all duration-300"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <h2 className="text-lg font-semibold text-white">Documentation</h2>
+          </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-gray-900 border-b border-yellow-400/20 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              {!sidebarOpen && (
+          <div className="flex-1 overflow-y-auto p-4">
+            <nav className="space-y-2">
+              {docs.map((doc, index) => (
                 <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
+                  key={index}
+                  onClick={() => setCurrentDoc(doc)}
+                  className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-all transform hover:scale-105 hover:-translate-x-1 ${
+                    currentDoc?.path === doc.path
+                      ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
+                      : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
+                  }`}
                 >
-                  <Menu className="w-5 h-5" />
+                  <FileText className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-sm">{doc.name}</span>
+                  <ChevronRight className={`w-3 h-3 ml-auto ${currentDoc?.path === doc.path ? 'text-yellow-400' : 'text-gray-500'}`} />
                 </button>
-              )}
-              <h1 className="text-xl font-semibold text-white">
-                {currentDoc?.title || 'ASDM Documentation'}
-              </h1>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          {/* Content Header */}
+          <div className="bg-gray-900 border-b border-yellow-400/20 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                {!sidebarOpen && (
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
+                  >
+                    <Menu className="w-5 h-5" />
+                  </button>
+                )}
+                <h1 className="text-xl font-semibold text-white">
+                  {currentDoc?.title || 'ASDM Documentation'}
+                </h1>
+              </div>
             </div>
           </div>
-        </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto bg-black">
-          {currentDoc ? (
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              <MarkdownRenderer content={currentDoc.content} />
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-gray-400">Select a document to view its content</p>
-            </div>
-          )}
-        </main>
+          {/* Content */}
+          <main className="flex-1 overflow-y-auto bg-black">
+            {currentDoc ? (
+              <div className="max-w-4xl mx-auto px-6 py-8">
+                <MarkdownRenderer content={currentDoc.content} />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-gray-400">Select a document to view its content</p>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }
