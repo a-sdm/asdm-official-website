@@ -44,7 +44,7 @@ This website is a single-page application built with Vite + React + TypeScript a
 
 ## Docker and Docker Compose
 
-Build and run the production image, then open http://localhost:6173/:
+Build and run the production stack, then open http://localhost:8080 (via Nginx) or http://localhost:6174 (direct to app):
 
 ```bash
 docker compose up -d --build
@@ -68,17 +68,18 @@ Rebuild after code changes:
 ```bash
 docker compose up -d --build
 # or
-docker compose build --no-cache web && docker compose up -d
+docker compose build --no-cache asdm-web && docker compose up -d
 ```
 
 Open a shell in the running container:
 
 ```bash
-docker compose exec web sh
+docker compose exec asdm-web sh
 ```
 
 Notes:
-- The container serves the static production build from dist using serve on port 3000, mapped to host port 6173 (configured in docker-compose.yml).
+- The container serves the static production build from dist using serve on port 3000, mapped to host port 6174 (configured in docker-compose.yml).
+- Nginx reverse proxy (service: asdm-nginx) exposes http://localhost:8080 and forwards to the internal asdm-web:3000.
 - For local development with HMR, prefer running npm run dev directly; the Docker image is optimized for production serving.
 - If you need Vite build-time env variables (e.g., BASE_URL), pass them at build time (build args or .env) because runtime envs won’t change already-built static assets.
 

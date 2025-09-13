@@ -1,13 +1,23 @@
-version: "3.9"
+
 services:
-  web:
+  asdm-web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: asdm-website
+    container_name: asdm-web
     ports:
-      - "6173:3000"
+      - "6174:3000"
     environment:
-      # Vite build-time envs would need to be passed at build if used; runtime envs not used for static site
       - NODE_ENV=production
+    restart: unless-stopped
+
+  asdm-nginx:
+    image: nginx:1.25-alpine
+    container_name: asdm-nginx
+    depends_on:
+      - asdm-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     restart: unless-stopped
