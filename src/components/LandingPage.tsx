@@ -43,8 +43,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
               Development Methodology
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Transform your development process with intelligent automation, 
-              enhanced collaboration, and cutting-edge AI integration.
+              Transform your development process with AI-first principles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
