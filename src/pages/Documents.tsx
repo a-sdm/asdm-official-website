@@ -159,7 +159,7 @@ export default function Documents() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      <Header showDocumentationButton={false} />
+      <Header />
       
       <div className="flex flex-1">
         {/* Sidebar */}
