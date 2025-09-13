@@ -27,10 +27,10 @@ export default function Header({}: HeaderProps) {
             Home
           </button>
           <button
-            onClick={() => navigate('/documents')}
+            onClick={() => navigate('/docs')}
             className="text-gray-300 hover:text-yellow-300 transition-colors font-medium"
           >
-            Documents
+            Docs
           </button>
         </nav>
       </div>

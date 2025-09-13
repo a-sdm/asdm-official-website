@@ -8,7 +8,7 @@ function App() {
     <div className="min-h-screen bg-white">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/documents" element={<Documents />} />
+        <Route path="/docs" element={<Documents />} />
       </Routes>
     </div>
   );

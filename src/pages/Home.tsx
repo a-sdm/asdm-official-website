@@ -9,7 +9,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/documents');
+    navigate('/docs');
   };
 
   return (
@@ -37,7 +37,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={handleNavigate}
+                onClick={() => navigate('/docs')}
                 className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-8 py-4 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold text-lg flex items-center space-x-2"
               >
                 <span>Get Started</span>
@@ -135,11 +135,11 @@ export default function Home() {
                     Join us in building this revolutionary framework and be part of the early community.
                   </p>
                   <button
-                    onClick={handleNavigate}
-                    className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-6 py-3 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold"
-                  >
-                    Explore Documentation
-                  </button>
+                    onClick={() => navigate('/docs')}
+                  className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-6 py-3 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold"
+                >
+                  Explore Docs
+                </button>
                 </div>
               </div>
             </div>
