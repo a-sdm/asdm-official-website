@@ -43,7 +43,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
               Development Methodology
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Transform your development process with AI-first principles.
+              A new framework revolutionizing development with AI-first principles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
@@ -64,31 +64,31 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         <section id="features" className="px-6 py-20 bg-gray-900/30 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl font-bold text-center mb-16 text-white">
-              Why Choose ASDM?
+              Building the Future with ASDM
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-black/40 backdrop-blur-sm p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105">
                 <Code className="w-12 h-12 text-yellow-300 mb-4" />
                 <h3 className="text-xl font-semibold mb-4 text-white">AI-First Development</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Integrate AI capabilities from the ground up, designing systems that naturally 
-                  incorporate machine learning and intelligent automation.
+                  We're building a framework that integrates AI capabilities from the ground up, 
+                  designing systems that naturally incorporate generative AI and intelligent automation.
                 </p>
               </div>
               <div className="bg-black/40 backdrop-blur-sm p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105">
                 <Zap className="w-12 h-12 text-yellow-300 mb-4" />
                 <h3 className="text-xl font-semibold mb-4 text-white">Enhanced Productivity</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Accelerate development cycles with intelligent code generation, automated testing, 
-                  and smart debugging assistance.
+                  Help us accelerate development cycles with intelligent code generation, 
+                  automated testing, and smart debugging assistance as we build this framework.
                 </p>
               </div>
               <div className="bg-black/40 backdrop-blur-sm p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105">
                 <Users className="w-12 h-12 text-yellow-300 mb-4" />
                 <h3 className="text-xl font-semibold mb-4 text-white">Team Collaboration</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  Foster better collaboration between human developers and AI systems, 
-                  creating synergistic workflows that amplify team capabilities.
+                  Join us in fostering collaboration between human developers and AI systems, 
+                  creating synergistic workflows as we develop this framework together.
                 </p>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
                   A Comprehensive Framework
                 </h2>
                 <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                  ASDM provides a structured approach to integrating AI throughout your 
+                  ASDM is a comprehensive framework we're building to integrate AI throughout the 
                   development lifecycle, from planning to deployment and maintenance.
                 </p>
                 <div className="space-y-4">
@@ -142,7 +142,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
                   <Brain className="w-24 h-24 text-yellow-300 mx-auto mb-6" />
                   <h3 className="text-2xl font-bold text-white mb-4">Ready to Transform?</h3>
                   <p className="text-gray-300 mb-6">
-                    Join thousands of developers already using ASDM to revolutionize their workflow.
+                    Join us in building this revolutionary framework and be part of the early community.
                   </p>
                   <button
                     onClick={onNavigate}
@@ -161,8 +161,8 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-8 text-white">Join Our Community</h2>
             <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-              Connect with fellow developers, share experiences, and stay updated with the latest 
-              in AI-powered development methodologies.
+              Join our growing community of early adopters, share feedback, and help shape the future 
+              of AI-powered development methodologies as we build this framework together.
             </p>
             <div className="flex justify-center space-x-6">
               <a
@@ -197,7 +197,7 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
                   <span className="font-bold text-white">ASDM</span>
                 </div>
                 <p className="text-gray-400 text-sm">
-                  Revolutionizing software development through intelligent AI integration.
+                  Building the future of software development through intelligent AI integration.
                 </p>
               </div>
               <div>
