@@ -37,10 +37,14 @@ export default function LandingPage({ onNavigate }: LandingPageProps) {
         {/* Hero Section */}
         <section className="px-6 py-20">
           <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-yellow-200 to-amber-300 bg-clip-text text-transparent">
-              AI Powered System
-              <br />
-              Development Methodology
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-white via-yellow-200 to-amber-300 bg-clip-text text-transparent">
+                AI Powered System
+                <br />
+              </span>
+              <span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent">
+                Development Methodology
+              </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               A new framework revolutionizing development with AI-first principles.

@@ -1,3 +1,13 @@
+---
+title: "ASDM Implementation Guide"
+description: "Comprehensive guide for implementing AI-Supported Development Methodology in software development teams"
+category: "Implementation"
+tags: ["ASDM", "AI", "Development", "Methodology", "Implementation"]
+created: "2025-09-13"
+updated: "2025-09-13"
+author: "ASDM Team"
+---
+
 # ASDM Implementation Guide
 
 ## Phase 1: Assessment and Planning

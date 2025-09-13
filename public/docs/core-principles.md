@@ -1,3 +1,12 @@
+---
+title: "Core Principles"
+description: "Fundamental principles guiding the AI System Development Methodology"
+category: "documentation"
+tags: ["principles", "core", "foundation", "guidelines"]
+last_updated: "2025-09-13"
+weight: 2
+---
+
 # Core Principles of ASDM
 
 ## 1. AI-First Approach

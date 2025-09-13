@@ -13,6 +13,13 @@ interface DocFile {
   title: string;
 }
 
+interface DocMetadata {
+  title: string;
+  description?: string;
+  category?: string;
+  tags?: string[];
+}
+
 export default function DocumentationCenter({ onNavigateHome }: DocumentationCenterProps) {
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
@@ -27,12 +34,12 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
         setLoading(true);
         setError(null);
         
-        // Define the documentation files to load
+        // Define the documentation files to load (just paths)
         const docFiles = [
-          { name: 'Introduction', path: 'introduction.md', title: 'Introduction to ASDM' },
-          { name: 'Core Principles', path: 'core-principles.md', title: 'Core Principles of ASDM' },
-          { name: 'Implementation Guide', path: 'implementation-guide.md', title: 'Implementation Guide' },
-          { name: 'Best Practices', path: 'best-practices.md', title: 'Best Practices' }
+          { path: 'introduction.md' },
+          { path: 'core-principles.md' },
+          { path: 'implementation-guide.md' },
+          { path: 'best-practices.md' }
         ];
 
         const loadedDocs: DocFile[] = [];
@@ -42,9 +49,19 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
             const response = await fetch(`/docs/${docFile.path}`);
             if (response.ok) {
               const content = await response.text();
+              
+              // Parse metadata from markdown content
+              const metadata = parseMetadata(content);
+              const contentWithoutMetadata = removeMetadata(content);
+              
+              // Extract name from path (remove .md extension)
+              const name = docFile.path.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              
               loadedDocs.push({
-                ...docFile,
-                content
+                name,
+                path: docFile.path,
+                content: contentWithoutMetadata,
+                title: metadata.title || name
               });
             } else {
               console.warn(`Failed to load ${docFile.path}: ${response.status}`);
@@ -70,6 +87,41 @@ export default function DocumentationCenter({ onNavigateHome }: DocumentationCen
 
     loadDocumentation();
   }, []);
+
+  // Function to parse metadata from markdown content
+  const parseMetadata = (content: string): DocMetadata => {
+    const metadata: DocMetadata = { title: '' };
+    const metadataRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
+    const match = content.match(metadataRegex);
+    
+    if (match) {
+      const metadataContent = match[1];
+      const lines = metadataContent.split('\n');
+      
+      lines.forEach(line => {
+        const [key, ...valueParts] = line.split(':');
+        if (key && valueParts.length > 0) {
+          const value = valueParts.join(':').trim();
+          if (key.trim() === 'title') {
+            metadata.title = value;
+          } else if (key.trim() === 'description') {
+            metadata.description = value;
+          } else if (key.trim() === 'category') {
+            metadata.category = value;
+          } else if (key.trim() === 'tags') {
+            metadata.tags = value.split(',').map(tag => tag.trim());
+          }
+        }
+      });
+    }
+    
+    return metadata;
+  };
+
+  // Function to remove metadata from markdown content
+  const removeMetadata = (content: string): string => {
+    return content.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+  };
 
   if (loading) {
     return (
