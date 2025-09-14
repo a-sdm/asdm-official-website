@@ -1,11 +1,3 @@
----
-title: "ASDM Best Practices"
-description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
-category: "Development"
-tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
-lastUpdated: "2025-09-13"
----
-
 # ASDM Best Practices
 
 ## Code Quality and AI Assistance

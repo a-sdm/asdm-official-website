@@ -1,0 +1,33 @@
+docRoot: /docs/content
+
+documents:
+  - title: "Introduction to ASDM"
+    path: introduction.md
+    description: "A comprehensive introduction to AI-Supported Development Methodology (ASDM)"
+    category: "Introduction"
+    tags: ["ASDM", "AI", "Development", "Methodology"]
+    lastUpdated: "2025-09-13"
+
+  - title: "ASDM Core Principles"
+    path: core-principles.md
+    description: "Detailed exploration of the six core principles that form the foundation of ASDM"
+    category: "Principles"
+    tags: ["ASDM", "AI", "Development", "Principles", "Methodology"]
+    lastUpdated: "2025-09-13"
+    weight: 1
+
+  - title: "ASDM Best Practices"
+    path: best-practices.md
+    description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
+    category: "Development"
+    tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
+    lastUpdated: "2025-09-13"
+
+  - title: "ASDM Implementation Guide"
+    path: implementation-guide.md
+    description: "Comprehensive guide for implementing AI-Supported Development Methodology in software development teams"
+    category: "Implementation"
+    tags: ["ASDM", "AI", "Development", "Methodology", "Implementation"]
+    created: "2025-09-13"
+    updated: "2025-09-13"
+    author: "ASDM Team"

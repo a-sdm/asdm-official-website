@@ -10,13 +10,30 @@ interface DocFile {
   path: string;
   content: string;
   title: string;
-}
-
-interface DocMetadata {
-  title: string;
   description?: string;
   category?: string;
   tags?: string[];
+  lastUpdated?: string;
+  created?: string;
+  updated?: string;
+  author?: string;
+  weight?: number;
+}
+
+interface SiteTree {
+  docRoot: string;
+  documents: Array<{
+    title: string;
+    path: string;
+    description?: string;
+    category?: string;
+    tags?: string[];
+    lastUpdated?: string;
+    created?: string;
+    updated?: string;
+    author?: string;
+    weight?: number;
+  }>;
 }
 
 export default function Documents() {
@@ -34,48 +51,63 @@ export default function Documents() {
         setLoading(true);
         setError(null);
         
-        // Define the documentation files to load (just paths)
-        const DOCS_BASE = 'content';
-        const docFiles = [
-          { path: `${DOCS_BASE}/introduction.md` },
-          { path: `${DOCS_BASE}/core-principles.md` },
-          { path: `${DOCS_BASE}/implementation-guide.md` },
-          { path: `${DOCS_BASE}/best-practices.md` }
-        ];
+        // Load site-tree.yml
+        const siteTreeResponse = await fetch('/docs/site-tree.yml');
+        if (!siteTreeResponse.ok) {
+          throw new Error('Failed to load site-tree.yml');
+        }
+        const siteTreeText = await siteTreeResponse.text();
+        
+        // Parse YAML
+        const yamlData = parseYaml(siteTreeText);
+        const siteTree: SiteTree = yamlData as SiteTree;
 
         const loadedDocs: DocFile[] = [];
 
-        for (const docFile of docFiles) {
+        for (const doc of siteTree.documents) {
           try {
-            const response = await fetch(`/docs/${docFile.path}`);
+            const response = await fetch(`${siteTree.docRoot}/${doc.path}`);
             if (response.ok) {
               const content = await response.text();
-              
-              // Parse metadata from markdown content
-              const metadata = parseMetadata(content);
               const contentWithoutMetadata = removeMetadata(content);
               
               // Extract name from filename (remove directory and .md extension)
-              const fileName = docFile.path.split('/').pop() || docFile.path;
+              const fileName = doc.path.split('/').pop() || doc.path;
               const name = fileName.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
               
               loadedDocs.push({
                 name,
-                path: docFile.path,
+                path: doc.path,
                 content: contentWithoutMetadata,
-                title: metadata.title || name
+                title: doc.title,
+                description: doc.description,
+                category: doc.category,
+                tags: doc.tags,
+                lastUpdated: doc.lastUpdated,
+                created: doc.created,
+                updated: doc.updated,
+                author: doc.author,
+                weight: doc.weight
               });
             } else {
-              console.warn(`Failed to load ${docFile.path}: ${response.status}`);
+              console.warn(`Failed to load ${doc.path}: ${response.status}`);
             }
           } catch (err) {
-            console.warn(`Error loading ${docFile.path}:`, err);
+            console.warn(`Error loading ${doc.path}:`, err);
           }
         }
 
         if (loadedDocs.length === 0) {
           throw new Error('No documentation files could be loaded');
         }
+
+        // Sort docs by weight if available, then by title
+        loadedDocs.sort((a, b) => {
+          if (a.weight !== undefined && b.weight !== undefined) {
+            return a.weight - b.weight;
+          }
+          return a.title.localeCompare(b.title);
+        });
 
         setDocs(loadedDocs);
         setCurrentDoc(loadedDocs[0]); // Set first doc as default
@@ -90,34 +122,51 @@ export default function Documents() {
     loadDocumentation();
   }, []);
 
-  // Function to parse metadata from markdown content
-  const parseMetadata = (content: string): DocMetadata => {
-    const metadata: DocMetadata = { title: '' };
-    const metadataRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
-    const match = content.match(metadataRegex);
-    
-    if (match) {
-      const metadataContent = match[1];
-      const lines = metadataContent.split('\n');
-      
-      lines.forEach(line => {
-        const [key, ...valueParts] = line.split(':');
-        if (key && valueParts.length > 0) {
-          const value = valueParts.join(':').trim();
-          if (key.trim() === 'title') {
-            metadata.title = value;
-          } else if (key.trim() === 'description') {
-            metadata.description = value;
-          } else if (key.trim() === 'category') {
-            metadata.category = value;
-          } else if (key.trim() === 'tags') {
-            metadata.tags = value.split(',').map(tag => tag.trim());
-          }
+  // Function to parse YAML
+  const parseYaml = (yamlText: string): any => {
+    const lines = yamlText.split('\n');
+    const result: any = {};
+    let currentArray: any[] = [];
+    let currentObject: any = null;
+    let isInArray = false;
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (!trimmedLine || trimmedLine.startsWith('#')) continue;
+
+      if (trimmedLine.startsWith('- ')) {
+        if (currentObject) {
+          currentArray.push(currentObject);
         }
-      });
+        currentObject = {};
+        isInArray = true;
+        const [key, ...valueParts] = trimmedLine.substring(2).split(':');
+        if (valueParts.length > 0) {
+          currentObject[key.trim()] = valueParts.join(':').trim().replace(/^"(.*)"$/, '$1');
+        }
+      } else if (trimmedLine.includes(':')) {
+        const [key, ...valueParts] = trimmedLine.split(':');
+        const value = valueParts.join(':').trim().replace(/^"(.*)"$/, '$1');
+        if (isInArray && currentObject) {
+          if (value.startsWith('[') && value.endsWith(']')) {
+            currentObject[key.trim()] = value.slice(1, -1).split(',').map(v => v.trim());
+          } else {
+            currentObject[key.trim()] = value;
+          }
+        } else {
+          result[key.trim()] = value;
+        }
+      }
     }
-    
-    return metadata;
+
+    if (currentObject) {
+      currentArray.push(currentObject);
+    }
+    if (isInArray) {
+      result.documents = currentArray;
+    }
+
+    return result;
   };
 
   // Function to remove metadata from markdown content
@@ -198,7 +247,7 @@ export default function Documents() {
                   }`}
                 >
                   <FileText className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm">{doc.name}</span>
+                  <span className="text-sm">{doc.title}</span>
                   <ChevronRight className={`w-3 h-3 ml-auto ${currentDoc?.path === doc.path ? 'text-yellow-400' : 'text-gray-500'}`} />
                 </button>
               ))}
@@ -220,10 +269,24 @@ export default function Documents() {
                     <Menu className="w-5 h-5" />
                   </button>
                 )}
-                <h1 className="text-xl font-semibold text-white">
-                  {currentDoc?.title || 'ASDM Documentation'}
-                </h1>
+                <div>
+                  <h1 className="text-xl font-semibold text-white">
+                    {currentDoc?.title || 'ASDM Documentation'}
+                  </h1>
+                  {currentDoc?.description && (
+                    <p className="text-sm text-gray-400 mt-1">{currentDoc.description}</p>
+                  )}
+                </div>
               </div>
+              {currentDoc?.tags && currentDoc.tags.length > 0 && (
+                <div className="flex gap-2">
+                  {currentDoc.tags.map((tag, index) => (
+                    <span key={index} className="px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -232,6 +295,16 @@ export default function Documents() {
             {currentDoc ? (
               <div className="max-w-4xl mx-auto px-6 py-8">
                 <MarkdownRenderer content={currentDoc.content} />
+                {(currentDoc.lastUpdated || currentDoc.author) && (
+                  <div className="mt-8 pt-4 border-t border-gray-800 text-sm text-gray-400">
+                    {currentDoc.lastUpdated && (
+                      <p>Last updated: {currentDoc.lastUpdated}</p>
+                    )}
+                    {currentDoc.author && (
+                      <p>Author: {currentDoc.author}</p>
+                    )}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center justify-center h-full">
