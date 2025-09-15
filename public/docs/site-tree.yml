@@ -9,7 +9,7 @@ documents:
     lastUpdated: "2025-09-13"
 
   - title: "ASDM Core Principles"
-    path: core-principles/index.md
+    path: core-principles/_index.md
     description: "Detailed exploration of the six core principles that form the foundation of ASDM"
     category: "Principles"
     tags: ["ASDM", "AI", "Development", "Principles", "Methodology"]
@@ -17,11 +17,53 @@ documents:
     weight: 1
 
   - title: "ASDM Best Practices"
-    path: best-practices/index.md
+    path: best-practices/_index.md
     description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
     category: "Development"
     tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
-    lastUpdated: "2025-09-13"
+    lastUpdated: "2025-09-15"
+
+  - title: "Code Quality and AI Assistance"
+    path: best-practices/code-quality.md
+    description: "Best practices for leveraging AI tools to enhance code quality while maintaining human oversight"
+    category: "Best Practices"
+    tags: ["AI", "Code Quality", "Code Review", "Testing"]
+    lastUpdated: "2025-09-15"
+
+  - title: "Development Workflow Integration"
+    path: best-practices/development-workflow.md
+    description: "Guidance on integrating AI into development workflows to enhance productivity and efficiency"
+    category: "Best Practices"
+    tags: ["AI", "Development Workflow", "Task Management", "Documentation"]
+    lastUpdated: "2025-09-15"
+
+  - title: "Quality Assurance with AI"
+    path: best-practices/quality-assurance.md
+    description: "Leveraging AI to enhance quality assurance processes in software development"
+    category: "Best Practices"
+    tags: ["AI", "Quality Assurance", "Debugging", "Performance"]
+    lastUpdated: "2025-09-15"
+
+  - title: "Security and Compliance"
+    path: best-practices/security-compliance.md
+    description: "Best practices for using AI to enhance security practices and ensure compliance"
+    category: "Best Practices"
+    tags: ["AI", "Security", "Compliance", "Ethical AI"]
+    lastUpdated: "2025-09-15"
+
+  - title: "Collaboration and Communication"
+    path: best-practices/collaboration.md
+    description: "Enhancing team collaboration and communication in software development with AI"
+    category: "Best Practices"
+    tags: ["AI", "Collaboration", "Communication", "Team Management"]
+    lastUpdated: "2025-09-15"
+
+  - title: "Continuous Improvement"
+    path: best-practices/continuous-improvement.md
+    description: "Establishing metrics and fostering continuous learning to improve ASDM effectiveness"
+    category: "Best Practices"
+    tags: ["AI", "Metrics", "Learning", "Improvement"]
+    lastUpdated: "2025-09-15"
 
   - title: "ASDM Implementation Guide"
     path: core-principles/implementation-guide.md
@@ -35,7 +77,14 @@ documents:
 # Menu tree structure for hierarchical navigation
 menu-tree:
   - path: introduction.md
-  - path: core-principles/index.md
+  - path: core-principles/_index.md
     children:
       - path: core-principles/implementation-guide.md
-  - path: best-practices/index.md
+  - path: best-practices/_index.md
+    children:
+      - path: best-practices/code-quality.md
+      - path: best-practices/development-workflow.md
+      - path: best-practices/quality-assurance.md
+      - path: best-practices/security-compliance.md
+      - path: best-practices/collaboration.md
+      - path: best-practices/continuous-improvement.md
