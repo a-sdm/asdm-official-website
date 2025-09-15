@@ -1,15 +1,125 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Components } from 'react-markdown';
+import mermaid from 'mermaid';
 
 interface MarkdownRendererProps {
   content: string;
 }
 
+// Mermaid diagram component
+const MermaidDiagram: React.FC<{ content: string }> = ({ content }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  // Use a stable ID based on content hash to prevent re-renders
+  const id = `mermaid-${content.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0).toString(36)}`;
+
+  useEffect(() => {
+    // Configure mermaid once
+    mermaid.initialize({
+      startOnLoad: false, // Important: we'll manually render
+      theme: 'dark',
+      securityLevel: 'loose',
+      themeVariables: {
+        // Enhanced color scheme for better readability on dark backgrounds
+        primaryColor: '#f59e0b',           // Yellow accent color
+        primaryTextColor: '#ffffff',       // White text for primary elements
+        primaryBorderColor: '#f59e0b',     // Yellow border
+        
+        // Background colors with better contrast
+        mainBkg: '#1e293b',               // Darker blue background
+        secondaryBkg: '#334155',          // Medium blue for secondary backgrounds
+        tertiaryBkg: '#475569',           // Lighter blue for tertiary backgrounds
+        
+        // Text colors with high contrast
+        textColor: '#f8fafc',             // Very light gray, almost white
+        lineColor: '#f8fafc',             // Light color for lines
+        
+        // Node colors
+        nodeBorder: '#f59e0b',            // Yellow border for nodes
+        clusterBkg: '#1e293b',            // Dark blue for cluster backgrounds
+        clusterBorder: '#64748b',         // Medium gray for cluster borders
+        
+        // Relationship colors
+        edgeLabelBackground: '#334155',   // Medium blue for edge labels
+        
+        // Contrast colors for different node types
+        secondaryColor: '#3b82f6',        // Bright blue
+        tertiaryColor: '#2dd4bf',         // Teal
+        
+        // Additional colors for better differentiation
+        activeTaskBkgColor: '#f59e0b',    // Yellow for active tasks
+        activeTaskBorderColor: '#fbbf24', // Lighter yellow for borders
+        
+        // Title and label colors
+        titleColor: '#f59e0b',            // Yellow for titles
+        labelColor: '#f8fafc',            // White for labels
+        
+        // Font settings
+        fontSize: '16px',                 // Larger font size
+        fontFamily: 'ui-sans-serif, system-ui, sans-serif'
+      }
+    });
+    
+    const renderDiagram = async () => {
+      if (ref.current) {
+        try {
+          // Clear previous content
+          ref.current.innerHTML = '';
+          
+          // Create a container for mermaid to render into
+          const container = document.createElement('div');
+          container.id = id;
+          container.style.width = '100%';
+          container.style.display = 'flex';
+          container.style.justifyContent = 'center';
+          container.textContent = content;
+          ref.current.appendChild(container);
+          
+          // Process and render the diagram
+          await mermaid.run({
+            nodes: [container]
+          });
+        } catch (error) {
+          console.error("Mermaid rendering failed:", error);
+          if (ref.current) {
+            ref.current.innerHTML = `<div class="text-red-500 p-2">Diagram rendering failed</div>`;
+          }
+        }
+      }
+    };
+    
+    // Small delay to ensure the component is fully mounted
+    const timer = setTimeout(() => {
+      renderDiagram();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [content, id]);
+
+  return (
+    <div className="my-6 bg-gray-900 p-6 rounded-lg shadow-xl overflow-auto border border-yellow-500/30">
+      <div ref={ref} className="flex justify-center min-h-[150px]" />
+    </div>
+  );
+};
+
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  // Initialize mermaid only once when component mounts
+  useEffect(() => {
+    // This ensures mermaid is properly initialized once
+    mermaid.initialize({
+      startOnLoad: false, // We'll manually render diagrams
+      theme: 'dark',
+      securityLevel: 'loose',
+      fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+    });
+    
+    // No cleanup needed - mermaid will be reinitialized if needed
+    return () => {};
+  }, []);
   return (
     <div className="prose prose-base max-w-none prose-invert">
       <ReactMarkdown
@@ -59,6 +169,12 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
           ),
           code: ({ className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || '');
+            
+            // Handle mermaid diagrams
+            if (!props.inline && match && match[1] === 'mermaid') {
+              return <MermaidDiagram content={String(children)} />;
+            }
+            
             return !props.inline && match ? (
               <div className="my-3 rounded-lg overflow-hidden text-xs">
                 <SyntaxHighlighter

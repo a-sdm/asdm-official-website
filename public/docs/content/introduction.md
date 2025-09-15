@@ -2,6 +2,31 @@
 
 AI-Supported Development Methodology (ASDM) is a comprehensive approach to software development that leverages artificial intelligence to enhance and streamline the development process. This methodology combines traditional software development practices with AI-powered tools and techniques to improve efficiency, quality, and innovation in software projects.
 
+## Documentation Structure
+
+```mermaid
+graph TD
+    A[Introduction] --> B[Core Principles]
+    A --> C[Best Practices]
+    A --> D[Tool Chain]
+    
+    B --> B1[Implementation Guide]
+    B --> B2[Best Practices]
+    B --> B3[Case Studies]
+    
+    C --> C1[Code Quality]
+    C --> C2[Development Workflow]
+    C --> C3[Quality Assurance]
+    C --> C4[Security Compliance]
+    C --> C5[Collaboration]
+    C --> C6[Continuous Improvement]
+```
+
+This documentation is organized into three main sections:
+- **Core Principles**: Fundamental concepts and philosophies of ASDM
+- **Best Practices**: Practical implementation guidelines and recommendations
+- **Tool Chain**: Tools and technologies that support ASDM implementation
+
 ## Key Objectives
 
 1. **Enhanced Development Efficiency**
