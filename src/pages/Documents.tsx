@@ -79,7 +79,7 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
   };
 
   return (
-    <div className={`space-y-1 ${level > 0 ? 'ml-6' : ''}`}>
+    <div className="space-y-1">
       {menuItems.map((item, index) => {
         const doc = findDocByPath(item.path);
         const hasChildren = item.children && item.children.length > 0;
@@ -90,34 +90,36 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
         return (
           <div key={index} className="space-y-1">
             <div className="flex items-center">
-              {hasChildren && (
-                <button 
-                  onClick={() => toggleExpanded(item.path)}
-                  className="p-1 mr-1 text-gray-400 hover:text-yellow-400 focus:outline-none rounded-full hover:bg-gray-800"
-                  aria-label={isExpanded ? "Collapse section" : "Expand section"}
-                  title={isExpanded ? "Collapse section" : "Expand section"}
-                >
-                  {isExpanded ? (
-                    <ChevronDown className="w-4 h-4" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4" />
-                  )}
-                </button>
-              )}
-              {!hasChildren && level > 0 && (
-                <div className="w-5 h-5 mr-1 flex items-center justify-center">
+              {/* Always reserve space for expand/collapse button to ensure alignment */}
+              <div className="w-5 flex-shrink-0 flex items-center justify-center">
+                {hasChildren ? (
+                  <button 
+                    onClick={() => toggleExpanded(item.path)}
+                    className="p-1 text-gray-400 hover:text-yellow-400 focus:outline-none rounded-full hover:bg-gray-800"
+                    aria-label={isExpanded ? "Collapse section" : "Expand section"}
+                    title={isExpanded ? "Collapse section" : "Expand section"}
+                  >
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" />
+                    )}
+                  </button>
+                ) : level > 0 ? (
                   <div className="w-1 h-1 rounded-full bg-gray-600"></div>
-                </div>
-              )}
+                ) : null}
+              </div>
               <button
                 onClick={() => setCurrentDoc(doc)}
-                className={`flex-1 flex items-center space-x-3 px-3 py-2 text-left rounded-md transition-all transform hover:scale-105 hover:-translate-x-1 ${
+                className={`flex-1 flex items-center space-x-2 px-2 py-1.5 text-left rounded-md transition-all transform hover:scale-105 hover:-translate-x-1 ${
                   currentDoc?.path === doc.path
                     ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
                     : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
                 } ${hasChildren ? 'font-medium' : ''}`}
               >
-                <FileText className="w-4 h-4 flex-shrink-0" />
+                <div className="w-4 flex-shrink-0 flex items-center justify-center">
+                  <FileText className="w-4 h-4" />
+                </div>
                 <span className="text-sm">{doc.title}</span>
                 {hasChildren && !isExpanded && item.children && (
                   <span className="ml-1 text-xs text-gray-500">(+{item.children.length})</span>
@@ -126,7 +128,7 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
             </div>
             
             {hasChildren && isExpanded && item.children && (
-              <div className="pl-2 border-l border-gray-700 ml-2 mt-1">
+              <div className="border-l border-gray-700 ml-4 mt-1">
                 <MenuTreeView
                   menuItems={item.children}
                   docs={docs}
@@ -411,8 +413,8 @@ export default function Documents() {
             <h2 className="text-lg font-semibold text-white">Documentation</h2>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
-            <nav className="space-y-2">
+          <div className="flex-1 overflow-y-auto p-2">
+            <nav className="space-y-1">
               {menuTree.length > 0 ? (
                 <MenuTreeView 
                   menuItems={menuTree} 

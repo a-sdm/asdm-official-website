@@ -9,7 +9,7 @@ documents:
     lastUpdated: "2025-09-13"
 
   - title: "ASDM Core Principles"
-    path: core-principles.md
+    path: core-principles/index.md
     description: "Detailed exploration of the six core principles that form the foundation of ASDM"
     category: "Principles"
     tags: ["ASDM", "AI", "Development", "Principles", "Methodology"]
@@ -17,7 +17,7 @@ documents:
     weight: 1
 
   - title: "ASDM Best Practices"
-    path: core-principles/best-practices.md
+    path: best-practices/index.md
     description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
     category: "Development"
     tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
@@ -35,7 +35,7 @@ documents:
 # Menu tree structure for hierarchical navigation
 menu-tree:
   - path: introduction.md
-  - path: core-principles.md
+  - path: core-principles/index.md
     children:
-      - path: core-principles/best-practices.md
       - path: core-principles/implementation-guide.md
+  - path: best-practices/index.md
