@@ -22,6 +22,7 @@ interface DocFile {
 
 interface DocMenuItem {
   path: string;
+  "menu-title"?: string;
   children?: DocMenuItem[];
 }
 
@@ -111,7 +112,7 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
               </div>
               <button
                 onClick={() => setCurrentDoc(doc)}
-                className={`flex-1 flex items-center space-x-2 px-2 py-1.5 text-left rounded-md transition-all transform hover:scale-105 hover:-translate-x-1 ${
+                className={`flex-1 flex items-center space-x-2 px-2 py-1.5 text-left rounded-md transition-colors ${
                   currentDoc?.path === doc.path
                     ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
                     : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
@@ -120,7 +121,7 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
                 <div className="w-4 flex-shrink-0 flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
-                <span className="text-sm">{doc.title}</span>
+                <span className="text-sm">{item["menu-title"] || doc.title}</span>
                 {hasChildren && !isExpanded && item.children && (
                   <span className="ml-1 text-xs text-gray-500">(+{item.children.length})</span>
                 )}
@@ -224,6 +225,9 @@ export default function Documents() {
           if (a.weight !== undefined && b.weight !== undefined) {
             return a.weight - b.weight;
           }
+          // Add null checks to prevent errors if title is missing
+          if (!a.title) return -1;
+          if (!b.title) return 1;
           return a.title.localeCompare(b.title);
         });
 
@@ -256,6 +260,7 @@ export default function Documents() {
     const menuTree: DocMenuItem[] = [];
     let currentParent: DocMenuItem | null = null;
     let inChildrenSection = false;
+    let lastChildItem: DocMenuItem | null = null;
     
     for (const line of lines) {
       const trimmedLine = line.trim();
@@ -277,6 +282,21 @@ export default function Documents() {
           continue;
         }
         
+        // Handle menu-title for top-level items
+        if (line.startsWith('    menu-title:')) {
+          if (currentParent) {
+            // Extract the menu title value after the colon, removing quotes if present
+            const colonIndex = trimmedLine.indexOf(':');
+            if (colonIndex !== -1) {
+              let menuTitle = trimmedLine.substring(colonIndex + 1).trim();
+              // Remove surrounding quotes if present
+              menuTitle = menuTitle.replace(/^"(.*)"$/, '$1');
+              currentParent["menu-title"] = menuTitle;
+            }
+          }
+          continue;
+        }
+        
         // Handle children section
         if (line.startsWith('    children:')) {
           inChildrenSection = true;
@@ -290,7 +310,23 @@ export default function Documents() {
         if (inChildrenSection && line.startsWith('      - path:')) {
           const path = trimmedLine.substring(7).trim();
           if (currentParent && currentParent.children) {
-            currentParent.children.push({ path });
+            lastChildItem = { path };
+            currentParent.children.push(lastChildItem);
+          }
+          continue;
+        }
+        
+        // Handle menu-title for child items
+        if (inChildrenSection && line.startsWith('        menu-title:')) {
+          if (lastChildItem) {
+            // Extract the menu title value after the colon, removing quotes if present
+            const colonIndex = trimmedLine.indexOf(':');
+            if (colonIndex !== -1) {
+              let menuTitle = trimmedLine.substring(colonIndex + 1).trim();
+              // Remove surrounding quotes if present
+              menuTitle = menuTitle.replace(/^"(.*)"$/, '$1');
+              lastChildItem["menu-title"] = menuTitle;
+            }
           }
           continue;
         }
