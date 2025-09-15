@@ -26,12 +26,18 @@ This website is a single-page application built with Vite + React + TypeScript a
 - src/
   - pages/
     - Home.tsx – Landing page UI
-    - Documents.tsx – Loads and renders docs, manages sidebar and current selection
+    - Documents.tsx – Loads documentation structure and manages navigation
   - components/
     - Header.tsx, Footer.tsx – Layout components
-    - MarkdownRenderer.tsx – react-markdown + remark-gfm + Prism integration and styling
+    - docsReader/ – Components for document rendering and navigation
+      - DocContent.tsx – Renders the selected document content
+      - DocSidebar.tsx – Displays the navigation sidebar
+      - MenuTreeView.tsx – Renders hierarchical document structure
+      - MarkdownRenderer.tsx – Handles Markdown parsing and styling
 - public/
-  - docs/content/ – Markdown files served as static assets (available at /docs/content/*.md)
+  - docs/
+    - site-tree.yml – Configuration file defining document structure and metadata
+    - content/ – Markdown files organized in directories (available at /docs/content/*.md)
 - Config & build
   - vite.config.ts, tsconfig*.json, tailwind.config.js, postcss.config.js, index.html
 
@@ -81,29 +87,62 @@ Notes:
 - The container serves the static production build from dist using serve on port 3000, mapped to host port 6174 (configured in docker-compose.yml).
 - Nginx reverse proxy (service: asdm-nginx) exposes http://localhost:8080 and forwards to the internal asdm-web:3000.
 - For local development with HMR, prefer running npm run dev directly; the Docker image is optimized for production serving.
-- If you need Vite build-time env variables (e.g., BASE_URL), pass them at build time (build args or .env) because runtime envs won’t change already-built static assets.
+- If you need Vite build-time env variables (e.g., BASE_URL), pass them at build time (build args or .env) because runtime envs won't change already-built static assets.
 
-- Location: public/docs/content/*.md
-- Runtime URL: /docs/content/<filename>.md (because files in public/ are served from the site root)
-- Loading: Documents.tsx fetches these files at runtime, parses optional front matter, strips it, then renders the remaining Markdown.
-- Add a new document:
-  1) Place your .md file in public/docs/content (e.g., public/docs/content/new-topic.md)
-  2) Add its path to the docFiles list in src/pages/Documents.tsx (e.g., content/new-topic.md)
-- Optional front matter (simple, line-based parser):
+## Documentation System
 
-```md
----
-title: Your Document Title
-description: Short description (optional)
-category: Category Name (optional)
-tags: tag1, tag2, tag3 (optional)
----
+### Document Structure
+- Documents are organized in a hierarchical structure in the `public/docs/content/` directory
+- The structure includes:
+  - Top-level documents (e.g., `introduction.md`)
+  - Section directories with index files (e.g., `core-principles/_index.md`)
+  - Topic files within sections (e.g., `best-practices/code-quality.md`)
 
-# Your Heading
-Content...
-```
+### Configuration
+- `public/docs/site-tree.yml` defines:
+  - Document metadata (title, description, tags, etc.)
+  - Document paths relative to the content directory
+  - Hierarchical menu structure for navigation
+  - Document weights for controlling display order
 
-- Notes:
-  - The front matter parser is intentionally simple (single-line values; tags are comma-separated)
-  - Files in public/ are copied as-is and not fingerprinted; URLs remain stable. If deploying under a subpath, prefer building URLs using import.meta.env.BASE_URL (e.g., `${import.meta.env.BASE_URL}docs/content/<file>.md`).
-  - Keeping docs in public/ keeps them out of the JS bundle and makes runtime fetching straightforward.
+### Adding New Documents
+1. Create a Markdown file in the appropriate location in `public/docs/content/`
+2. Add the document metadata to `site-tree.yml` under the `documents` section:
+   ```yaml
+   - title: "Your Document Title"
+     path: section-name/your-document.md
+     description: "Brief description of the document"
+     category: "Category Name"
+     tags: ["tag1", "tag2"]
+     lastUpdated: "YYYY-MM-DD"
+   ```
+3. Update the menu structure in `site-tree.yml` under the `menu-tree` section:
+   ```yaml
+   - path: section-name/_index.md
+     menu-title: "Section Name"
+     children:
+       - path: section-name/your-document.md
+         menu-title: "Your Document"
+   ```
+
+### Section Organization
+- For new sections, create a directory in `public/docs/content/`
+- Add an `_index.md` file in the directory to serve as the section landing page
+- Add individual topic files within the section directory
+
+### Document Metadata
+Documents can include the following metadata:
+- `title`: Document title (required)
+- `path`: Path to the file relative to content directory (required)
+- `description`: Brief summary of the document
+- `category`: Document category for grouping
+- `tags`: Array of related topics
+- `lastUpdated`: Last modification date
+- `created`: Creation date
+- `updated`: Update date
+- `author`: Document author
+- `weight`: Numeric value for controlling display order
+
+### URL Structure
+- Documents are accessible at `/docs/[path]` where path is the document path without the `.md` extension
+- Section index pages are accessible at `/docs/[section-name]` (automatically maps to `[section-name]/_index.md`)
