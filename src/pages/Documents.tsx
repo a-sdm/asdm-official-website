@@ -3,12 +3,12 @@ import { Home, Menu, X, FileText, ChevronRight, ChevronDown } from 'lucide-react
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface DocFile {
   name: string;
   path: string;
-  content: string;
+  content?: string; // Content is optional now, will be loaded on demand
   title: string;
   description?: string;
   category?: string;
@@ -150,17 +150,114 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
 
 export default function Documents() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [contentLoading, setContentLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [menuTree, setMenuTree] = useState<DocMenuItem[]>([]);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [docRoot, setDocRoot] = useState<string>('/docs/content');
+  
+  // Helper function to get route path from document path
+  const getRoutePathFromDocPath = (docPath: string): string => {
+    // If the path ends with _index.md, remove the filename and just use the directory
+    if (docPath.endsWith('/_index.md') || docPath.endsWith('\\_index.md')) {
+      const parts = docPath.split('/');
+      parts.pop(); // Remove _index.md
+      return parts.join('/');
+    }
+    
+    // Otherwise, remove the .md extension
+    return docPath.replace(/\.md$/, '');
+  };
+  
+  // Helper function to get document path from route path
+  const getDocPathFromRoutePath = (routePath: string): string => {
+    // If the path doesn't have an extension, check if it's a directory (might need _index.md)
+    if (!routePath.endsWith('.md')) {
+      // Try with _index.md first
+      return `${routePath}/_index.md`;
+    }
+    return routePath;
+  };
+  
+  // Find document by route path
+  const findDocByRoutePath = (routePath: string, docsList: DocFile[] = docs): DocFile | undefined => {
+    // Remove leading /docs/ if present
+    const normalizedPath = routePath.replace(/^\/docs\//, '');
+    
+    if (!normalizedPath) {
+      // If we're at /docs/, find the first document in the menu tree
+      if (menuTree.length > 0) {
+        return docsList.find(doc => doc.path === menuTree[0].path);
+      }
+      return docsList[0]; // Fallback to first doc
+    }
+    
+    // Try to find exact match first
+    let doc = docsList.find(doc => {
+      const docRoutePath = getRoutePathFromDocPath(doc.path);
+      return docRoutePath === normalizedPath;
+    });
+    
+    // If not found, try with _index.md
+    if (!doc) {
+      doc = docsList.find(doc => doc.path === `${normalizedPath}/_index.md`);
+    }
+    
+    // If still not found, try without _index.md
+    if (!doc && normalizedPath.endsWith('/_index')) {
+      const pathWithoutIndex = normalizedPath.replace('/_index', '');
+      doc = docsList.find(doc => {
+        const docRoutePath = getRoutePathFromDocPath(doc.path);
+        return docRoutePath === pathWithoutIndex;
+      });
+    }
+    
+    return doc;
+  };
 
-  // Load documentation files
+  // Function to load document content
+  const loadDocumentContent = async (doc: DocFile): Promise<DocFile> => {
+    // If content is already loaded, return the doc as is
+    if (doc.content) {
+      return doc;
+    }
+    
+    try {
+      setContentLoading(true);
+      
+      const response = await fetch(`${docRoot}/${doc.path}`);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${doc.path}: ${response.status}`);
+      }
+      
+      const content = await response.text();
+      const contentWithoutMetadata = removeMetadata(content);
+      
+      // Create a new doc object with the content
+      const updatedDoc = { ...doc, content: contentWithoutMetadata };
+      
+      // Update the doc in the docs array
+      setDocs(prevDocs => 
+        prevDocs.map(d => d.path === doc.path ? updatedDoc : d)
+      );
+      
+      return updatedDoc;
+    } catch (err) {
+      console.error(`Error loading document content for ${doc.path}:`, err);
+      return doc; // Return the original doc without content
+    } finally {
+      setContentLoading(false);
+    }
+  };
+
+  // Load site-tree.yml and initialize document metadata
   useEffect(() => {
-    const loadDocumentation = async () => {
+    const loadSiteTree = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -175,53 +272,38 @@ export default function Documents() {
         // Parse YAML
         const yamlData = parseYaml(siteTreeText);
         const siteTree: SiteTree = yamlData;
+        
+        // Set document root
+        setDocRoot(siteTree.docRoot);
 
         // Set menu tree if available
         if (siteTree["menu-tree"]) {
           setMenuTree(siteTree["menu-tree"] || []);
         }
 
-        const loadedDocs: DocFile[] = [];
-
-        for (const doc of siteTree.documents) {
-          try {
-            const response = await fetch(`${siteTree.docRoot}/${doc.path}`);
-            if (response.ok) {
-              const content = await response.text();
-              const contentWithoutMetadata = removeMetadata(content);
-              
-              // Extract name from filename (remove directory and .md extension)
-              const fileName = doc.path.split('/').pop() || doc.path;
-              const name = fileName.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-              
-              loadedDocs.push({
-                name,
-                path: doc.path,
-                content: contentWithoutMetadata,
-                title: doc.title,
-                description: doc.description,
-                category: doc.category,
-                tags: doc.tags,
-                lastUpdated: doc.lastUpdated,
-                created: doc.created,
-                updated: doc.updated,
-                author: doc.author,
-                weight: doc.weight
-              });
-            } else {
-              console.warn(`Failed to load ${doc.path}: ${response.status}`);
-            }
-          } catch (err) {
-            console.warn(`Error loading ${doc.path}:`, err);
-          }
-        }
-
-        if (loadedDocs.length === 0) {
-          throw new Error('No documentation files could be loaded');
-        }
+        // Create document metadata without loading content
+        const docsMetadata: DocFile[] = siteTree.documents.map(doc => {
+          // Extract name from filename (remove directory and .md extension)
+          const fileName = doc.path.split('/').pop() || doc.path;
+          const name = fileName.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          
+          return {
+            name,
+            path: doc.path,
+            title: doc.title,
+            description: doc.description,
+            category: doc.category,
+            tags: doc.tags,
+            lastUpdated: doc.lastUpdated,
+            created: doc.created,
+            updated: doc.updated,
+            author: doc.author,
+            weight: doc.weight
+          };
+        });
 
         // Sort docs by weight if available, then by title
-        loadedDocs.sort((a, b) => {
+        docsMetadata.sort((a, b) => {
           if (a.weight !== undefined && b.weight !== undefined) {
             return a.weight - b.weight;
           }
@@ -231,8 +313,60 @@ export default function Documents() {
           return a.title.localeCompare(b.title);
         });
 
-        setDocs(loadedDocs);
-        setCurrentDoc(loadedDocs[0]); // Set first doc as default
+        setDocs(docsMetadata);
+        
+        // Now that we have the metadata, load the current document based on URL
+        const pathSegments = location.pathname.split('/').filter(Boolean);
+        let docToLoad: DocFile | undefined;
+        
+        if (pathSegments.length <= 1) {
+          // We're at /docs/ or /, show the first document in the menu tree
+          if (siteTree["menu-tree"] && siteTree["menu-tree"].length > 0) {
+            const firstMenuPath = siteTree["menu-tree"][0].path;
+            docToLoad = docsMetadata.find(doc => doc.path === firstMenuPath);
+          }
+          
+          if (!docToLoad) {
+            docToLoad = docsMetadata[0]; // Fallback to first doc
+          }
+        } else {
+          // We have a specific document path in the URL
+          const docPath = pathSegments.slice(1).join('/');
+          docToLoad = findDocByRoutePath(docPath, docsMetadata);
+          
+          if (!docToLoad) {
+            docToLoad = docsMetadata[0]; // Fallback to first doc
+          }
+          
+          // Expand the menu tree to show the current document
+          const expandParentPaths = new Set<string>();
+          
+          // Function to recursively find and expand parent menu items
+          const findAndExpandParents = (items: DocMenuItem[], targetPath: string): boolean => {
+            for (const item of items) {
+              if (item.path === targetPath) {
+                return true;
+              }
+              
+              if (item.children && item.children.length > 0) {
+                if (findAndExpandParents(item.children, targetPath)) {
+                  expandParentPaths.add(item.path);
+                  return true;
+                }
+              }
+            }
+            return false;
+          };
+          
+          findAndExpandParents(siteTree["menu-tree"] || [], docToLoad.path);
+          setExpandedItems(expandParentPaths);
+        }
+        
+        // Load the content for the selected document
+        if (docToLoad) {
+          const docWithContent = await loadDocumentContent(docToLoad);
+          setCurrentDoc(docWithContent);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load documentation');
         console.error('Error loading documentation:', err);
@@ -241,8 +375,67 @@ export default function Documents() {
       }
     };
 
-    loadDocumentation();
+    loadSiteTree();
   }, []);
+  
+  // Handle URL changes to load the appropriate document
+  useEffect(() => {
+    if (docs.length === 0) return; // Wait for docs metadata to be loaded
+    
+    const loadDocumentFromUrl = async () => {
+      try {
+        const pathSegments = location.pathname.split('/').filter(Boolean);
+        
+        if (pathSegments.length <= 1) {
+          // We're at /docs/ or /, show the first document in the menu tree
+          if (menuTree.length > 0) {
+            const firstMenuPath = menuTree[0].path;
+            const docToLoad = docs.find(doc => doc.path === firstMenuPath);
+            if (docToLoad) {
+              const docWithContent = await loadDocumentContent(docToLoad);
+              setCurrentDoc(docWithContent);
+            }
+          }
+        } else {
+          // We have a specific document path in the URL
+          const docPath = pathSegments.slice(1).join('/');
+          const docToLoad = findDocByRoutePath(docPath);
+          
+          if (docToLoad) {
+            const docWithContent = await loadDocumentContent(docToLoad);
+            setCurrentDoc(docWithContent);
+            
+            // Expand the menu tree to show the current document
+            const expandParentPaths = new Set<string>();
+            
+            // Function to recursively find and expand parent menu items
+            const findAndExpandParents = (items: DocMenuItem[], targetPath: string): boolean => {
+              for (const item of items) {
+                if (item.path === targetPath) {
+                  return true;
+                }
+                
+                if (item.children && item.children.length > 0) {
+                  if (findAndExpandParents(item.children, targetPath)) {
+                    expandParentPaths.add(item.path);
+                    return true;
+                  }
+                }
+              }
+              return false;
+            };
+            
+            findAndExpandParents(menuTree, docToLoad.path);
+            setExpandedItems(expandParentPaths);
+          }
+        }
+      } catch (err) {
+        console.error('Error loading document from URL:', err);
+      }
+    };
+    
+    loadDocumentFromUrl();
+  }, [location.pathname, docs.length]);
 
   // Function to parse YAML
   const parseYaml = (yamlText: string): SiteTree => {
@@ -392,6 +585,21 @@ export default function Documents() {
   const handleNavigateHome = () => {
     navigate('/');
   };
+  
+  // Handle document selection and URL update
+  const handleDocumentSelect = async (doc: DocFile) => {
+    // Update the URL based on the document path
+    const routePath = getRoutePathFromDocPath(doc.path);
+    navigate(`/docs/${routePath}`);
+    
+    // Load document content if not already loaded
+    if (!doc.content) {
+      const docWithContent = await loadDocumentContent(doc);
+      setCurrentDoc(docWithContent);
+    } else {
+      setCurrentDoc(doc);
+    }
+  };
 
   if (loading) {
     return (
@@ -456,7 +664,7 @@ export default function Documents() {
                   menuItems={menuTree} 
                   docs={docs} 
                   currentDoc={currentDoc} 
-                  setCurrentDoc={setCurrentDoc}
+                  setCurrentDoc={handleDocumentSelect}
                   expandedItems={expandedItems}
                   setExpandedItems={setExpandedItems}
                 />
@@ -464,7 +672,7 @@ export default function Documents() {
                 docs.map((doc, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentDoc(doc)}
+                    onClick={() => handleDocumentSelect(doc)}
                     className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-all transform hover:scale-105 hover:-translate-x-1 ${
                       currentDoc?.path === doc.path
                         ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
@@ -518,7 +726,14 @@ export default function Documents() {
 
           {/* Content */}
           <main className="flex-1 overflow-y-auto bg-black">
-            {currentDoc ? (
+            {contentLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+                  <p className="text-gray-400">Loading document content...</p>
+                </div>
+              </div>
+            ) : currentDoc && currentDoc.content ? (
               <div className="max-w-4xl mx-auto px-6 py-8">
                 <MarkdownRenderer content={currentDoc.content} />
                 {(currentDoc.lastUpdated || currentDoc.author) && (
