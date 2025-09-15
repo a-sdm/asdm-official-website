@@ -71,20 +71,52 @@ documents:
     category: "Implementation"
     tags: ["ASDM", "AI", "Development", "Methodology", "Implementation"]
     created: "2025-09-13"
-    updated: "2025-09-13"
+    updated: "2025-09-15"
+    author: "ASDM Team"
+
+  - title: "ASDM Best Practices Guide"
+    path: core-principles/best-practices.md
+    description: "Detailed best practices for implementing each of the ASDM core principles in your development workflow"
+    category: "Implementation"
+    tags: ["ASDM", "AI", "Development", "Best Practices", "Methodology"]
+    created: "2025-09-15"
+    updated: "2025-09-15"
+    author: "ASDM Team"
+
+  - title: "ASDM Case Studies"
+    path: core-principles/case-studies.md
+    description: "Real-world examples of organizations that have successfully implemented ASDM core principles"
+    category: "Implementation"
+    tags: ["ASDM", "AI", "Development", "Case Studies", "Examples"]
+    created: "2025-09-15"
+    updated: "2025-09-15"
     author: "ASDM Team"
 
 # Menu tree structure for hierarchical navigation
 menu-tree:
   - path: introduction.md
+    menu-title: "Introduction"
   - path: core-principles/_index.md
+    menu-title: "Core Principles"
     children:
       - path: core-principles/implementation-guide.md
+        menu-title: "Implementation Guide"
+      - path: core-principles/best-practices.md
+        menu-title: "Best Practices"
+      - path: core-principles/case-studies.md
+        menu-title: "Case Studies"
   - path: best-practices/_index.md
+    menu-title: "Best Practices"
     children:
       - path: best-practices/code-quality.md
+        menu-title: "Code Quality"
       - path: best-practices/development-workflow.md
+        menu-title: "Development Workflow"
       - path: best-practices/quality-assurance.md
+        menu-title: "Quality Assurance"
       - path: best-practices/security-compliance.md
+        menu-title: "Security & Compliance"
       - path: best-practices/collaboration.md
+        menu-title: "Collaboration"
       - path: best-practices/continuous-improvement.md
+        menu-title: "Continuous Improvement"
