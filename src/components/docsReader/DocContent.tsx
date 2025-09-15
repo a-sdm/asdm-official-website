@@ -1,5 +1,5 @@
-import React from 'react';
-import { Menu } from 'lucide-react';
+import React, { useCallback } from 'react';
+import { Menu, ChevronRight, Home } from 'lucide-react';
 import { DocFile } from './types';
 import MarkdownRenderer from './MarkdownRenderer';
 
@@ -8,19 +8,62 @@ interface DocContentProps {
   contentLoading: boolean;
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  onNavigate?: (path: string) => void;
 }
 
 const DocContent: React.FC<DocContentProps> = ({
   currentDoc,
   contentLoading,
   sidebarOpen,
-  setSidebarOpen
+  setSidebarOpen,
+  onNavigate
 }) => {
+  // Function to handle breadcrumb navigation
+  const handleBreadcrumbClick = useCallback((index: number) => {
+    if (!currentDoc?.path || !onNavigate) return;
+    
+    const pathParts = currentDoc.path.split('/').filter(Boolean);
+    // Navigate to the path up to the clicked breadcrumb
+    let targetPath = pathParts.slice(0, index + 1).join('/');
+    
+    // Check if we need to add _index.md for directory navigation
+    if (!targetPath.endsWith('.md')) {
+      targetPath = `${targetPath}/_index.md`;
+    }
+    
+    onNavigate(targetPath);
+  }, [currentDoc, onNavigate]);
   return (
     <div className="flex-1 flex flex-col">
       {/* Content Header */}
       <div className="bg-gray-900 border-b border-yellow-400/20 px-6 py-4">
-        <div className="flex items-center justify-between">
+        {/* Breadcrumbs */}
+        {currentDoc?.path && (
+          <div className="flex items-center text-sm text-gray-400 mb-3">
+            <Home className="w-3 h-3 mr-1" />
+            <span 
+              className="hover:text-yellow-400 cursor-pointer transition-colors"
+              onClick={() => onNavigate && onNavigate('')}
+            >
+              Docs
+            </span>
+            {currentDoc.path.split('/').filter(Boolean).map((part, index, array) => (
+              <React.Fragment key={index}>
+                <ChevronRight className="w-3 h-3 mx-1" />
+                <span 
+                  className={`${index === array.length - 1 ? 'text-yellow-400' : 'hover:text-yellow-400 cursor-pointer transition-colors'}`}
+                  onClick={() => index < array.length - 1 && handleBreadcrumbClick(index)}
+                  role={index < array.length - 1 ? "button" : undefined}
+                  tabIndex={index < array.length - 1 ? 0 : undefined}
+                >
+                  {part.replace(/-/g, ' ').replace(/^_index$/, 'Overview')}
+                </span>
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+        
+        <div className="flex flex-col">
           <div className="flex items-center space-x-4">
             {!sidebarOpen && (
               <button
@@ -39,11 +82,12 @@ const DocContent: React.FC<DocContentProps> = ({
               )}
             </div>
           </div>
+          
           {currentDoc?.tags && currentDoc.tags.length > 0 && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 mt-3">
               {currentDoc.tags.map((tag, index) => (
                 <span key={index} className="px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded-full">
-                  {tag}
+                  {tag.replace(/^"(.*)"$/, '$1')}
                 </span>
               ))}
             </div>

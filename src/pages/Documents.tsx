@@ -239,6 +239,41 @@ export default function Documents() {
           contentLoading={contentLoading}
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
+          onNavigate={(path) => {
+            // If it's the root, navigate to the first document
+            if (path === '') {
+              if (menuTree.length > 0) {
+                const firstDoc = docs.find(doc => doc.path === menuTree[0].path);
+                if (firstDoc) {
+                  handleDocumentSelect(firstDoc);
+                }
+              }
+              return;
+            }
+            
+            // First try to find an exact match for the path
+            let docToNavigate = docs.find(doc => doc.path === path);
+            
+            // If not found and the path ends with _index.md, try to find a document in that directory
+            if (!docToNavigate && path.endsWith('/_index.md')) {
+              const dirPath = path.replace('/_index.md', '');
+              // Look for a document that represents the directory index
+              docToNavigate = docs.find(doc => 
+                doc.path === path || 
+                doc.path === `${dirPath}/_index.md` || 
+                doc.path === `${dirPath}/index.md`
+              );
+              
+              // If still not found, find any document in that directory
+              if (!docToNavigate) {
+                docToNavigate = docs.find(doc => doc.path.startsWith(`${dirPath}/`));
+              }
+            }
+            
+            if (docToNavigate) {
+              handleDocumentSelect(docToNavigate);
+            }
+          }}
         />
       </div>
       
