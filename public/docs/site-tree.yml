@@ -17,17 +17,25 @@ documents:
     weight: 1
 
   - title: "ASDM Best Practices"
-    path: best-practices.md
+    path: core-principles/best-practices.md
     description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
     category: "Development"
     tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
     lastUpdated: "2025-09-13"
 
   - title: "ASDM Implementation Guide"
-    path: implementation-guide.md
+    path: core-principles/implementation-guide.md
     description: "Comprehensive guide for implementing AI-Supported Development Methodology in software development teams"
     category: "Implementation"
     tags: ["ASDM", "AI", "Development", "Methodology", "Implementation"]
     created: "2025-09-13"
     updated: "2025-09-13"
     author: "ASDM Team"
+
+# Menu tree structure for hierarchical navigation
+menu-tree:
+  - path: introduction.md
+  - path: core-principles.md
+    children:
+      - path: core-principles/best-practices.md
+      - path: core-principles/implementation-guide.md

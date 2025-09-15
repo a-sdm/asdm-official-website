@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Menu, X, FileText, ChevronRight } from 'lucide-react';
+import { Home, Menu, X, FileText, ChevronRight, ChevronDown } from 'lucide-react';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,6 +20,11 @@ interface DocFile {
   weight?: number;
 }
 
+interface DocMenuItem {
+  path: string;
+  children?: DocMenuItem[];
+}
+
 interface SiteTree {
   docRoot: string;
   documents: Array<{
@@ -34,7 +39,111 @@ interface SiteTree {
     author?: string;
     weight?: number;
   }>;
+  "menu-tree"?: DocMenuItem[];
 }
+
+// Menu Tree View Component
+interface MenuTreeViewProps {
+  menuItems: DocMenuItem[];
+  docs: DocFile[];
+  currentDoc: DocFile | null;
+  setCurrentDoc: (doc: DocFile) => void;
+  expandedItems: Set<string>;
+  setExpandedItems: React.Dispatch<React.SetStateAction<Set<string>>>;
+  level?: number;
+}
+
+const MenuTreeView: React.FC<MenuTreeViewProps> = ({ 
+  menuItems, 
+  docs, 
+  currentDoc, 
+  setCurrentDoc, 
+  expandedItems, 
+  setExpandedItems,
+  level = 0 
+}) => {
+  // Find doc by path
+  const findDocByPath = (path: string): DocFile | undefined => {
+    return docs.find(doc => doc.path === path);
+  };
+
+  // Toggle expanded state
+  const toggleExpanded = (path: string) => {
+    const newExpandedItems = new Set(expandedItems);
+    if (newExpandedItems.has(path)) {
+      newExpandedItems.delete(path);
+    } else {
+      newExpandedItems.add(path);
+    }
+    setExpandedItems(newExpandedItems);
+  };
+
+  return (
+    <div className={`space-y-1 ${level > 0 ? 'ml-6' : ''}`}>
+      {menuItems.map((item, index) => {
+        const doc = findDocByPath(item.path);
+        const hasChildren = item.children && item.children.length > 0;
+        const isExpanded = hasChildren && expandedItems.has(item.path);
+        
+        if (!doc) return null;
+        
+        return (
+          <div key={index} className="space-y-1">
+            <div className="flex items-center">
+              {hasChildren && (
+                <button 
+                  onClick={() => toggleExpanded(item.path)}
+                  className="p-1 mr-1 text-gray-400 hover:text-yellow-400 focus:outline-none rounded-full hover:bg-gray-800"
+                  aria-label={isExpanded ? "Collapse section" : "Expand section"}
+                  title={isExpanded ? "Collapse section" : "Expand section"}
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
+                </button>
+              )}
+              {!hasChildren && level > 0 && (
+                <div className="w-5 h-5 mr-1 flex items-center justify-center">
+                  <div className="w-1 h-1 rounded-full bg-gray-600"></div>
+                </div>
+              )}
+              <button
+                onClick={() => setCurrentDoc(doc)}
+                className={`flex-1 flex items-center space-x-3 px-3 py-2 text-left rounded-md transition-all transform hover:scale-105 hover:-translate-x-1 ${
+                  currentDoc?.path === doc.path
+                    ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
+                    : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
+                } ${hasChildren ? 'font-medium' : ''}`}
+              >
+                <FileText className="w-4 h-4 flex-shrink-0" />
+                <span className="text-sm">{doc.title}</span>
+                {hasChildren && !isExpanded && item.children && (
+                  <span className="ml-1 text-xs text-gray-500">(+{item.children.length})</span>
+                )}
+              </button>
+            </div>
+            
+            {hasChildren && isExpanded && item.children && (
+              <div className="pl-2 border-l border-gray-700 ml-2 mt-1">
+                <MenuTreeView
+                  menuItems={item.children}
+                  docs={docs}
+                  currentDoc={currentDoc}
+                  setCurrentDoc={setCurrentDoc}
+                  expandedItems={expandedItems}
+                  setExpandedItems={setExpandedItems}
+                  level={level + 1}
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default function Documents() {
   const navigate = useNavigate();
@@ -43,6 +152,8 @@ export default function Documents() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [menuTree, setMenuTree] = useState<DocMenuItem[]>([]);
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   // Load documentation files
   useEffect(() => {
@@ -60,7 +171,12 @@ export default function Documents() {
         
         // Parse YAML
         const yamlData = parseYaml(siteTreeText);
-        const siteTree: SiteTree = yamlData as SiteTree;
+        const siteTree: SiteTree = yamlData;
+
+        // Set menu tree if available
+        if (siteTree["menu-tree"]) {
+          setMenuTree(siteTree["menu-tree"] || []);
+        }
 
         const loadedDocs: DocFile[] = [];
 
@@ -123,20 +239,71 @@ export default function Documents() {
   }, []);
 
   // Function to parse YAML
-  const parseYaml = (yamlText: string): any => {
+  const parseYaml = (yamlText: string): SiteTree => {
     const lines = yamlText.split('\n');
-    const result: any = {};
-    let currentArray: any[] = [];
-    let currentObject: any = null;
+    const result: Record<string, unknown> = {
+      docRoot: '',
+      documents: []
+    };
+    const documentArray: Array<Record<string, unknown>> = [];
+    let currentObject: Record<string, unknown> | null = null;
     let isInArray = false;
-
+    let currentSection = '';
+    
+    // For menu tree parsing
+    const menuTree: DocMenuItem[] = [];
+    let currentParent: DocMenuItem | null = null;
+    let inChildrenSection = false;
+    
     for (const line of lines) {
       const trimmedLine = line.trim();
       if (!trimmedLine || trimmedLine.startsWith('#')) continue;
 
+      // Handle menu-tree section
+      if (trimmedLine === 'menu-tree:') {
+        currentSection = 'menu-tree';
+        continue;
+      }
+
+      if (currentSection === 'menu-tree') {
+        // Handle top-level menu items
+        if (line.startsWith('  - path:')) {
+          const path = trimmedLine.substring(7).trim();
+          currentParent = { path };
+          menuTree.push(currentParent);
+          inChildrenSection = false;
+          continue;
+        }
+        
+        // Handle children section
+        if (line.startsWith('    children:')) {
+          inChildrenSection = true;
+          if (currentParent && !currentParent.children) {
+            currentParent.children = [];
+          }
+          continue;
+        }
+        
+        // Handle child items
+        if (inChildrenSection && line.startsWith('      - path:')) {
+          const path = trimmedLine.substring(7).trim();
+          if (currentParent && currentParent.children) {
+            currentParent.children.push({ path });
+          }
+          continue;
+        }
+        
+        // Exit menu-tree section
+        if (trimmedLine.startsWith('documents:')) {
+          currentSection = 'documents';
+          isInArray = false;
+          continue;
+        }
+      }
+
       if (trimmedLine.startsWith('- ')) {
         if (currentObject) {
-          currentArray.push(currentObject);
+          documentArray.push(currentObject);
         }
         currentObject = {};
         isInArray = true;
@@ -160,13 +327,23 @@ export default function Documents() {
     }
 
     if (currentObject) {
-      currentArray.push(currentObject);
+      documentArray.push(currentObject);
     }
+    
     if (isInArray) {
-      result.documents = currentArray;
+      result.documents = documentArray;
+    }
+    
+    if (menuTree.length > 0) {
+      result['menu-tree'] = menuTree;
     }
 
-    return result;
+    // Type assertion to ensure we have the required fields
+    return {
+      docRoot: result.docRoot as string,
+      documents: result.documents as SiteTree['documents'],
+      "menu-tree": result['menu-tree'] as DocMenuItem[] | undefined
+    };
   };
 
   // Function to remove metadata from markdown content
@@ -236,21 +413,32 @@ export default function Documents() {
 
           <div className="flex-1 overflow-y-auto p-4">
             <nav className="space-y-2">
-              {docs.map((doc, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentDoc(doc)}
-                  className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-all transform hover:scale-105 hover:-translate-x-1 ${
-                    currentDoc?.path === doc.path
-                      ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
-                      : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
-                  }`}
-                >
-                  <FileText className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm">{doc.title}</span>
-                  <ChevronRight className={`w-3 h-3 ml-auto ${currentDoc?.path === doc.path ? 'text-yellow-400' : 'text-gray-500'}`} />
-                </button>
-              ))}
+              {menuTree.length > 0 ? (
+                <MenuTreeView 
+                  menuItems={menuTree} 
+                  docs={docs} 
+                  currentDoc={currentDoc} 
+                  setCurrentDoc={setCurrentDoc}
+                  expandedItems={expandedItems}
+                  setExpandedItems={setExpandedItems}
+                />
+              ) : (
+                docs.map((doc, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentDoc(doc)}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 text-left transition-all transform hover:scale-105 hover:-translate-x-1 ${
+                      currentDoc?.path === doc.path
+                        ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
+                        : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
+                    }`}
+                  >
+                    <FileText className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm">{doc.title}</span>
+                    <ChevronRight className={`w-3 h-3 ml-auto ${currentDoc?.path === doc.path ? 'text-yellow-400' : 'text-gray-500'}`} />
+                  </button>
+                ))
+              )}
             </nav>
           </div>
         </div>
