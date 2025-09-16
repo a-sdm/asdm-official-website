@@ -36,10 +36,10 @@ const DocContent: React.FC<DocContentProps> = ({
   return (
     <div className="flex-1 flex flex-col">
       {/* Content Header */}
-      <div className="bg-gray-900 border-b border-yellow-400/20 px-6 py-4">
-        {/* Breadcrumbs */}
+      <div className="bg-gray-900 border-b border-yellow-400/20 px-4 sm:px-6 py-3 sm:py-4">
+        {/* Breadcrumbs - Hide on small screens */}
         {currentDoc?.path && (
-          <div className="flex items-center text-sm text-gray-400 mb-3">
+          <div className="hidden sm:flex items-center text-sm text-gray-400 mb-3">
             <Home className="w-3 h-3 mr-1" />
             <span 
               className="hover:text-yellow-400 cursor-pointer transition-colors"
@@ -51,7 +51,7 @@ const DocContent: React.FC<DocContentProps> = ({
               <React.Fragment key={index}>
                 <ChevronRight className="w-3 h-3 mx-1" />
                 <span 
-                  className={`${index === array.length - 1 ? 'text-yellow-400' : 'hover:text-yellow-400 cursor-pointer transition-colors'}`}
+                  className={`${index === array.length - 1 ? 'text-yellow-400' : 'hover:text-yellow-400 cursor-pointer transition-colors'} truncate max-w-[100px] md:max-w-none`}
                   onClick={() => index < array.length - 1 && handleBreadcrumbClick(index)}
                   role={index < array.length - 1 ? "button" : undefined}
                   tabIndex={index < array.length - 1 ? 0 : undefined}
@@ -64,29 +64,30 @@ const DocContent: React.FC<DocContentProps> = ({
         )}
         
         <div className="flex flex-col">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
+                className="p-1 sm:p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
+                aria-label="Open sidebar"
               >
                 <Menu className="w-5 h-5" />
               </button>
             )}
-            <div>
-              <h1 className="text-xl font-semibold text-white">
+            <div className="overflow-hidden">
+              <h1 className="text-lg sm:text-xl font-semibold text-white truncate">
                 {currentDoc?.title || 'ASDM Documentation'}
               </h1>
               {currentDoc?.description && (
-                <p className="text-sm text-gray-400 mt-1">{currentDoc.description}</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">{currentDoc.description}</p>
               )}
             </div>
           </div>
           
           {currentDoc?.tags && currentDoc.tags.length > 0 && (
-            <div className="flex gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
               {currentDoc.tags.map((tag, index) => (
-                <span key={index} className="px-2 py-1 bg-gray-800 text-xs text-gray-300 rounded-full">
+                <span key={index} className="px-2 py-0.5 sm:py-1 bg-gray-800 text-xs text-gray-300 rounded-full">
                   {tag.replace(/^"(.*)"$/, '$1')}
                 </span>
               ))}
@@ -100,15 +101,15 @@ const DocContent: React.FC<DocContentProps> = ({
         {contentLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-              <p className="text-gray-400">Loading document content...</p>
+              <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-yellow-400 mx-auto mb-3 sm:mb-4"></div>
+              <p className="text-sm sm:text-base text-gray-400">Loading document content...</p>
             </div>
           </div>
         ) : currentDoc && currentDoc.content ? (
-          <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
             <MarkdownRenderer content={currentDoc.content} />
             {(currentDoc.lastUpdated || currentDoc.author) && (
-              <div className="mt-8 pt-4 border-t border-gray-800 text-sm text-gray-400">
+              <div className="mt-6 sm:mt-8 pt-3 sm:pt-4 border-t border-gray-800 text-xs sm:text-sm text-gray-400">
                 {currentDoc.lastUpdated && (
                   <p>Last updated: {currentDoc.lastUpdated}</p>
                 )}

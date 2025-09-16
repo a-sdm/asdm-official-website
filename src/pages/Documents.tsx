@@ -221,18 +221,30 @@ export default function Documents() {
     <div className="min-h-screen bg-black flex flex-col">
       <Header />
       
-      <div className="flex flex-1">
-        <DocSidebar
-          docs={docs}
-          menuTree={menuTree}
-          currentDoc={currentDoc}
-          onDocumentSelect={handleDocumentSelect}
-          expandedItems={expandedItems}
-          setExpandedItems={setExpandedItems}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onNavigateHome={handleNavigateHome}
-        />
+      <div className="flex flex-1 relative">
+        {/* Mobile overlay when sidebar is open */}
+        {sidebarOpen && (
+          <div 
+            className="md:hidden fixed inset-0 bg-black/70 z-20"
+            onClick={() => setSidebarOpen(false)}
+          ></div>
+        )}
+        
+        {/* Sidebar with z-index for mobile */}
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} 
+          transition-transform duration-300 fixed md:relative z-30 h-[calc(100vh-64px)] md:h-auto`}>
+          <DocSidebar
+            docs={docs}
+            menuTree={menuTree}
+            currentDoc={currentDoc}
+            onDocumentSelect={handleDocumentSelect}
+            expandedItems={expandedItems}
+            setExpandedItems={setExpandedItems}
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            onNavigateHome={handleNavigateHome}
+          />
+        </div>
 
         <DocContent
           currentDoc={currentDoc}
