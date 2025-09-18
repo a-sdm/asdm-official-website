@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: asdm-web
+    image: ghcr.io/a-sdm/asdm-official-website:latest
     ports:
       - "6174:3000"
     environment:
