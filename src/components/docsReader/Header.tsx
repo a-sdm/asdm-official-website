@@ -87,7 +87,7 @@ export default function Header({
   };
 
   // Render menu items recursively
-  const renderMenuItems = (items: DocMenuItem[], level = 0) => {
+  const renderMenuItems = (items: DocMenuItem[], level = 0, isMobile = false) => {
     return (
       <div className="space-y-1">
         {items.map((item, index) => {
@@ -129,6 +129,9 @@ export default function Header({
                   onClick={() => {
                     onDocumentSelect(doc);
                     setDocsDropdownOpen(false);
+                    if (isMobile) {
+                      setMobileMenuOpen(false);
+                    }
                   }}
                   className={`flex-1 flex items-center space-x-2 px-2 py-1 text-left rounded-md transition-colors ${
                     currentDoc?.path === doc.path
@@ -137,15 +140,15 @@ export default function Header({
                   } ${hasChildren ? 'font-medium' : ''}`}
                 >
                   <div className="w-4 flex-shrink-0 flex items-center justify-center">
-                    <FileText className="w-3 h-3" />
+                    <FileText className="w-4 h-4" />
                   </div>
-                  <span className="text-xs">{item["menu-title"] || doc.title}</span>
+                  <span className="text-sm">{item["menu-title"] || doc.title}</span>
                 </button>
               </div>
               
               {/* Render children if expanded */}
               {hasChildren && isExpanded && item.children && (
-                renderMenuItems(item.children, level + 1)
+                renderMenuItems(item.children, level + 1, isMobile)
               )}
             </div>
           );
@@ -188,7 +191,7 @@ export default function Header({
         <nav className="hidden md:flex items-center space-x-8">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm"
+            className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm flex items-center pb-1"
           >
             Home
           </button>
@@ -259,7 +262,7 @@ export default function Header({
               {/* Mobile docs menu */}
               {menuTree.length > 0 && (
                 <div className="ml-4 pl-2 border-l border-gray-700">
-                  {renderMenuItems(menuTree)}
+                  {renderMenuItems(menuTree, 0, true)}
                 </div>
               )}
             </div>
