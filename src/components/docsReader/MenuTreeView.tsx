@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileText, ChevronRight, ChevronDown } from 'lucide-react';
 import { DocFile, DocMenuItem } from './types';
+import { useTheme } from '../../context/ThemeContext';
 
 interface MenuTreeViewProps {
   menuItems: DocMenuItem[];
@@ -21,6 +22,7 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
   setExpandedItems,
   level = 0 
 }) => {
+  const { theme } = useTheme();
   // Find doc by path
   const findDocByPath = (path: string): DocFile | undefined => {
     return docs.find(doc => doc.path === path);
@@ -54,7 +56,11 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
                 {hasChildren ? (
                   <button 
                     onClick={() => toggleExpanded(item.path)}
-                    className="p-1 text-gray-400 hover:text-yellow-400 focus:outline-none rounded-full hover:bg-gray-800"
+                    className={`p-1 focus:outline-none rounded-full ${
+                      theme === 'dark'
+                        ? 'text-gray-400 hover:text-yellow-400 hover:bg-gray-800'
+                        : 'text-gray-500 hover:text-blue-600 hover:bg-gray-200'
+                    }`}
                     aria-label={isExpanded ? "Collapse section" : "Expand section"}
                     title={isExpanded ? "Collapse section" : "Expand section"}
                   >
@@ -65,15 +71,21 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
                     )}
                   </button>
                 ) : level > 0 ? (
-                  <div className="w-1 h-1 rounded-full bg-gray-600"></div>
+                  <div className={`w-1 h-1 rounded-full ${
+                    theme === 'dark' ? 'bg-gray-600' : 'bg-gray-400'
+                  }`}></div>
                 ) : null}
               </div>
               <button
                 onClick={() => setCurrentDoc(doc)}
                 className={`flex-1 flex items-center space-x-2 px-2 py-1.5 text-left rounded-md transition-colors ${
                   currentDoc?.path === doc.path
-                    ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
-                    : 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
+                    ? theme === 'dark'
+                      ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400 border-r-4 border-yellow-400 shadow-lg shadow-yellow-400/20'
+                      : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-600 border-r-4 border-blue-500 shadow-lg shadow-blue-500/20'
+                    : theme === 'dark'
+                      ? 'text-gray-300 hover:bg-gray-800 hover:border-r-2 hover:border-yellow-400/50'
+                      : 'text-gray-600 hover:bg-gray-100 hover:border-r-2 hover:border-blue-500/50'
                 } ${hasChildren ? 'font-medium' : ''}`}
               >
                 <div className="w-4 flex-shrink-0 flex items-center justify-center">
@@ -81,13 +93,17 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
                 </div>
                 <span className="text-sm">{item["menu-title"] || doc.title}</span>
                 {hasChildren && !isExpanded && item.children && (
-                  <span className="ml-1 text-xs text-gray-500">(+{item.children.length})</span>
+                  <span className={`ml-1 text-xs ${
+                    theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                  }`}>(+{item.children.length})</span>
                 )}
               </button>
             </div>
             
             {hasChildren && isExpanded && item.children && (
-              <div className="border-l border-gray-700 ml-4 mt-1">
+              <div className={`border-l ml-4 mt-1 ${
+                theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
+              }`}>
                 <MenuTreeView
                   menuItems={item.children}
                   docs={docs}

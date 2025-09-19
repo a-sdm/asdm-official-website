@@ -1,0 +1,107 @@
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+  --border-color: #dee2e6;
+  --accent-color: #ffc107;
+  --accent-hover: #e0a800;
+  --sidebar-bg: #f8f9fa;
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --code-bg: #f5f5f5;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --card-bg: #ffffff;
+  --dropdown-bg: #ffffff;
+  --dropdown-hover: #f8f9fa;
+  --mobile-menu-bg: rgba(248, 249, 250, 0.95);
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #e9ecef;
+  --text-secondary: #ced4da;
+  --text-muted: #adb5bd;
+  --border-color: #495057;
+  --accent-color: #ffc107;
+  --accent-hover: #ffca2c;
+  --sidebar-bg: #1a1a1a;
+  --header-bg: rgba(18, 18, 18, 0.8);
+  --code-bg: #2d2d2d;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --card-bg: #1e1e1e;
+  --dropdown-bg: #1e1e1e;
+  --dropdown-hover: #2d2d2d;
+  --mobile-menu-bg: rgba(30, 30, 30, 0.95);
+}
+
+/* Apply theme variables to elements */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Header styles */
+header.theme-aware {
+  background-color: var(--header-bg);
+  border-color: var(--border-color);
+}
+
+/* Sidebar styles */
+.sidebar.theme-aware {
+  background-color: var(--sidebar-bg);
+  border-color: var(--border-color);
+}
+
+/* Content area styles */
+.content.theme-aware {
+  background-color: var(--bg-primary);
+}
+
+/* Card styles */
+.card.theme-aware {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+/* Dropdown menu styles */
+.dropdown.theme-aware {
+  background-color: var(--dropdown-bg);
+  border-color: var(--border-color);
+}
+
+.dropdown-item.theme-aware:hover {
+  background-color: var(--dropdown-hover);
+}
+
+/* Mobile menu styles */
+.mobile-menu.theme-aware {
+  background-color: var(--mobile-menu-bg);
+  border-color: var(--border-color);
+}
+
+/* Code block styles */
+pre.theme-aware, code.theme-aware {
+  background-color: var(--code-bg);
+  color: var(--text-secondary);
+}
+
+.light-theme {
+  color-scheme: light;
+}
+
+.dark-theme {
+  color-scheme: dark;
+}
+
+/* Theme transition effects */
+.theme-transition {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}

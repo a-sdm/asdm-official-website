@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Brain, Menu, X, Book, ChevronLeft, ChevronDown, ChevronRight, FileText } from 'lucide-react';
+import { Brain, Menu, X, Book, ChevronLeft, ChevronDown, ChevronRight, FileText, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DocFile, DocMenuItem } from './types';
+import { useTheme } from '../../context/ThemeContext';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -27,6 +28,7 @@ export default function Header({
   onDocumentSelect = () => {}
 }: HeaderProps) {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [docsDropdownOpen, setDocsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -110,7 +112,11 @@ export default function Header({
                   {hasChildren ? (
                     <button 
                       onClick={(e) => toggleExpanded(item.path, e)}
-                      className="p-1 text-gray-400 hover:text-yellow-400 focus:outline-none rounded-full hover:bg-gray-800"
+                      className={`p-1 focus:outline-none rounded-full ${
+                        theme === 'dark' 
+                          ? 'text-gray-400 hover:bg-gray-800 hover:text-yellow-400' 
+                          : 'text-gray-500 hover:bg-gray-200 hover:text-blue-600'
+                      }`}
                       aria-label={isExpanded ? "Collapse section" : "Expand section"}
                     >
                       {isExpanded ? (
@@ -120,7 +126,7 @@ export default function Header({
                       )}
                     </button>
                   ) : level > 0 ? (
-                    <div className="w-1 h-1 rounded-full bg-gray-600"></div>
+                    <div className={`w-1 h-1 rounded-full ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-400'}`}></div>
                   ) : null}
                 </div>
                 
@@ -135,8 +141,12 @@ export default function Header({
                   }}
                   className={`flex-1 flex items-center space-x-2 px-2 py-1 text-left rounded-md transition-colors ${
                     currentDoc?.path === doc.path
-                      ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400'
-                      : 'text-gray-300 hover:bg-gray-800'
+                      ? theme === 'dark'
+                        ? 'bg-gradient-to-r from-yellow-400/20 to-red-500/20 text-yellow-400'
+                        : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-600'
+                      : theme === 'dark'
+                        ? 'text-gray-300 hover:bg-gray-800'
+                        : 'text-gray-600 hover:bg-gray-200'
                   } ${hasChildren ? 'font-medium' : ''}`}
                 >
                   <div className="w-4 flex-shrink-0 flex items-center justify-center">
@@ -158,13 +168,21 @@ export default function Header({
   };
 
   return (
-    <header className="px-6 py-4 border-b border-gray-800/50 backdrop-blur-sm bg-black/20 sticky top-0 z-40">
+    <header className={`px-6 py-4 border-b backdrop-blur-sm sticky top-0 z-40 theme-aware theme-transition ${
+      theme === 'dark' 
+        ? 'border-gray-800/50 bg-black/20' 
+        : 'border-gray-200/50 bg-white/80'
+    }`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {/* Sidebar toggle button - desktop only */}
           <button
             onClick={toggleSidebar}
-            className="hidden md:block mr-2 text-gray-300 hover:text-yellow-300 transition-colors"
+            className={`hidden md:block mr-2 transition-colors ${
+              theme === 'dark' 
+                ? 'text-gray-300 hover:text-yellow-300' 
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
             aria-label="Toggle sidebar"
           >
             <Menu className="w-5 h-5" />
@@ -175,13 +193,15 @@ export default function Header({
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
             <Brain className="w-8 h-8 text-yellow-300" />
-            <span className="text-xl font-bold text-white">ASDM</span>
+            <span className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>ASDM</span>
           </button>
           
           <div className="hidden md:flex items-center">
-            <ChevronLeft className="w-4 h-4 text-gray-500" />
-            <Book className="w-5 h-5 text-gray-300 ml-2" />
-            <span className="ml-2 text-gray-300 font-medium text-sm truncate max-w-[200px]">
+            <ChevronLeft className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`} />
+            <Book className={`w-5 h-5 ml-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} />
+            <span className={`ml-2 font-medium text-sm truncate max-w-[200px] ${
+              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               {title}
             </span>
           </div>
@@ -191,9 +211,31 @@ export default function Header({
         <nav className="hidden md:flex items-center space-x-8">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm flex items-center pb-1"
+            className={`transition-colors font-medium text-sm flex items-center pb-1 ${
+              theme === 'dark' 
+                ? 'text-gray-300 hover:text-yellow-300' 
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
           >
             Home
+          </button>
+          
+          {/* Theme toggle button */}
+          <button
+            onClick={toggleTheme}
+            className={`transition-colors font-medium text-sm flex items-center pb-1 ${
+              theme === 'dark' 
+                ? 'text-gray-300 hover:text-yellow-300' 
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 mr-1" />
+            ) : (
+              <Moon className="w-4 h-4 mr-1" />
+            )}
+            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
           
           {/* Docs dropdown */}
@@ -201,7 +243,11 @@ export default function Header({
             <button
               ref={dropdownButtonRef}
               onClick={toggleDocsDropdown}
-              className="flex items-center space-x-1 text-yellow-300 transition-colors font-medium text-sm border-b border-yellow-300 pb-1"
+              className={`flex items-center space-x-1 transition-colors font-medium text-sm border-b pb-1 ${
+                theme === 'dark' 
+                  ? 'text-yellow-300 border-yellow-300' 
+                  : 'text-blue-600 border-blue-500'
+              }`}
             >
               <span>Docs</span>
               <ChevronDown className={`w-4 h-4 transition-transform ${docsDropdownOpen ? 'rotate-180' : ''}`} />
@@ -209,8 +255,12 @@ export default function Header({
             
             {docsDropdownOpen && menuTree.length > 0 && (
               <div 
-                className={`absolute top-full mt-2 w-64 max-h-[70vh] overflow-y-auto bg-gray-900 border border-gray-800 rounded-md shadow-lg z-50 ${
+                className={`absolute top-full mt-2 w-64 max-h-[70vh] overflow-y-auto rounded-md shadow-lg z-50 dropdown theme-aware theme-transition ${
                   dropdownPosition.right ? 'right-0' : 'left-0'
+                } ${
+                  theme === 'dark' 
+                    ? 'bg-gray-900 border border-gray-800' 
+                    : 'bg-white border border-gray-200'
                 }`}
               >
                 <div className="p-2">
@@ -223,7 +273,11 @@ export default function Header({
         
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-gray-300 hover:text-yellow-300 transition-colors"
+          className={`md:hidden transition-colors ${
+            theme === 'dark' 
+              ? 'text-gray-300 hover:text-yellow-300' 
+              : 'text-gray-600 hover:text-blue-600'
+          }`}
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
         >
@@ -237,16 +291,47 @@ export default function Header({
       
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800">
+        <div className={`md:hidden absolute top-16 left-0 right-0 z-50 backdrop-blur-md border-b mobile-menu theme-aware theme-transition ${
+          theme === 'dark' 
+            ? 'bg-gray-900/95 border-gray-800' 
+            : 'bg-gray-100/95 border-gray-200'
+        }`}>
           <nav className="flex flex-col p-4 space-y-4">
             <button
               onClick={() => {
                 navigate('/');
                 setMobileMenuOpen(false);
               }}
-              className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-xs"
+              className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs ${
+                theme === 'dark' 
+                  ? 'text-gray-300 hover:bg-gray-800/50 hover:text-yellow-300' 
+                  : 'text-gray-600 hover:bg-gray-200/50 hover:text-blue-600'
+              }`}
             >
               Home
+            </button>
+            <button
+              onClick={() => {
+                toggleTheme();
+                setMobileMenuOpen(false);
+              }}
+              className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs flex items-center ${
+                theme === 'dark' 
+                  ? 'text-gray-300 hover:bg-gray-800/50 hover:text-yellow-300' 
+                  : 'text-gray-600 hover:bg-gray-200/50 hover:text-blue-600'
+              }`}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="w-3 h-3 mr-2" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3 h-3 mr-2" />
+                  <span>Dark Mode</span>
+                </>
+              )}
             </button>
             <div className="space-y-2">
               <button
@@ -254,14 +339,20 @@ export default function Header({
                   navigate('/docs');
                   setMobileMenuOpen(false);
                 }}
-                className="text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-xs border-l-2 border-yellow-300"
+                className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs border-l-2 ${
+                  theme === 'dark' 
+                    ? 'text-yellow-300 border-yellow-300 hover:bg-gray-800/50' 
+                    : 'text-blue-600 border-blue-500 hover:bg-gray-200/50'
+                }`}
               >
                 Docs
               </button>
               
               {/* Mobile docs menu */}
               {menuTree.length > 0 && (
-                <div className="ml-4 pl-2 border-l border-gray-700">
+                <div className={`ml-4 pl-2 border-l ${
+                  theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
+                }`}>
                   {renderMenuItems(menuTree, 0, true)}
                 </div>
               )}

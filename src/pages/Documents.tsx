@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
+import { useTheme } from '../context/ThemeContext';
 import {
   DocSidebar,
   DocContent,
@@ -19,6 +20,7 @@ import {
 export default function Documents() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme } = useTheme();
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -218,7 +220,7 @@ export default function Documents() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
       <Header 
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
