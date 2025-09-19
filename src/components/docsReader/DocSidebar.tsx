@@ -27,7 +27,7 @@ const DocSidebar: React.FC<DocSidebarProps> = ({
   onNavigateHome
 }) => {
   return (
-    <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-yellow-400/20 flex flex-col overflow-hidden`}>
+    <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-yellow-400/20 flex flex-col overflow-hidden h-[calc(100vh-64px)]`}>
       <div className="p-4 border-b border-yellow-400/20">
         <div className="flex items-center justify-between mb-4">
           <button

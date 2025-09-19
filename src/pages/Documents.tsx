@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
   DocSidebar,
@@ -13,7 +12,8 @@ import {
   loadDocumentContent,
   findDocByRoutePath,
   getRoutePathFromDocPath,
-  findAndExpandParents
+  findAndExpandParents,
+  Header
 } from '../components/docsReader';
 
 export default function Documents() {
@@ -219,20 +219,21 @@ export default function Documents() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      <Header />
+      <Header 
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        title={currentDoc?.title || 'Documentation'}
+        docs={docs}
+        menuTree={menuTree}
+        currentDoc={currentDoc}
+        expandedItems={expandedItems}
+        setExpandedItems={setExpandedItems}
+        onDocumentSelect={handleDocumentSelect}
+      />
       
       <div className="flex flex-1 relative">
-        {/* Mobile overlay when sidebar is open */}
-        {sidebarOpen && (
-          <div 
-            className="md:hidden fixed inset-0 bg-black/70 z-20"
-            onClick={() => setSidebarOpen(false)}
-          ></div>
-        )}
-        
-        {/* Sidebar with z-index for mobile */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} 
-          transition-transform duration-300 fixed md:relative z-30 h-[calc(100vh-64px)] md:h-auto`}>
+        {/* Desktop-only sidebar */}
+        <div className="hidden md:block">
           <DocSidebar
             docs={docs}
             menuTree={menuTree}
@@ -249,7 +250,7 @@ export default function Documents() {
         <DocContent
           currentDoc={currentDoc}
           contentLoading={contentLoading}
-          sidebarOpen={sidebarOpen}
+          sidebarOpen={sidebarOpen && window.innerWidth >= 768} // Only consider sidebar open on desktop
           setSidebarOpen={setSidebarOpen}
           onNavigate={(path) => {
             // If it's the root, navigate to the first document

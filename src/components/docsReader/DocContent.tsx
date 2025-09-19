@@ -36,7 +36,7 @@ const DocContent: React.FC<DocContentProps> = ({
   return (
     <div className="flex-1 flex flex-col">
       {/* Content Header */}
-      <div className="bg-gray-900 border-b border-yellow-400/20 px-4 sm:px-6 py-3 sm:py-4">
+      <div className="bg-gray-900 border-b border-yellow-400/20 px-4 sm:px-6 py-3 sm:py-4 w-full overflow-hidden">
         {/* Breadcrumbs - Hide on small screens */}
         {currentDoc?.path && (
           <div className="hidden sm:flex items-center text-sm text-gray-400 mb-3">
@@ -51,7 +51,7 @@ const DocContent: React.FC<DocContentProps> = ({
               <React.Fragment key={index}>
                 <ChevronRight className="w-3 h-3 mx-1" />
                 <span 
-                  className={`${index === array.length - 1 ? 'text-yellow-400' : 'hover:text-yellow-400 cursor-pointer transition-colors'} truncate max-w-[100px] md:max-w-none`}
+                  className={`${index === array.length - 1 ? 'text-yellow-400' : 'hover:text-yellow-400 cursor-pointer transition-colors'} break-all max-w-[100px] md:max-w-none`}
                   onClick={() => index < array.length - 1 && handleBreadcrumbClick(index)}
                   role={index < array.length - 1 ? "button" : undefined}
                   tabIndex={index < array.length - 1 ? 0 : undefined}
@@ -63,31 +63,32 @@ const DocContent: React.FC<DocContentProps> = ({
           </div>
         )}
         
-        <div className="flex flex-col">
-          <div className="flex items-center space-x-3 sm:space-x-4">
+        <div className="flex flex-col w-full overflow-hidden">
+          <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
+            {/* Sidebar toggle button - desktop only */}
             {!sidebarOpen && (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-1 sm:p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
+                className="hidden md:block p-1 sm:p-2 hover:bg-gray-800 text-gray-300 hover:text-white transform hover:scale-110 hover:rotate-180 transition-all duration-300"
                 aria-label="Open sidebar"
               >
                 <Menu className="w-5 h-5" />
               </button>
             )}
-            <div className="overflow-hidden">
-              <h1 className="text-lg sm:text-xl font-semibold text-white truncate">
+            <div className="overflow-hidden min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl font-semibold text-white break-words">
                 {currentDoc?.title || 'ASDM Documentation'}
               </h1>
               {currentDoc?.description && (
-                <p className="text-xs sm:text-sm text-gray-400 mt-1 truncate">{currentDoc.description}</p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-1 break-words">{currentDoc.description}</p>
               )}
             </div>
           </div>
           
           {currentDoc?.tags && currentDoc.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2 sm:mt-3">
+            <div className="flex flex-wrap gap-2 mt-2 sm:mt-3 overflow-hidden">
               {currentDoc.tags.map((tag, index) => (
-                <span key={index} className="px-2 py-0.5 sm:py-1 bg-gray-800 text-xs text-gray-300 rounded-full">
+                <span key={index} className="px-2 py-0.5 sm:py-1 bg-gray-800 text-xs text-gray-300 rounded-full break-words">
                   {tag.replace(/^"(.*)"$/, '$1')}
                 </span>
               ))}
