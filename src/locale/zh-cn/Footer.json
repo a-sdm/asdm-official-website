@@ -1,0 +1,22 @@
+{
+  "tagline": "通过智能 AI 集成构建软件开发的未来。",
+  "resources": {
+    "title": "资源",
+    "documentation": "文档",
+    "tutorials": "教程",
+    "bestPractices": "最佳实践"
+  },
+  "community": {
+    "title": "社区",
+    "github": "GitHub",
+    "discord": "Discord",
+    "forum": "论坛"
+  },
+  "support": {
+    "title": "支持",
+    "helpCenter": "帮助中心",
+    "contact": "联系我们",
+    "status": "系统状态"
+  },
+  "copyright": "© 2025 ASDM。保留所有权利。"
+}

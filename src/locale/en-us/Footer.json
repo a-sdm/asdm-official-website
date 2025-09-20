@@ -1,0 +1,22 @@
+{
+  "tagline": "Building the future of software development through intelligent AI integration.",
+  "resources": {
+    "title": "Resources",
+    "documentation": "Documentation",
+    "tutorials": "Tutorials",
+    "bestPractices": "Best Practices"
+  },
+  "community": {
+    "title": "Community",
+    "github": "GitHub",
+    "discord": "Discord",
+    "forum": "Forum"
+  },
+  "support": {
+    "title": "Support",
+    "helpCenter": "Help Center",
+    "contact": "Contact",
+    "status": "Status"
+  },
+  "copyright": "© 2025 ASDM. All rights reserved."
+}
