@@ -32,7 +32,7 @@ export default function Header({}: HeaderProps) {
   };
 
   return (
-    <header className="px-6 py-4 border-b border-gray-800/50 backdrop-blur-sm bg-black/20">
+    <header className="px-6 py-4 border-b border-gray-800/50 backdrop-blur-sm bg-black/20 relative z-[1000]">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <button
           onClick={() => navigate('/')}
@@ -108,7 +108,7 @@ export default function Header({}: HeaderProps) {
       
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-md border-b border-gray-800">
+        <div className="md:hidden fixed top-16 left-0 right-0 z-[100] bg-gray-900/95 backdrop-blur-md border-b border-gray-800 shadow-xl">
           <nav className="flex flex-col p-4 space-y-4">
             <button
               onClick={() => {
@@ -117,7 +117,7 @@ export default function Header({}: HeaderProps) {
               }}
               className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-xs"
             >
-              {t('header.home')}
+              {isLoaded('Header') ? t('home', 'Header') : 'Home'}
             </button>
             <button
               onClick={() => {
@@ -126,7 +126,7 @@ export default function Header({}: HeaderProps) {
               }}
               className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-xs"
             >
-              {t('header.docs')}
+              {isLoaded('Header') ? t('docs', 'Header') : 'Docs'}
             </button>
             
             {/* Mobile Language Switcher */}
