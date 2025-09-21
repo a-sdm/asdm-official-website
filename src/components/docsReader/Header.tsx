@@ -35,10 +35,6 @@ export default function Header({
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ right: false });
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -168,198 +164,213 @@ export default function Header({
   };
 
   return (
-    <header className={`px-6 py-4 border-b backdrop-blur-sm sticky top-0 z-40 theme-aware theme-transition ${
-      theme === 'dark' 
-        ? 'border-gray-800/50 bg-black/20' 
-        : 'border-gray-200/50 bg-white/80'
-    }`}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          {/* Sidebar toggle button - desktop only */}
-          <button
-            onClick={toggleSidebar}
-            className={`hidden md:block mr-2 transition-colors ${
-              theme === 'dark' 
-                ? 'text-gray-300 hover:text-yellow-300' 
-                : 'text-gray-600 hover:text-blue-600'
-            }`}
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-          >
-            <Brain className="w-8 h-8 text-yellow-300" />
-            <span className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>ASDM</span>
-          </button>
-          
-          <div className="hidden md:flex items-center">
-            <ChevronLeft className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`} />
-            <Book className={`w-5 h-5 ml-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} />
-            <span className={`ml-2 font-medium text-sm truncate max-w-[200px] ${
-              theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-            }`}>
-              {title}
-            </span>
-          </div>
-        </div>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <button
-            onClick={() => navigate('/')}
-            className={`transition-colors font-medium text-sm flex items-center pb-1 ${
-              theme === 'dark' 
-                ? 'text-gray-300 hover:text-yellow-300' 
-                : 'text-gray-600 hover:text-blue-600'
-            }`}
-          >
-            Home
-          </button>
-          
-          {/* Theme toggle button */}
-          <button
-            onClick={toggleTheme}
-            className={`transition-colors font-medium text-sm flex items-center pb-1 ${
-              theme === 'dark' 
-                ? 'text-gray-300 hover:text-yellow-300' 
-                : 'text-gray-600 hover:text-blue-600'
-            }`}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {theme === 'dark' ? (
-              <Sun className="w-4 h-4 mr-1" />
-            ) : (
-              <Moon className="w-4 h-4 mr-1" />
-            )}
-            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
-          
-          {/* Docs dropdown */}
-          <div className="relative" ref={dropdownRef}>
+    <>
+      <header className={`px-6 py-4 border-b backdrop-blur-sm sticky top-0 z-[1000] theme-aware theme-transition ${
+        theme === 'dark' 
+          ? 'border-gray-800/50 bg-black/20' 
+          : 'border-gray-200/50 bg-white/80'
+      }`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            {/* Sidebar toggle button - desktop only */}
             <button
-              ref={dropdownButtonRef}
-              onClick={toggleDocsDropdown}
-              className={`flex items-center space-x-1 transition-colors font-medium text-sm border-b pb-1 ${
+              onClick={toggleSidebar}
+              className={`hidden md:block mr-2 transition-colors ${
                 theme === 'dark' 
-                  ? 'text-yellow-300 border-yellow-300' 
-                  : 'text-blue-600 border-blue-500'
+                  ? 'text-gray-300 hover:text-yellow-300' 
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
+              aria-label="Toggle sidebar"
             >
-              <span>Docs</span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${docsDropdownOpen ? 'rotate-180' : ''}`} />
+              <Menu className="w-5 h-5" />
             </button>
             
-            {docsDropdownOpen && menuTree.length > 0 && (
-              <div 
-                className={`absolute top-full mt-2 w-64 max-h-[70vh] overflow-y-auto rounded-md shadow-lg z-50 dropdown theme-aware theme-transition ${
-                  dropdownPosition.right ? 'right-0' : 'left-0'
-                } ${
-                  theme === 'dark' 
-                    ? 'bg-gray-900 border border-gray-800' 
-                    : 'bg-white border border-gray-200'
-                }`}
-              >
-                <div className="p-2">
-                  {renderMenuItems(menuTree)}
-                </div>
-              </div>
-            )}
-          </div>
-        </nav>
-        
-        {/* Mobile Menu Button */}
-        <button 
-          className={`md:hidden transition-colors ${
-            theme === 'dark' 
-              ? 'text-gray-300 hover:text-yellow-300' 
-              : 'text-gray-600 hover:text-blue-600'
-          }`}
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
-      </div>
-      
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <div className={`md:hidden absolute top-16 left-0 right-0 z-50 backdrop-blur-md border-b mobile-menu theme-aware theme-transition ${
-          theme === 'dark' 
-            ? 'bg-gray-900/95 border-gray-800' 
-            : 'bg-gray-100/95 border-gray-200'
-        }`}>
-          <nav className="flex flex-col p-4 space-y-4">
             <button
-              onClick={() => {
-                navigate('/');
-                setMobileMenuOpen(false);
-              }}
-              className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs ${
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            >
+              <Brain className="w-8 h-8 text-yellow-300" />
+              <span className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>ASDM</span>
+            </button>
+            
+            <div className="hidden md:flex items-center">
+              <ChevronLeft className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`} />
+              <Book className={`w-5 h-5 ml-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} />
+              <span className={`ml-2 font-medium text-sm truncate max-w-[200px] ${
+                theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+              }`}>
+                {title}
+              </span>
+            </div>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <button
+              onClick={() => navigate('/')}
+              className={`transition-colors font-medium text-sm flex items-center pb-1 ${
                 theme === 'dark' 
-                  ? 'text-gray-300 hover:bg-gray-800/50 hover:text-yellow-300' 
-                  : 'text-gray-600 hover:bg-gray-200/50 hover:text-blue-600'
+                  ? 'text-gray-300 hover:text-yellow-300' 
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
             >
               Home
             </button>
+            
+            {/* Theme toggle button */}
             <button
-              onClick={() => {
-                toggleTheme();
-                setMobileMenuOpen(false);
-              }}
-              className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs flex items-center ${
+              onClick={toggleTheme}
+              className={`transition-colors font-medium text-sm flex items-center pb-1 ${
                 theme === 'dark' 
-                  ? 'text-gray-300 hover:bg-gray-800/50 hover:text-yellow-300' 
-                  : 'text-gray-600 hover:bg-gray-200/50 hover:text-blue-600'
+                  ? 'text-gray-300 hover:text-yellow-300' 
+                  : 'text-gray-600 hover:text-blue-600'
               }`}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {theme === 'dark' ? (
-                <>
-                  <Sun className="w-3 h-3 mr-2" />
-                  <span>Light Mode</span>
-                </>
+                <Sun className="w-4 h-4 mr-1" />
               ) : (
-                <>
-                  <Moon className="w-3 h-3 mr-2" />
-                  <span>Dark Mode</span>
-                </>
+                <Moon className="w-4 h-4 mr-1" />
               )}
+              <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
             </button>
-            <div className="space-y-2">
+            
+            {/* Docs dropdown */}
+            <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => {
-                  navigate('/docs');
-                  setMobileMenuOpen(false);
-                }}
-                className={`transition-colors font-medium py-2 px-4 rounded-md w-full text-left text-xs border-l-2 ${
+                ref={dropdownButtonRef}
+                onClick={toggleDocsDropdown}
+                className={`flex items-center space-x-1 transition-colors font-medium text-sm border-b pb-1 ${
                   theme === 'dark' 
-                    ? 'text-yellow-300 border-yellow-300 hover:bg-gray-800/50' 
-                    : 'text-blue-600 border-blue-500 hover:bg-gray-200/50'
+                    ? 'text-yellow-300 border-yellow-300' 
+                    : 'text-blue-600 border-blue-500'
                 }`}
               >
-                Docs
+                <span>Docs</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${docsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               
-              {/* Mobile docs menu */}
-              {menuTree.length > 0 && (
-                <div className={`ml-4 pl-2 border-l ${
-                  theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
-                }`}>
-                  {renderMenuItems(menuTree, 0, true)}
+              {docsDropdownOpen && menuTree.length > 0 && (
+                <div 
+                  className={`absolute top-full mt-2 w-64 max-h-[70vh] overflow-y-auto rounded-md shadow-lg z-50 dropdown theme-aware theme-transition ${
+                    dropdownPosition.right ? 'right-0' : 'left-0'
+                  } ${
+                    theme === 'dark' 
+                      ? 'bg-gray-900 border border-gray-800' 
+                      : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <div className="p-2">
+                    {renderMenuItems(menuTree)}
+                  </div>
                 </div>
               )}
             </div>
           </nav>
+          
+          {/* Mobile Menu Button */}
+          <button 
+            className={`md:hidden transition-colors ${
+              theme === 'dark' 
+                ? 'text-gray-300 hover:text-yellow-300' 
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Menu - Separate from header */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-[2000] bg-black bg-opacity-50">
+          <div className={`fixed top-16 left-0 right-0 bottom-0 z-[2001] overflow-y-auto ${
+            theme === 'dark' 
+              ? 'bg-gray-900 text-white' 
+              : 'bg-white text-gray-800'
+          }`}>
+            
+            <div className="p-4 pt-10 space-y-4">
+              <button
+                onClick={() => {
+                  navigate('/');
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full text-left p-3 rounded-md ${
+                  theme === 'dark' 
+                    ? 'hover:bg-gray-800' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                Home
+              </button>
+              
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full text-left p-3 rounded-md flex items-center ${
+                  theme === 'dark' 
+                    ? 'hover:bg-gray-800' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="w-5 h-5 mr-3" />
+                    <span>Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-5 h-5 mr-3" />
+                    <span>Dark Mode</span>
+                  </>
+                )}
+              </button>
+              
+              <div className={`p-3 rounded-md ${
+                theme === 'dark' 
+                  ? 'bg-gray-800/50' 
+                  : 'bg-gray-100'
+              }`}>
+                <h3 className={`font-medium mb-2 ${
+                  theme === 'dark' 
+                    ? 'text-yellow-300' 
+                    : 'text-blue-600'
+                }`}>
+                  Documentation
+                </h3>
+                
+                {menuTree.length > 0 ? (
+                  <div className="pl-2 space-y-1">
+                    {renderMenuItems(menuTree, 0, true)}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No documentation available</p>
+                )}
+              </div>
+              
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className={`w-full text-center p-3 mt-4 rounded-md ${
+                  theme === 'dark' 
+                    ? 'bg-gray-800 text-white hover:bg-gray-700' 
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
+              >
+                Close Menu
+              </button>
+            </div>
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
