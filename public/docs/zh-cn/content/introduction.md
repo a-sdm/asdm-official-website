@@ -1,89 +1,89 @@
-# Introduction to ASDM
+# ASDM 简介
 
-AI-Supported Development Methodology (ASDM) is a comprehensive approach to software development that leverages artificial intelligence to enhance and streamline the development process. This methodology combines traditional software development practices with AI-powered tools and techniques to improve efficiency, quality, and innovation in software projects.
+人工智能支持的开发方法论（AI-Supported Development Methodology，ASDM）是一种综合性的软件开发方法，它利用人工智能来增强和简化开发过程。该方法论将传统软件开发实践与人工智能驱动的工具和技术相结合，以提高软件项目的效率、质量和创新能力。
 
-## Documentation Structure
+## 文档结构
 
 ```mermaid
 graph TD
-    A[Introduction] --> B[Core Principles]
-    A --> C[Best Practices]
-    A --> D[Tool Chain]
+    A[简介] --> B[核心原则]
+    A --> C[最佳实践]
+    A --> D[工具链]
     
-    B --> B1[Implementation Guide]
-    B --> B2[Best Practices]
-    B --> B3[Case Studies]
+    B --> B1[实施指南]
+    B --> B2[最佳实践]
+    B --> B3[案例研究]
     
-    C --> C1[Code Quality]
-    C --> C2[Development Workflow]
-    C --> C3[Quality Assurance]
-    C --> C4[Security Compliance]
-    C --> C5[Collaboration]
-    C --> C6[Continuous Improvement]
+    C --> C1[代码质量]
+    C --> C2[开发工作流]
+    C --> C3[质量保证]
+    C --> C4[安全合规]
+    C --> C5[协作]
+    C --> C6[持续改进]
 ```
 
-This documentation is organized into three main sections:
-- **Core Principles**: Fundamental concepts and philosophies of ASDM
-- **Best Practices**: Practical implementation guidelines and recommendations
-- **Tool Chain**: Tools and technologies that support ASDM implementation
+本文档分为三个主要部分：
+- **核心原则**：ASDM的基本概念和理念
+- **最佳实践**：实际实施指南和建议
+- **工具链**：支持ASDM实施的工具和技术
 
-## Key Objectives
+## 主要目标
 
-1. **Enhanced Development Efficiency**
-   - Accelerate development cycles through AI assistance
-   - Reduce repetitive tasks and boilerplate code
-   - Streamline code review and testing processes
+1. **提高开发效率**
+   - 通过AI辅助加速开发周期
+   - 减少重复任务和样板代码
+   - 简化代码审查和测试流程
 
-2. **Improved Code Quality**
-   - Leverage AI for code analysis and optimization
-   - Ensure consistent coding standards
-   - Identify potential issues early in development
+2. **提升代码质量**
+   - 利用AI进行代码分析和优化
+   - 确保一致的编码标准
+   - 在开发早期识别潜在问题
 
-3. **Better Decision Making**
-   - Use AI insights for architectural decisions
-   - Data-driven development planning
-   - Intelligent resource allocation
+3. **改进决策制定**
+   - 利用AI洞察进行架构决策
+   - 数据驱动的开发规划
+   - 智能资源分配
 
-## Target Users
+## 目标用户
 
-- Development Teams
-- Project Managers
-- Technical Leads
-- DevOps Engineers
-- Quality Assurance Teams
+- 开发团队
+- 项目经理
+- 技术负责人
+- DevOps工程师
+- 质量保证团队
 
-## Getting Started
+## 入门指南
 
-1. **Assessment**
-   - Evaluate current development processes
-   - Identify areas for AI integration
-   - Define success metrics
+1. **评估**
+   - 评估当前开发流程
+   - 确定AI集成的领域
+   - 定义成功指标
 
-2. **Tool Selection**
-   - Choose appropriate AI development tools
-   - Set up development environment
-   - Configure integration points
+2. **工具选择**
+   - 选择适当的AI开发工具
+   - 设置开发环境
+   - 配置集成点
 
-3. **Team Training**
-   - Provide AI tools training
-   - Establish best practices
-   - Create documentation
+3. **团队培训**
+   - 提供AI工具培训
+   - 建立最佳实践
+   - 创建文档
 
-4. **Implementation**
-   - Start with pilot projects
-   - Gather feedback
-   - Iterate and improve
+4. **实施**
+   - 从试点项目开始
+   - 收集反馈
+   - 迭代和改进
 
-## Benefits
+## 优势
 
-- Faster Development Cycles
-- Reduced Technical Debt
-- Improved Code Maintainability
-- Enhanced Developer Experience
-- Better Project Outcomes
+- 更快的开发周期
+- 减少技术债务
+- 提高代码可维护性
+- 增强开发者体验
+- 更好的项目成果
 
-## Next Steps
+## 下一步
 
-1. Review the [Core Principles](core-principles.md) of ASDM
-2. Explore [Best Practices](best-practices.md) for implementation
-3. Follow the [Implementation Guide](implementation-guide.md) to get started
+1. 查看ASDM的[核心原则](core-principles.md)
+2. 探索实施的[最佳实践](best-practices.md)
+3. 按照[实施指南](implementation-guide.md)开始使用
