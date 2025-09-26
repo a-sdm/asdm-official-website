@@ -73,20 +73,7 @@ const DocContent: React.FC<DocContentProps> = ({
         
         <div className="flex flex-col w-full overflow-hidden">
           <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
-            {/* Sidebar toggle button - desktop only */}
-            {!sidebarOpen && (
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className={`hidden md:block p-1 sm:p-2 transform hover:scale-110 hover:rotate-180 transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'hover:bg-gray-800 text-gray-300 hover:text-white' 
-                    : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'
-                }`}
-                aria-label="Open sidebar"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-            )}
+            {/* Sidebar toggle button removed */}
             <div className="overflow-hidden min-w-0 flex-1">
               <h1 className={`text-lg sm:text-xl font-semibold break-words ${
                 theme === 'dark' ? 'text-white' : 'text-gray-800'
