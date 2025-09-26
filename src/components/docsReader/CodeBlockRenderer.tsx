@@ -11,9 +11,29 @@ interface CodeBlockRendererProps {
 const CodeBlockRenderer: React.FC<CodeBlockRendererProps> = ({ language, children, theme }) => {
   const [copied, setCopied] = useState(false);
   
-  const handleCopy = async () => {
+  // Clean the code content to ensure it's plain text
+  const codeText = children.replace(/\n$/, '');
+  
+  const handleCopy = () => {
     try {
-      await navigator.clipboard.writeText(children);
+      // Create a text area element to handle the copy operation
+      const textArea = document.createElement('textarea');
+      textArea.value = codeText;
+      
+      // Make the textarea out of viewport
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      
+      // Select and copy the text
+      textArea.focus();
+      textArea.select();
+      document.execCommand('copy');
+      
+      // Clean up
+      document.body.removeChild(textArea);
+      
       setCopied(true);
       
       // Reset copied state after 2 seconds
