@@ -15,13 +15,16 @@ import {
   getRoutePathFromDocPath,
   findAndExpandParents,
   Header,
-  DocsReaderLanguageProvider
+  DocsReaderLanguageProvider,
+  useDocsReaderLanguage
 } from '../components/docsReader';
 
-export default function Documents() {
+// Create a wrapper component that uses the language context
+const DocumentsContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
+  const { language, getDocRoot } = useDocsReaderLanguage();
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -30,13 +33,14 @@ export default function Documents() {
   const [error, setError] = useState<string | null>(null);
   const [menuTree, setMenuTree] = useState<DocMenuItem[]>([]);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [docRoot, setDocRoot] = useState<string>('/docs/content');
+  const [docRoot, setDocRoot] = useState<string>(`${getDocRoot()}/content`);
   
   // Function to load document content with state updates
   const handleLoadDocumentContent = async (doc: DocFile): Promise<DocFile> => {
     setContentLoading(true);
     try {
-      const docWithContent = await loadDocumentContent(doc, docRoot, setDocs);
+      // Use the language-specific document root
+      const docWithContent = await loadDocumentContent(doc, `${getDocRoot()}/content`, setDocs);
       setContentLoading(false);
       return docWithContent;
     } catch (err) {
@@ -47,13 +51,20 @@ export default function Documents() {
 
   // Load site-tree.yml and initialize document metadata
   useEffect(() => {
+    // Reset state when language changes
+    setCurrentDoc(null);
+    setDocs([]);
+    
     const loadSiteTree = async () => {
       try {
         setLoading(true);
         setError(null);
         
-        // Load site-tree.yml
-        const siteTreeResponse = await fetch('/docs/site-tree.yml');
+        // Update docRoot based on current language
+        setDocRoot(`${getDocRoot()}/content`);
+        
+        // Load site-tree.yml from language-specific path
+        const siteTreeResponse = await fetch(`${getDocRoot()}/site-tree.yml`);
         if (!siteTreeResponse.ok) {
           throw new Error('Failed to load site-tree.yml');
         }
@@ -108,7 +119,7 @@ export default function Documents() {
         const pathSegments = location.pathname.split('/').filter(Boolean);
         let docToLoad: DocFile | undefined;
         
-        if (pathSegments.length <= 1) {
+        if (pathSegments.length <= 2) {
           // We're at /docs/ or /, show the first document in the menu tree
           if (siteTree["menu-tree"] && siteTree["menu-tree"].length > 0) {
             const firstMenuPath = siteTree["menu-tree"][0].path;
@@ -120,7 +131,8 @@ export default function Documents() {
           }
         } else {
           // We have a specific document path in the URL
-          const docPath = pathSegments.slice(1).join('/');
+          // Skip the language segment (pathSegments[1]) and get the rest
+          const docPath = pathSegments.slice(2).join('/');
           docToLoad = findDocByRoutePath(docPath, docsMetadata);
           
           if (!docToLoad) {
@@ -150,7 +162,7 @@ export default function Documents() {
     };
 
     loadSiteTree();
-  }, []);
+  }, [language]); // Re-run when language changes
   
   // Handle URL changes to load the appropriate document
   useEffect(() => {
@@ -201,7 +213,9 @@ export default function Documents() {
   const handleDocumentSelect = async (doc: DocFile) => {
     // Update the URL based on the document path
     const routePath = getRoutePathFromDocPath(doc.path);
-    navigate(`/docs/${routePath}`);
+    // Extract language code from the doc root path
+    const langCode = getDocRoot().split('/').pop();
+    navigate(`/docs/${langCode}/${routePath}`);
     
     // Load document content if not already loaded
     if (!doc.content) {
@@ -221,8 +235,7 @@ export default function Documents() {
   }
 
   return (
-    <DocsReaderLanguageProvider>
-      <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         <Header 
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
@@ -296,6 +309,14 @@ export default function Documents() {
       
       <Footer />
     </div>
+  );
+};
+
+// Main component that provides the language context
+export default function Documents() {
+  return (
+    <DocsReaderLanguageProvider>
+      <DocumentsContent />
     </DocsReaderLanguageProvider>
   );
 }

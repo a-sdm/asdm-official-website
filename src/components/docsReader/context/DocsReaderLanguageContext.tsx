@@ -1,5 +1,11 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
+// Define paths for language-specific document roots
+export const LANGUAGE_DOC_ROOTS = {
+  'en-us': '/docs/en-us',
+  'zh-cn': '/docs/zh-cn'
+};
+
 // Define the available languages
 export type LanguageCode = 'en-us' | 'zh-cn';
 
@@ -10,6 +16,7 @@ interface DocsReaderLanguageContextType {
   t: (key: string, component?: string) => string;
   loadTranslations: (component: string) => Promise<void>;
   isLoaded: (component: string) => boolean;
+  getDocRoot: () => string;
 }
 
 // Create the context with default values
@@ -19,6 +26,7 @@ const DocsReaderLanguageContextValue = createContext<DocsReaderLanguageContextTy
   t: () => '',
   loadTranslations: async () => {},
   isLoaded: () => false,
+  getDocRoot: () => LANGUAGE_DOC_ROOTS['en-us'],
 });
 
 // Cache for loaded translations
@@ -108,13 +116,24 @@ const DocsReaderLanguageProviderComponent: React.FC<DocsReaderLanguageProviderPr
     return value;
   };
 
+  // Function to get the document root path for the current language
+  const getDocRoot = (): string => {
+    return LANGUAGE_DOC_ROOTS[language];
+  };
+
+  // Update HTML lang attribute when language changes
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   return (
     <DocsReaderLanguageContextValue.Provider value={{ 
       language, 
       setLanguage: changeLanguage, 
       t: translate,
       loadTranslations,
-      isLoaded
+      isLoaded,
+      getDocRoot
     }}>
       {children}
     </DocsReaderLanguageContextValue.Provider>
