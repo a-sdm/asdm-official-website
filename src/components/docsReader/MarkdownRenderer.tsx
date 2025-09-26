@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Components } from 'react-markdown';
 import mermaid from 'mermaid';
 import { useTheme } from '../../context/ThemeContext';
+import CodeBlockRenderer from './CodeBlockRenderer';
 
 interface MarkdownRendererProps {
   content: string;
@@ -274,48 +273,11 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
             }
             
             return !props.inline && match ? (
-              <div className={`my-3 rounded-lg w-full text-xs relative border ${
-                theme === 'dark' 
-                  ? 'border-gray-800' 
-                  : 'border-gray-200'
-              }`}>
-                <div className="overflow-x-auto max-w-full" style={{ 
-                  maxWidth: '100%', 
-                  overflowX: 'auto',
-                  overflowY: 'hidden',
-                  WebkitOverflowScrolling: 'touch',
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: theme === 'dark' ? '#4b5563 #1f2937' : '#cbd5e1 #f1f5f9'
-                }}>
-                  <SyntaxHighlighter
-                    style={(theme === 'dark' ? tomorrow : oneLight) as any}
-                    language={match[1]}
-                    PreTag="div"
-                    customStyle={{ 
-                      fontSize: '0.75rem', 
-                      padding: '0.75rem',
-                      margin: 0,
-                      borderRadius: '0.375rem',
-                      width: 'auto',
-                      minWidth: '100%',
-                      maxWidth: 'max-content'
-                    }}
-                    codeTagProps={{ style: { fontSize: '0.75rem' } }}
-                    wrapLongLines={true}
-                    wrapLines={true}
-                    showLineNumbers={true}
-                    lineProps={{
-                      style: { 
-                        wordBreak: 'break-word', 
-                        whiteSpace: 'pre-wrap',
-                        overflowWrap: 'anywhere'
-                      }
-                    }}
-                  >
-                    {String(children).replace(/\n$/, '')}
-                  </SyntaxHighlighter>
-                </div>
-              </div>
+              <CodeBlockRenderer 
+                language={match[1]} 
+                theme={theme} 
+                children={String(children)} 
+              />
             ) : (
               <code className={`px-1 py-0.5 text-xs shadow-md break-all ${
                 theme === 'dark' 
