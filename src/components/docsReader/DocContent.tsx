@@ -118,31 +118,33 @@ const DocContent: React.FC<DocContentProps> = ({
       </div>
 
       {/* Content */}
-      <main className={`flex-1 overflow-y-auto ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+      <main className={`flex-1 overflow-y-auto w-full ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         {contentLoading ? (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full w-full">
             <div className="text-center">
               <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-yellow-400 mx-auto mb-3 sm:mb-4"></div>
               <p className={`text-sm sm:text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Loading document content...</p>
             </div>
           </div>
         ) : currentDoc && currentDoc.content ? (
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-            <MarkdownRenderer content={currentDoc.content} />
-            {(currentDoc.lastUpdated || currentDoc.author) && (
-              <div className={`mt-6 sm:mt-8 pt-3 sm:pt-4 border-t text-xs sm:text-sm ${
-                theme === 'dark' 
-                  ? 'border-gray-800 text-gray-400' 
-                  : 'border-gray-200 text-gray-500'
-              }`}>
-                {currentDoc.lastUpdated && (
-                  <p>Last updated: {currentDoc.lastUpdated}</p>
-                )}
-                {currentDoc.author && (
-                  <p>Author: {currentDoc.author}</p>
-                )}
-              </div>
-            )}
+          <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-8">
+            <div className="w-full">
+              <MarkdownRenderer content={currentDoc.content} />
+              {(currentDoc.lastUpdated || currentDoc.author) && (
+                <div className={`mt-6 sm:mt-8 pt-3 sm:pt-4 border-t text-xs sm:text-sm ${
+                  theme === 'dark' 
+                    ? 'border-gray-800 text-gray-400' 
+                    : 'border-gray-200 text-gray-500'
+                }`}>
+                  {currentDoc.lastUpdated && (
+                    <p>Last updated: {currentDoc.lastUpdated}</p>
+                  )}
+                  {currentDoc.author && (
+                    <p>Author: {currentDoc.author}</p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="flex items-center justify-center h-full">

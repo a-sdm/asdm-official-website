@@ -170,7 +170,7 @@ export default function Header({
           ? 'border-gray-800/50 bg-black/20' 
           : 'border-gray-200/50 bg-white/80'
       }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {/* Sidebar toggle button - desktop only */}
             <button

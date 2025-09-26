@@ -274,8 +274,19 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
             }
             
             return !props.inline && match ? (
-              <div className="my-3 rounded-lg w-full text-xs relative">
-                <div className="overflow-x-auto" style={{ maxWidth: '100%', width: '100%' }}>
+              <div className={`my-3 rounded-lg w-full text-xs relative border ${
+                theme === 'dark' 
+                  ? 'border-gray-800' 
+                  : 'border-gray-200'
+              }`}>
+                <div className="overflow-x-auto max-w-full" style={{ 
+                  maxWidth: '100%', 
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: theme === 'dark' ? '#4b5563 #1f2937' : '#cbd5e1 #f1f5f9'
+                }}>
                   <SyntaxHighlighter
                     style={(theme === 'dark' ? tomorrow : oneLight) as any}
                     language={match[1]}
@@ -284,12 +295,22 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
                       fontSize: '0.75rem', 
                       padding: '0.75rem',
                       margin: 0,
-                      borderRadius: '0.5rem',
-                      width: 'fit-content',
-                      minWidth: '100%'
+                      borderRadius: '0.375rem',
+                      width: 'auto',
+                      minWidth: '100%',
+                      maxWidth: 'max-content'
                     }}
                     codeTagProps={{ style: { fontSize: '0.75rem' } }}
-                    wrapLongLines={false}
+                    wrapLongLines={true}
+                    wrapLines={true}
+                    showLineNumbers={true}
+                    lineProps={{
+                      style: { 
+                        wordBreak: 'break-word', 
+                        whiteSpace: 'pre-wrap',
+                        overflowWrap: 'anywhere'
+                      }
+                    }}
                   >
                     {String(children).replace(/\n$/, '')}
                   </SyntaxHighlighter>
