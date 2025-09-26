@@ -232,13 +232,13 @@ export default function Header({
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             <button
               onClick={() => navigate('/')}
-              className={`transition-colors font-medium text-sm flex items-center pb-1 ${
+              className={`transition-colors font-medium text-sm flex items-center px-3 py-1 rounded-md ${
                 theme === 'dark' 
-                  ? 'text-gray-300 hover:text-yellow-300' 
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-gray-300 hover:text-yellow-300 hover:bg-gray-800/40' 
+                  : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
               }`}
             >
               {isLoaded('Header') ? t('home', 'Header') : 'Home'}
@@ -247,19 +247,19 @@ export default function Header({
             {/* Theme toggle button */}
             <button
               onClick={toggleTheme}
-              className={`transition-colors font-medium text-sm flex items-center pb-1 ${
+              className={`transition-colors font-medium text-sm flex items-center px-3 py-1 rounded-md ${
                 theme === 'dark' 
-                  ? 'text-gray-300 hover:text-yellow-300' 
-                  : 'text-gray-600 hover:text-blue-600'
+                  ? 'text-gray-300 hover:text-yellow-300 hover:bg-gray-800/40' 
+                  : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
               }`}
               aria-label={theme === 'dark' 
                 ? (isLoaded('Header') ? t('lightMode', 'Header') : 'Switch to light mode') 
                 : (isLoaded('Header') ? t('darkMode', 'Header') : 'Switch to dark mode')}
             >
               {theme === 'dark' ? (
-                <Sun className="w-4 h-4 mr-1" />
+                <Sun className="w-4 h-4 mr-2" />
               ) : (
-                <Moon className="w-4 h-4 mr-1" />
+                <Moon className="w-4 h-4 mr-2" />
               )}
               <span>{theme === 'dark' 
                   ? (isLoaded('Header') ? t('lightMode', 'Header') : 'Light Mode') 
@@ -271,22 +271,22 @@ export default function Header({
             <div className="relative" ref={languageDropdownRef}>
               <button
                 onClick={toggleLanguageMenu}
-                className={`flex items-center space-x-2 transition-colors font-medium text-sm ${
+                className={`flex items-center transition-colors font-medium text-sm px-3 py-1 rounded-md ${
                   theme === 'dark' 
-                    ? 'text-gray-300 hover:text-yellow-300' 
-                    : 'text-gray-600 hover:text-blue-600'
+                    ? 'text-gray-300 hover:text-yellow-300 hover:bg-gray-800/40' 
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
                 }`}
                 aria-label={isLoaded('Header') ? t('changeLanguage', 'Header') : "Change language"}
               >
-                <Globe className="w-4 h-4" />
-                <span>{language === 'en-us' ? 'English' : '中文'}</span>
+                <Globe className="w-4 h-4 mr-2" />
+                <span className="mr-1">{language === 'en-us' ? 'English' : '中文'}</span>
                 <ChevronDown className={`w-3 h-3 transition-transform ${languageMenuOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {/* Language Dropdown */}
               {languageMenuOpen && (
                 <div 
-                  className={`absolute top-full right-0 mt-2 w-32 rounded-md shadow-lg z-50 theme-aware theme-transition ${
+                  className={`absolute top-full right-0 mt-2 w-36 rounded-md shadow-lg z-50 theme-aware theme-transition ${
                     theme === 'dark' 
                       ? 'bg-gray-900 border border-gray-800' 
                       : 'bg-white border border-gray-200'
@@ -296,21 +296,23 @@ export default function Header({
                     onClick={() => changeLanguage('en-us')}
                     className={`w-full text-left px-4 py-2 text-sm ${
                       language === 'en-us' 
-                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        ? theme === 'dark' ? 'text-yellow-300 font-medium' : 'text-blue-600 font-medium'
                         : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                    } hover:bg-gray-800/50 rounded-t-md`}
+                    } hover:bg-gray-800/50 rounded-t-md flex items-center justify-between`}
                   >
-                    English
+                    <span>English</span>
+                    {language === 'en-us' && <span className="text-xs">✓</span>}
                   </button>
                   <button
                     onClick={() => changeLanguage('zh-cn')}
                     className={`w-full text-left px-4 py-2 text-sm ${
                       language === 'zh-cn' 
-                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        ? theme === 'dark' ? 'text-yellow-300 font-medium' : 'text-blue-600 font-medium'
                         : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                    } hover:bg-gray-800/50 rounded-b-md`}
+                    } hover:bg-gray-800/50 rounded-b-md flex items-center justify-between`}
                   >
-                    中文
+                    <span>中文</span>
+                    {language === 'zh-cn' && <span className="text-xs">✓</span>}
                   </button>
                 </div>
               )}
@@ -321,19 +323,19 @@ export default function Header({
               <button
                 ref={dropdownButtonRef}
                 onClick={toggleDocsDropdown}
-                className={`flex items-center space-x-1 transition-colors font-medium text-sm border-b pb-1 ${
+                className={`flex items-center transition-colors font-medium text-sm px-3 py-1 rounded-md ${
                   theme === 'dark' 
-                    ? 'text-yellow-300 border-yellow-300' 
-                    : 'text-blue-600 border-blue-500'
+                    ? 'text-yellow-300 bg-yellow-300/10 hover:bg-yellow-300/20' 
+                    : 'text-blue-600 bg-blue-500/10 hover:bg-blue-500/20'
                 }`}
               >
-                <span>{isLoaded('Header') ? t('docs', 'Header') : 'Docs'}</span>
+                <span className="mr-1">{isLoaded('Header') ? t('docs', 'Header') : 'Docs'}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${docsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {docsDropdownOpen && menuTree.length > 0 && (
                 <div 
-                  className={`absolute top-full mt-2 w-64 max-h-[70vh] overflow-y-auto rounded-md shadow-lg z-50 dropdown theme-aware theme-transition ${
+                  className={`absolute top-full mt-2 w-72 max-h-[70vh] overflow-y-auto rounded-md shadow-lg z-50 dropdown theme-aware theme-transition ${
                     dropdownPosition.right ? 'right-0' : 'left-0'
                   } ${
                     theme === 'dark' 
@@ -341,7 +343,7 @@ export default function Header({
                       : 'bg-white border border-gray-200'
                   }`}
                 >
-                  <div className="p-2">
+                  <div className="p-3">
                     {renderMenuItems(menuTree)}
                   </div>
                 </div>
@@ -351,10 +353,10 @@ export default function Header({
           
           {/* Mobile Menu Button */}
           <button 
-            className={`md:hidden transition-colors ${
+            className={`md:hidden transition-colors p-1 rounded-md ${
               theme === 'dark' 
-                ? 'text-gray-300 hover:text-yellow-300' 
-                : 'text-gray-600 hover:text-blue-600'
+                ? 'text-gray-300 hover:text-yellow-300 hover:bg-gray-800/40' 
+                : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100/60'
             }`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
@@ -436,9 +438,9 @@ export default function Header({
                       changeLanguage('en-us');
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full text-left p-2 rounded-md flex items-center ${
+                    className={`w-full text-left p-2 rounded-md flex items-center justify-between ${
                       language === 'en-us'
-                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        ? theme === 'dark' ? 'text-yellow-300 font-medium' : 'text-blue-600 font-medium'
                         : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                     } ${
                       theme === 'dark' 
@@ -446,8 +448,11 @@ export default function Header({
                         : 'hover:bg-gray-200'
                     }`}
                   >
-                    <Globe className="w-4 h-4 mr-2" />
-                    <span>English</span>
+                    <div className="flex items-center">
+                      <Globe className="w-4 h-4 mr-2" />
+                      <span>English</span>
+                    </div>
+                    {language === 'en-us' && <span className="text-xs">✓</span>}
                   </button>
                   
                   <button
@@ -455,9 +460,9 @@ export default function Header({
                       changeLanguage('zh-cn');
                       setMobileMenuOpen(false);
                     }}
-                    className={`w-full text-left p-2 rounded-md flex items-center ${
+                    className={`w-full text-left p-2 rounded-md flex items-center justify-between ${
                       language === 'zh-cn'
-                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        ? theme === 'dark' ? 'text-yellow-300 font-medium' : 'text-blue-600 font-medium'
                         : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
                     } ${
                       theme === 'dark' 
@@ -465,8 +470,11 @@ export default function Header({
                         : 'hover:bg-gray-200'
                     }`}
                   >
-                    <Globe className="w-4 h-4 mr-2" />
-                    <span>中文</span>
+                    <div className="flex items-center">
+                      <Globe className="w-4 h-4 mr-2" />
+                      <span>中文</span>
+                    </div>
+                    {language === 'zh-cn' && <span className="text-xs">✓</span>}
                   </button>
                 </div>
               </div>
