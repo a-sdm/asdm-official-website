@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -9,12 +9,43 @@ interface CodeBlockRendererProps {
 }
 
 const CodeBlockRenderer: React.FC<CodeBlockRendererProps> = ({ language, children, theme }) => {
+  const [copied, setCopied] = useState(false);
+  
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(children);
+      setCopied(true);
+      
+      // Reset copied state after 2 seconds
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   return (
     <div className={`my-3 rounded-lg w-full text-xs relative border ${
       theme === 'dark' 
         ? 'border-gray-800' 
         : 'border-gray-200'
     }`}>
+      <button
+        onClick={handleCopy}
+        className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-medium transition-colors z-10 ${
+          theme === 'dark'
+            ? copied 
+              ? 'bg-green-600 text-white' 
+              : 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+            : copied 
+              ? 'bg-green-500 text-white' 
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+        }`}
+        aria-label="Copy code to clipboard"
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
       <div className="overflow-x-auto max-w-full" style={{ 
         maxWidth: '100%', 
         overflowX: 'auto',
