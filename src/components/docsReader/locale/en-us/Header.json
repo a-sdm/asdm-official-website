@@ -1,0 +1,15 @@
+{
+  "home": "Home",
+  "docs": "Docs",
+  "language": "Language",
+  "back": "Back",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "documentation": "Documentation",
+  "noDocsAvailable": "No documentation available",
+  "closeMenu": "Close Menu",
+  "toggleSidebar": "Toggle sidebar",
+  "collapseSection": "Collapse section",
+  "expandSection": "Expand section",
+  "changeLanguage": "Change language"
+}

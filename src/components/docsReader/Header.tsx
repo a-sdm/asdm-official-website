@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Brain, Menu, X, Book, ChevronLeft, ChevronDown, ChevronRight, FileText, Sun, Moon } from 'lucide-react';
+import { Brain, Menu, X, Book, ChevronLeft, ChevronDown, ChevronRight, FileText, Sun, Moon, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DocFile, DocMenuItem } from './types';
 import { useTheme } from '../../context/ThemeContext';
+import { useDocsReaderLanguage, LanguageCode } from './context/DocsReaderLanguageContext';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -29,11 +30,19 @@ export default function Header({
 }: HeaderProps) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t, loadTranslations, isLoaded } = useDocsReaderLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [docsDropdownOpen, setDocsDropdownOpen] = useState(false);
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ right: false });
+  
+  // Load header translations
+  useEffect(() => {
+    loadTranslations('Header');
+  }, [language, loadTranslations]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -51,13 +60,29 @@ export default function Header({
     }
     
     setDocsDropdownOpen(!docsDropdownOpen);
+    // Close language menu if open
+    if (languageMenuOpen) setLanguageMenuOpen(false);
+  };
+  
+  const toggleLanguageMenu = () => {
+    setLanguageMenuOpen(!languageMenuOpen);
+    // Close docs dropdown if open
+    if (docsDropdownOpen) setDocsDropdownOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  const changeLanguage = (lang: LanguageCode) => {
+    setLanguage(lang);
+    setLanguageMenuOpen(false);
+  };
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDocsDropdownOpen(false);
+      }
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        setLanguageMenuOpen(false);
       }
     };
 
@@ -113,7 +138,9 @@ export default function Header({
                           ? 'text-gray-400 hover:bg-gray-800 hover:text-yellow-400' 
                           : 'text-gray-500 hover:bg-gray-200 hover:text-blue-600'
                       }`}
-                      aria-label={isExpanded ? "Collapse section" : "Expand section"}
+                      aria-label={isExpanded 
+                        ? (isLoaded('Header') ? t('collapseSection', 'Header') : "Collapse section") 
+                        : (isLoaded('Header') ? t('expandSection', 'Header') : "Expand section")}
                     >
                       {isExpanded ? (
                         <ChevronDown className="w-3 h-3" />
@@ -180,7 +207,7 @@ export default function Header({
                   ? 'text-gray-300 hover:text-yellow-300' 
                   : 'text-gray-600 hover:text-blue-600'
               }`}
-              aria-label="Toggle sidebar"
+              aria-label={isLoaded('Header') ? t('toggleSidebar', 'Header') : "Toggle sidebar"}
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -214,7 +241,7 @@ export default function Header({
                   : 'text-gray-600 hover:text-blue-600'
               }`}
             >
-              Home
+              {isLoaded('Header') ? t('home', 'Header') : 'Home'}
             </button>
             
             {/* Theme toggle button */}
@@ -225,15 +252,69 @@ export default function Header({
                   ? 'text-gray-300 hover:text-yellow-300' 
                   : 'text-gray-600 hover:text-blue-600'
               }`}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={theme === 'dark' 
+                ? (isLoaded('Header') ? t('lightMode', 'Header') : 'Switch to light mode') 
+                : (isLoaded('Header') ? t('darkMode', 'Header') : 'Switch to dark mode')}
             >
               {theme === 'dark' ? (
                 <Sun className="w-4 h-4 mr-1" />
               ) : (
                 <Moon className="w-4 h-4 mr-1" />
               )}
-              <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+              <span>{theme === 'dark' 
+                  ? (isLoaded('Header') ? t('lightMode', 'Header') : 'Light Mode') 
+                  : (isLoaded('Header') ? t('darkMode', 'Header') : 'Dark Mode')}
+                </span>
             </button>
+            
+            {/* Language Switcher */}
+            <div className="relative" ref={languageDropdownRef}>
+              <button
+                onClick={toggleLanguageMenu}
+                className={`flex items-center space-x-2 transition-colors font-medium text-sm ${
+                  theme === 'dark' 
+                    ? 'text-gray-300 hover:text-yellow-300' 
+                    : 'text-gray-600 hover:text-blue-600'
+                }`}
+                aria-label={isLoaded('Header') ? t('changeLanguage', 'Header') : "Change language"}
+              >
+                <Globe className="w-4 h-4" />
+                <span>{language === 'en-us' ? 'English' : '中文'}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${languageMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {/* Language Dropdown */}
+              {languageMenuOpen && (
+                <div 
+                  className={`absolute top-full right-0 mt-2 w-32 rounded-md shadow-lg z-50 theme-aware theme-transition ${
+                    theme === 'dark' 
+                      ? 'bg-gray-900 border border-gray-800' 
+                      : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <button
+                    onClick={() => changeLanguage('en-us')}
+                    className={`w-full text-left px-4 py-2 text-sm ${
+                      language === 'en-us' 
+                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    } hover:bg-gray-800/50 rounded-t-md`}
+                  >
+                    English
+                  </button>
+                  <button
+                    onClick={() => changeLanguage('zh-cn')}
+                    className={`w-full text-left px-4 py-2 text-sm ${
+                      language === 'zh-cn' 
+                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    } hover:bg-gray-800/50 rounded-b-md`}
+                  >
+                    中文
+                  </button>
+                </div>
+              )}
+            </div>
             
             {/* Docs dropdown */}
             <div className="relative" ref={dropdownRef}>
@@ -246,7 +327,7 @@ export default function Header({
                     : 'text-blue-600 border-blue-500'
                 }`}
               >
-                <span>Docs</span>
+                <span>{isLoaded('Header') ? t('docs', 'Header') : 'Docs'}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${docsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               
@@ -308,7 +389,7 @@ export default function Header({
                     : 'hover:bg-gray-100'
                 }`}
               >
-                Home
+                {isLoaded('Header') ? t('home', 'Header') : 'Home'}
               </button>
               
               <button
@@ -325,15 +406,70 @@ export default function Header({
                 {theme === 'dark' ? (
                   <>
                     <Sun className="w-5 h-5 mr-3" />
-                    <span>Light Mode</span>
+                    <span>{isLoaded('Header') ? t('lightMode', 'Header') : 'Light Mode'}</span>
                   </>
                 ) : (
                   <>
                     <Moon className="w-5 h-5 mr-3" />
-                    <span>Dark Mode</span>
+                    <span>{isLoaded('Header') ? t('darkMode', 'Header') : 'Dark Mode'}</span>
                   </>
                 )}
               </button>
+              
+              {/* Mobile Language Switcher */}
+              <div className={`p-3 rounded-md ${
+                theme === 'dark' 
+                  ? 'bg-gray-800/50' 
+                  : 'bg-gray-100'
+              }`}>
+                <h3 className={`font-medium mb-2 ${
+                  theme === 'dark' 
+                    ? 'text-yellow-300' 
+                    : 'text-blue-600'
+                }`}>
+                  {isLoaded('Header') ? t('language', 'Header') : 'Language'}
+                </h3>
+                
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      changeLanguage('en-us');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left p-2 rounded-md flex items-center ${
+                      language === 'en-us'
+                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    } ${
+                      theme === 'dark' 
+                        ? 'hover:bg-gray-800' 
+                        : 'hover:bg-gray-200'
+                    }`}
+                  >
+                    <Globe className="w-4 h-4 mr-2" />
+                    <span>English</span>
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      changeLanguage('zh-cn');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`w-full text-left p-2 rounded-md flex items-center ${
+                      language === 'zh-cn'
+                        ? theme === 'dark' ? 'text-yellow-300' : 'text-blue-600'
+                        : theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                    } ${
+                      theme === 'dark' 
+                        ? 'hover:bg-gray-800' 
+                        : 'hover:bg-gray-200'
+                    }`}
+                  >
+                    <Globe className="w-4 h-4 mr-2" />
+                    <span>中文</span>
+                  </button>
+                </div>
+              </div>
               
               <div className={`p-3 rounded-md ${
                 theme === 'dark' 
@@ -345,7 +481,7 @@ export default function Header({
                     ? 'text-yellow-300' 
                     : 'text-blue-600'
                 }`}>
-                  Documentation
+                  {isLoaded('Header') ? t('documentation', 'Header') : 'Documentation'}
                 </h3>
                 
                 {menuTree.length > 0 ? (
@@ -353,7 +489,7 @@ export default function Header({
                     {renderMenuItems(menuTree, 0, true)}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">No documentation available</p>
+                  <p className="text-sm text-gray-500">{isLoaded('Header') ? t('noDocsAvailable', 'Header') : 'No documentation available'}</p>
                 )}
               </div>
               
@@ -365,7 +501,7 @@ export default function Header({
                     : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                 }`}
               >
-                Close Menu
+                {isLoaded('Header') ? t('closeMenu', 'Header') : 'Close Menu'}
               </button>
             </div>
           </div>

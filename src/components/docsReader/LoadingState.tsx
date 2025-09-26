@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDocsReaderLanguage } from './context/DocsReaderLanguageContext';
 
 interface LoadingStateProps {
   message?: string;
@@ -6,9 +7,20 @@ interface LoadingStateProps {
 }
 
 const LoadingState: React.FC<LoadingStateProps> = ({ 
-  message = 'Loading...', 
+  message, 
   size = 'medium' 
 }) => {
+  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  
+  // Load translations for this component
+  useEffect(() => {
+    if (!isLoaded('LoadingState')) {
+      loadTranslations('LoadingState');
+    }
+  }, [loadTranslations, isLoaded]);
+  
+  // Use provided message or default translation
+  const displayMessage = message || t('loading', 'LoadingState');
   const spinnerSize = {
     small: 'h-6 w-6',
     medium: 'h-8 w-8',
@@ -19,7 +31,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({
     <div className="flex items-center justify-center h-full">
       <div className="text-center">
         <div className={`animate-spin rounded-full ${spinnerSize[size]} border-b-2 border-yellow-400 mx-auto mb-4`}></div>
-        <p className="text-gray-400">{message}</p>
+        <p className="text-gray-400">{displayMessage}</p>
       </div>
     </div>
   );

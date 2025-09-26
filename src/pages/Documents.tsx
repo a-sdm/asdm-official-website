@@ -14,7 +14,8 @@ import {
   findDocByRoutePath,
   getRoutePathFromDocPath,
   findAndExpandParents,
-  Header
+  Header,
+  DocsReaderLanguageProvider
 } from '../components/docsReader';
 
 export default function Documents() {
@@ -220,18 +221,19 @@ export default function Documents() {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-      <Header 
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        title={currentDoc?.title || 'Documentation'}
-        docs={docs}
-        menuTree={menuTree}
-        currentDoc={currentDoc}
-        expandedItems={expandedItems}
-        setExpandedItems={setExpandedItems}
-        onDocumentSelect={handleDocumentSelect}
-      />
+    <DocsReaderLanguageProvider>
+      <div className={`min-h-screen flex flex-col ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
+        <Header 
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          title={currentDoc?.title || 'Documentation'}
+          docs={docs}
+          menuTree={menuTree}
+          currentDoc={currentDoc}
+          expandedItems={expandedItems}
+          setExpandedItems={setExpandedItems}
+          onDocumentSelect={handleDocumentSelect}
+        />
       
       <div className="flex flex-1 relative">
         {/* Desktop-only sidebar */}
@@ -294,5 +296,6 @@ export default function Documents() {
       
       <Footer />
     </div>
+    </DocsReaderLanguageProvider>
   );
 }

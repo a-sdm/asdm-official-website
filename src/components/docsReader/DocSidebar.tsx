@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Home, X, FileText, ChevronRight } from 'lucide-react';
 import { DocFile, DocMenuItem } from './types';
 import MenuTreeView from './MenuTreeView';
 import { useTheme } from '../../context/ThemeContext';
+import { useDocsReaderLanguage } from './context/DocsReaderLanguageContext';
 
 interface DocSidebarProps {
   docs: DocFile[];
@@ -28,6 +29,14 @@ const DocSidebar: React.FC<DocSidebarProps> = ({
   onNavigateHome
 }) => {
   const { theme } = useTheme();
+  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  
+  // Load translations for this component
+  useEffect(() => {
+    if (!isLoaded('DocSidebar')) {
+      loadTranslations('DocSidebar');
+    }
+  }, [loadTranslations, isLoaded]);
   return (
     <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 flex flex-col overflow-hidden h-full sticky top-0 sidebar theme-aware theme-transition ${
       theme === 'dark' 
@@ -43,7 +52,7 @@ const DocSidebar: React.FC<DocSidebarProps> = ({
             }`}
           >
             <Home className="w-4 h-4" />
-            <span className="text-sm">Back to Home</span>
+            <span className="text-sm">{t('backToHome', 'DocSidebar')}</span>
           </button>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -52,11 +61,13 @@ const DocSidebar: React.FC<DocSidebarProps> = ({
                 ? 'hover:bg-gray-800 text-gray-300 hover:text-white' 
                 : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'
             }`}
+            aria-label={t('closeSidebar', 'DocSidebar')}
+            title={t('closeSidebar', 'DocSidebar')}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
-        <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Documentation</h2>
+        <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{t('documentation', 'DocSidebar')}</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">

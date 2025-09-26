@@ -1,0 +1,15 @@
+{
+  "home": "首页",
+  "docs": "文档",
+  "language": "语言",
+  "back": "返回",
+  "lightMode": "亮色模式",
+  "darkMode": "暗色模式",
+  "documentation": "文档",
+  "noDocsAvailable": "暂无可用文档",
+  "closeMenu": "关闭菜单",
+  "toggleSidebar": "切换侧边栏",
+  "collapseSection": "收起部分",
+  "expandSection": "展开部分",
+  "changeLanguage": "切换语言"
+}

@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Menu, ChevronRight, Home } from 'lucide-react';
 import { DocFile } from './types';
 import MarkdownRenderer from './MarkdownRenderer';
 import { useTheme } from '../../context/ThemeContext';
+import { useDocsReaderLanguage } from './context/DocsReaderLanguageContext';
 
 interface DocContentProps {
   currentDoc: DocFile | null;
@@ -20,6 +21,15 @@ const DocContent: React.FC<DocContentProps> = ({
   onNavigate
 }) => {
   const { theme } = useTheme();
+  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  
+  // Load translations for this component
+  useEffect(() => {
+    if (!isLoaded('DocContent')) {
+      loadTranslations('DocContent');
+    }
+  }, [loadTranslations, isLoaded]);
+  
   // Function to handle breadcrumb navigation
   const handleBreadcrumbClick = useCallback((index: number) => {
     if (!currentDoc?.path || !onNavigate) return;
@@ -53,7 +63,7 @@ const DocContent: React.FC<DocContentProps> = ({
               className="hover:text-yellow-400 cursor-pointer transition-colors"
               onClick={() => onNavigate && onNavigate('')}
             >
-              Docs
+              {t('docs', 'DocContent')}
             </span>
             {currentDoc.path.split('/').filter(Boolean).map((part, index, array) => (
               <React.Fragment key={index}>
@@ -64,7 +74,7 @@ const DocContent: React.FC<DocContentProps> = ({
                   role={index < array.length - 1 ? "button" : undefined}
                   tabIndex={index < array.length - 1 ? 0 : undefined}
                 >
-                  {part.replace(/-/g, ' ').replace(/^_index$/, 'Overview')}
+                  {part.replace(/-/g, ' ').replace(/^_index$/, t('overview', 'DocContent'))}
                 </span>
               </React.Fragment>
             ))}
@@ -78,7 +88,7 @@ const DocContent: React.FC<DocContentProps> = ({
               <h1 className={`text-lg sm:text-xl font-semibold break-words ${
                 theme === 'dark' ? 'text-white' : 'text-gray-800'
               }`}>
-                {currentDoc?.title || 'ASDM Documentation'}
+                {currentDoc?.title || t('asdmDocumentation', 'DocContent')}
               </h1>
               {currentDoc?.description && (
                 <p className={`text-xs sm:text-sm mt-1 break-words ${
@@ -110,7 +120,7 @@ const DocContent: React.FC<DocContentProps> = ({
           <div className="flex items-center justify-center h-full w-full">
             <div className="text-center">
               <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-yellow-400 mx-auto mb-3 sm:mb-4"></div>
-              <p className={`text-sm sm:text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Loading document content...</p>
+              <p className={`text-sm sm:text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{t('loadingDocumentContent', 'DocContent')}</p>
             </div>
           </div>
         ) : currentDoc && currentDoc.content ? (
@@ -124,10 +134,10 @@ const DocContent: React.FC<DocContentProps> = ({
                     : 'border-gray-200 text-gray-500'
                 }`}>
                   {currentDoc.lastUpdated && (
-                    <p>Last updated: {currentDoc.lastUpdated}</p>
+                    <p>{t('lastUpdated', 'DocContent')}{currentDoc.lastUpdated}</p>
                   )}
                   {currentDoc.author && (
-                    <p>Author: {currentDoc.author}</p>
+                    <p>{t('author', 'DocContent')}{currentDoc.author}</p>
                   )}
                 </div>
               )}
@@ -135,7 +145,7 @@ const DocContent: React.FC<DocContentProps> = ({
           </div>
         ) : (
           <div className="flex items-center justify-center h-full">
-            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Select a document to view its content</p>
+            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{t('selectDocument', 'DocContent')}</p>
           </div>
         )}
       </main>

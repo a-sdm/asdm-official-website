@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useDocsReaderLanguage } from './context/DocsReaderLanguageContext';
 
 interface CodeBlockRendererProps {
   language: string;
@@ -10,6 +11,14 @@ interface CodeBlockRendererProps {
 
 const CodeBlockRenderer: React.FC<CodeBlockRendererProps> = ({ language, children, theme }) => {
   const [copied, setCopied] = useState(false);
+  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  
+  // Load translations for this component
+  useEffect(() => {
+    if (!isLoaded('CodeBlockRenderer')) {
+      loadTranslations('CodeBlockRenderer');
+    }
+  }, [loadTranslations, isLoaded]);
   
   // Clean the code content to ensure it's plain text
   const codeText = children.replace(/\n$/, '');
@@ -62,9 +71,9 @@ const CodeBlockRenderer: React.FC<CodeBlockRendererProps> = ({ language, childre
               ? 'bg-green-500 text-white' 
               : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
         }`}
-        aria-label="Copy code to clipboard"
+        aria-label={t('copyToClipboard', 'CodeBlockRenderer')}
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? t('copied', 'CodeBlockRenderer') : t('copy', 'CodeBlockRenderer')}
       </button>
       <div className="overflow-x-auto max-w-full" style={{ 
         maxWidth: '100%', 

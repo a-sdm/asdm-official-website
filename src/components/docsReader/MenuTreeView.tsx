@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FileText, ChevronRight, ChevronDown } from 'lucide-react';
 import { DocFile, DocMenuItem } from './types';
 import { useTheme } from '../../context/ThemeContext';
+import { useDocsReaderLanguage } from './context/DocsReaderLanguageContext';
 
 interface MenuTreeViewProps {
   menuItems: DocMenuItem[];
@@ -23,6 +24,14 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
   level = 0 
 }) => {
   const { theme } = useTheme();
+  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  
+  // Load translations for this component
+  useEffect(() => {
+    if (!isLoaded('MenuTreeView')) {
+      loadTranslations('MenuTreeView');
+    }
+  }, [loadTranslations, isLoaded]);
   // Find doc by path
   const findDocByPath = (path: string): DocFile | undefined => {
     return docs.find(doc => doc.path === path);
@@ -61,8 +70,8 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
                         ? 'text-gray-400 hover:text-yellow-400 hover:bg-gray-800'
                         : 'text-gray-500 hover:text-blue-600 hover:bg-gray-200'
                     }`}
-                    aria-label={isExpanded ? "Collapse section" : "Expand section"}
-                    title={isExpanded ? "Collapse section" : "Expand section"}
+                    aria-label={isExpanded ? t('collapseSection', 'MenuTreeView') : t('expandSection', 'MenuTreeView')}
+                    title={isExpanded ? t('collapseSection', 'MenuTreeView') : t('expandSection', 'MenuTreeView')}
                   >
                     {isExpanded ? (
                       <ChevronDown className="w-4 h-4" />
