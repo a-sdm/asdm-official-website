@@ -7,78 +7,134 @@ import Footer from '../components/Footer';
 import { useLanguage } from '../context/LanguageContext';
 
 interface BlogPost {
-  id: number;
   title: string;
-  excerpt: string;
+  description: string;
   author: string;
   date: string;
   readTime: string;
   category: string;
   icon: React.ReactNode;
+  path: string;
+  tags: string[];
+}
+
+interface BlogData {
+  docRoot: string;
+  documents: {
+    title: string;
+    path: string;
+    description: string;
+    category: string;
+    author: string;
+    date: string;
+    readTime: string;
+    tags: string[];
+    icon: string;
+  }[];
 }
 
 export default function Blogs() {
   const navigate = useNavigate();
   const { t, loadTranslations, isLoaded, language } = useLanguage();
+  const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([]);
+  const [loading, setLoading] = React.useState(true);
   
   // Load blog page translations
   useEffect(() => {
     loadTranslations('Blogs');
   }, [language, loadTranslations]);
 
-  // Example blog posts based on Home.tsx content
-  const blogPosts: BlogPost[] = [
-    {
-      id: 1,
-      title: "Introducing ASDM: The Future of AI-Powered Development",
-      excerpt: "Discover how our new framework revolutionizes development with AI-first principles, integrating intelligent automation from the ground up.",
-      author: "ASDM Team",
-      date: "2025-01-15",
-      readTime: "5 min read",
-      category: "Framework",
-      icon: <Brain className="w-5 h-5" />
-    },
-    {
-      id: 2,
-      title: "Building AI-First Development Workflows",
-      excerpt: "Learn how to integrate AI capabilities throughout your development lifecycle, from planning to deployment and maintenance.",
-      author: "Sarah Chen",
-      date: "2025-01-10",
-      readTime: "8 min read",
-      category: "Best Practices",
-      icon: <Code className="w-5 h-5" />
-    },
-    {
-      id: 3,
-      title: "Enhancing Team Productivity with Intelligent Automation",
-      excerpt: "Explore how AI-assisted development accelerates cycles with intelligent code generation, automated testing, and smart debugging.",
-      author: "Michael Rodriguez",
-      date: "2025-01-05",
-      readTime: "6 min read",
-      category: "Productivity",
-      icon: <Zap className="w-5 h-5" />
-    },
-    {
-      id: 4,
-      title: "Fostering Human-AI Collaboration in Development Teams",
-      excerpt: "Discover strategies for creating synergistic workflows between human developers and AI systems in modern development environments.",
-      author: "Emily Johnson",
-      date: "2024-12-28",
-      readTime: "7 min read",
-      category: "Collaboration",
-      icon: <Users className="w-5 h-5" />
-    },
-    {
-      id: 5,
-      title: "The Three-Step ASDM Implementation Guide",
-      excerpt: "A comprehensive walkthrough of Assessment & Planning, Foundation Setup, and Implementation & Scaling phases of the ASDM methodology.",
-      author: "David Kim",
-      date: "2024-12-20",
-      readTime: "10 min read",
-      category: "Implementation",
-      icon: <Lightbulb className="w-5 h-5" />
-    }
-  ];
+  // Load blog posts from YAML file
+  useEffect(() => {
+    const loadBlogPosts = async () => {
+      try {
+        const response = await fetch('/blogs/content/site-tree.yml');
+        const yamlText = await response.text();
+        
+        // Simple YAML parser for our specific structure
+        const lines = yamlText.split('\n');
+        const documents: BlogPost[] = [];
+        let currentDoc: any = {};
+        let inDocuments = false;
+        
+        for (const line of lines) {
+          const trimmed = line.trim();
+          
+          if (trimmed === 'documents:') {
+            inDocuments = true;
+            continue;
+          }
+          
+          if (!inDocuments) continue;
+          
+          if (trimmed.startsWith('- title:')) {
+            if (currentDoc.title) {
+              documents.push(createBlogPost(currentDoc));
+            }
+            currentDoc = { title: trimmed.replace('- title:', '').replace(/"/g, '').trim() };
+          } else if (trimmed.startsWith('path:')) {
+            currentDoc.path = trimmed.replace('path:', '').trim();
+          } else if (trimmed.startsWith('description:')) {
+            currentDoc.description = trimmed.replace('description:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('category:')) {
+            currentDoc.category = trimmed.replace('category:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('author:')) {
+            currentDoc.author = trimmed.replace('author:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('date:')) {
+            currentDoc.date = trimmed.replace('date:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('readTime:')) {
+            currentDoc.readTime = trimmed.replace('readTime:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('icon:')) {
+            currentDoc.icon = trimmed.replace('icon:', '').replace(/"/g, '').trim();
+          } else if (trimmed.startsWith('tags:')) {
+            currentDoc.tags = [];
+          } else if (trimmed.startsWith('-') && currentDoc.tags) {
+            currentDoc.tags.push(trimmed.replace('-', '').replace(/"/g, '').trim());
+          }
+        }
+        
+        // Add the last document
+        if (currentDoc.title) {
+          documents.push(createBlogPost(currentDoc));
+        }
+        
+        setBlogPosts(documents);
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        // Fallback to empty array
+        setBlogPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBlogPosts();
+  }, []);
+
+  const createBlogPost = (doc: any): BlogPost => {
+    const getIconComponent = (iconName: string) => {
+      switch (iconName) {
+        case 'brain': return <Brain className="w-5 h-5" />;
+        case 'code': return <Code className="w-5 h-5" />;
+        case 'zap': return <Zap className="w-5 h-5" />;
+        case 'users': return <Users className="w-5 h-5" />;
+        case 'lightbulb': return <Lightbulb className="w-5 h-5" />;
+        default: return <Brain className="w-5 h-5" />;
+      }
+    };
+
+    return {
+      title: doc.title,
+      description: doc.description,
+      author: doc.author,
+      date: doc.date,
+      readTime: doc.readTime,
+      category: doc.category,
+      icon: getIconComponent(doc.icon),
+      path: doc.path,
+      tags: doc.tags || []
+    };
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -125,14 +181,21 @@ export default function Blogs() {
         {/* Blog Posts Section */}
         <section className="px-4 sm:px-6 py-12 sm:py-20">
           <div className="max-w-7xl mx-auto">
-            <div className="grid gap-8 md:gap-12">
-              {blogPosts.map((post, index) => (
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-300"></div>
+                <p className="text-gray-300 mt-4">Loading blog posts...</p>
+              </div>
+            ) : (
+              <div className="grid gap-8 md:gap-12">
+                {blogPosts.map((post, index) => (
                 <article 
-                  key={post.id}
+                  key={index}
                   className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-[1.02] cursor-pointer group"
                   onClick={() => {
-                    // In a real app, this would navigate to the individual blog post
-                    console.log(`Navigate to blog post ${post.id}`);
+                    // Navigate to the individual blog post
+                    const routePath = post.path.replace(/\.md$/, '');
+                    navigate(`/blog/${routePath}`);
                   }}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
@@ -164,7 +227,7 @@ export default function Blogs() {
 
                       {/* Excerpt */}
                       <p className="text-gray-300 mb-6 leading-relaxed">
-                        {post.excerpt}
+                        {post.description}
                       </p>
 
                       {/* Read More */}
@@ -186,8 +249,9 @@ export default function Blogs() {
                     </div>
                   </div>
                 </article>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Load More Section */}
             <div className="text-center mt-12">
