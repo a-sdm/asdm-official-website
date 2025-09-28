@@ -51,6 +51,12 @@ export default function Header({}: HeaderProps) {
             {isLoaded('Header') ? t('home', 'Header') : 'Home'}
           </button>
           <button
+            onClick={() => navigate('/blog')}
+            className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm px-2 py-1"
+          >
+            {isLoaded('Header') ? t('blog', 'Header') : 'Blog'}
+          </button>
+          <button
             onClick={() => navigate('/docs')}
             className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm px-2 py-1"
           >
@@ -120,6 +126,15 @@ export default function Header({}: HeaderProps) {
               className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-sm"
             >
               {isLoaded('Header') ? t('home', 'Header') : 'Home'}
+            </button>
+            <button
+              onClick={() => {
+                navigate('/blog');
+                setMobileMenuOpen(false);
+              }}
+              className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-sm"
+            >
+              {isLoaded('Header') ? t('blog', 'Header') : 'Blog'}
             </button>
             <button
               onClick={() => {
