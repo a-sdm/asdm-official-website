@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
+import { useParams } from 'react-router-dom';
 
 // Define paths for language-specific blog roots
 export const LANGUAGE_BLOG_ROOTS = {
@@ -43,7 +44,8 @@ interface BlogReaderLanguageProviderProps {
 
 const BlogReaderLanguageProviderComponent: React.FC<BlogReaderLanguageProviderProps> = ({ children }) => {
   // Get language from main app context to stay in sync
-  const { language: mainAppLanguage } = useLanguage();
+  const { language: mainAppLanguage, setLanguage: setMainAppLanguage } = useLanguage();
+  const { '*': routePath } = useParams();
   const [language, setLanguage] = useState<LanguageCode>(mainAppLanguage);
   
   // Cache for loaded translations
@@ -51,6 +53,19 @@ const BlogReaderLanguageProviderComponent: React.FC<BlogReaderLanguageProviderPr
     'en-us': {},
     'zh-cn': {}
   });
+
+  // Extract language from URL and sync with main app
+  useEffect(() => {
+    if (routePath) {
+      const pathParts = routePath.split('/');
+      const routeLanguage = pathParts[0] as LanguageCode;
+      
+      // If URL contains a valid language that's different from current, update both contexts
+      if ((routeLanguage === 'en-us' || routeLanguage === 'zh-cn') && routeLanguage !== mainAppLanguage) {
+        setMainAppLanguage(routeLanguage);
+      }
+    }
+  }, [routePath, mainAppLanguage, setMainAppLanguage]);
 
   // Sync with main app language changes
   useEffect(() => {

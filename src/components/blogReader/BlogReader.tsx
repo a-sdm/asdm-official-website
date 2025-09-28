@@ -10,7 +10,7 @@ import { BlogReaderLanguageProvider, useBlogReaderLanguage } from './context/Blo
 
 // Create a wrapper component that uses the language context
 const BlogReaderContent: React.FC = () => {
-  const { '*': routePath } = useParams();
+  const { language: routeLanguage, '*': routePath } = useParams();
   const navigate = useNavigate();
   const { language, getBlogRoot } = useBlogReaderLanguage();
   
@@ -26,7 +26,10 @@ const BlogReaderContent: React.FC = () => {
       try {
         setLoading(true);
         // Use language-specific blog root
-        const response = await fetch(`${getBlogRoot()}/content/site-tree.yml`);
+        const blogRoot = getBlogRoot();
+        console.log('Loading blog site tree for language:', language, 'from:', `${blogRoot}/site-tree.yml`);
+        
+        const response = await fetch(`${blogRoot}/site-tree.yml`);
         if (!response.ok) {
           throw new Error(`Failed to load site tree: ${response.status}`);
         }
@@ -48,6 +51,7 @@ const BlogReaderContent: React.FC = () => {
           icon: doc.icon
         }));
         
+        console.log('Loaded blog posts:', blogPosts.map(b => ({ title: b.title, path: b.path })));
         setBlogs(blogPosts);
       } catch (error) {
         console.error('Error loading blog site tree:', error);
@@ -66,25 +70,31 @@ const BlogReaderContent: React.FC = () => {
       return;
     }
 
-    // Extract language and actual path from route
-    // Route format: /blog/en-us/20250115/introducing-asdm or /blog/zh-cn/20250115/introducing-asdm
-    const pathParts = routePath.split('/');
-    const routeLanguage = pathParts[0]; // en-us or zh-cn
-    const actualPath = pathParts.slice(1).join('/'); // 20250115/introducing-asdm
+    // Extract language from route params and use wildcard as the actual path
+    const actualPath = routePath; // e.g., 20250115/productivity-automation
     
-    // Only process if the route language matches current language
-    if (routeLanguage !== language) {
+    // Validate that we have a valid language and path
+    if (!routeLanguage || !actualPath) {
       setCurrentBlog(null);
       return;
     }
 
+    // Find the blog post using the actual path (without language prefix)
+    console.log('Looking for blog with path:', actualPath);
+    console.log('Available blogs:', blogs.map(b => ({ title: b.title, path: b.path })));
+    
     const blog = findBlogByRoutePath(actualPath, blogs);
+    console.log('Found blog:', blog ? { title: blog.title, path: blog.path } : 'null');
+    
     if (blog && siteTree) {
       setContentLoading(true);
       // Use language-specific blog root for content loading
       const blogContentRoot = `${getBlogRoot()}/content`;
+      console.log('Loading content from:', blogContentRoot);
+      
       loadBlogContent(blog, blogContentRoot, setBlogs)
         .then(loadedBlog => {
+          console.log('Successfully loaded blog content');
           setCurrentBlog(loadedBlog);
         })
         .catch(error => {
@@ -95,12 +105,19 @@ const BlogReaderContent: React.FC = () => {
           setContentLoading(false);
         });
     } else {
+      console.log('Blog not found:', { 
+        actualPath, 
+        routeLanguage,
+        currentLanguage: language,
+        availableBlogs: blogs.map(b => ({ title: b.title, path: b.path })),
+        siteTreeExists: !!siteTree
+      });
       setCurrentBlog(null);
     }
-  }, [routePath, blogs, siteTree, language]);
+  }, [routePath, blogs, siteTree, language, getBlogRoot]);
 
   const handleBack = () => {
-    navigate('/blog');
+    navigate(`/blog/${language}`);
   };
 
   if (loading) {

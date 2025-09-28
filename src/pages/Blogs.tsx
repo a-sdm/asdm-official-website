@@ -58,7 +58,7 @@ const BlogsContent = () => {
     const loadBlogPosts = async () => {
       try {
         // Use language-specific blog root
-        const response = await fetch(`${getBlogRoot()}/content/site-tree.yml`);
+        const response = await fetch(`${getBlogRoot()}/site-tree.yml`);
         const yamlText = await response.text();
         
         // Simple YAML parser for our specific structure
