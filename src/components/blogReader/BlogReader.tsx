@@ -6,10 +6,13 @@ import BlogContent from './BlogContent';
 import AnimatedBackground from '../AnimatedBackground';
 import Header from '../Header';
 import Footer from '../Footer';
+import { BlogReaderLanguageProvider, useBlogReaderLanguage } from './context/BlogReaderLanguageContext';
 
-const BlogReader: React.FC = () => {
+// Create a wrapper component that uses the language context
+const BlogReaderContent: React.FC = () => {
   const { '*': routePath } = useParams();
   const navigate = useNavigate();
+  const { language, getBlogRoot } = useBlogReaderLanguage();
   
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [currentBlog, setCurrentBlog] = useState<BlogPost | null>(null);
@@ -22,7 +25,8 @@ const BlogReader: React.FC = () => {
     const loadBlogSiteTree = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/blogs/content/site-tree.yml');
+        // Use language-specific blog root
+        const response = await fetch(`${getBlogRoot()}/content/site-tree.yml`);
         if (!response.ok) {
           throw new Error(`Failed to load site tree: ${response.status}`);
         }
@@ -53,7 +57,7 @@ const BlogReader: React.FC = () => {
     };
 
     loadBlogSiteTree();
-  }, []);
+  }, [language, getBlogRoot]);
 
   // Handle route changes and load specific blog content
   useEffect(() => {
@@ -62,10 +66,24 @@ const BlogReader: React.FC = () => {
       return;
     }
 
-    const blog = findBlogByRoutePath(routePath, blogs);
+    // Extract language and actual path from route
+    // Route format: /blog/en-us/20250115/introducing-asdm or /blog/zh-cn/20250115/introducing-asdm
+    const pathParts = routePath.split('/');
+    const routeLanguage = pathParts[0]; // en-us or zh-cn
+    const actualPath = pathParts.slice(1).join('/'); // 20250115/introducing-asdm
+    
+    // Only process if the route language matches current language
+    if (routeLanguage !== language) {
+      setCurrentBlog(null);
+      return;
+    }
+
+    const blog = findBlogByRoutePath(actualPath, blogs);
     if (blog && siteTree) {
       setContentLoading(true);
-      loadBlogContent(blog, siteTree.docRoot, setBlogs)
+      // Use language-specific blog root for content loading
+      const blogContentRoot = `${getBlogRoot()}/content`;
+      loadBlogContent(blog, blogContentRoot, setBlogs)
         .then(loadedBlog => {
           setCurrentBlog(loadedBlog);
         })
@@ -79,7 +97,7 @@ const BlogReader: React.FC = () => {
     } else {
       setCurrentBlog(null);
     }
-  }, [routePath, blogs, siteTree]);
+  }, [routePath, blogs, siteTree, language]);
 
   const handleBack = () => {
     navigate('/blog');
@@ -122,6 +140,15 @@ const BlogReader: React.FC = () => {
         <Footer />
       </div>
     </div>
+  );
+};
+
+// Main component that provides the language context
+const BlogReader: React.FC = () => {
+  return (
+    <BlogReaderLanguageProvider>
+      <BlogReaderContent />
+    </BlogReaderLanguageProvider>
   );
 };
 

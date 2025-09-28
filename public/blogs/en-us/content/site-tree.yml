@@ -1,0 +1,52 @@
+docRoot: "/blogs/en-us/content"
+
+documents:
+  - title: "Introducing ASDM: The Future of AI-Powered Development"
+    path: "20250115/introducing-asdm"
+    description: "Learn the fundamentals of AI-powered Software Development Methodology and how to implement it in your projects."
+    category: "Framework"
+    author: "ASDM Team"
+    date: "2025-01-15"
+    readTime: "5 min read"
+    tags: ["framework", "getting-started", "ai"]
+    icon: "brain"
+    
+  - title: "AI-First Development Workflows"
+    path: "20250110/ai-first-workflows"
+    description: "Discover proven strategies and methodologies for integrating AI into your development workflow effectively."
+    category: "Best Practices"
+    author: "Sarah Chen"
+    date: "2025-01-10"
+    readTime: "8 min read"
+    tags: ["best-practices", "ai", "workflow"]
+    icon: "lightbulb"
+    
+  - title: "Productivity Through Automation"
+    path: "20250105/productivity-automation"
+    description: "Real-world case studies showing how teams increased their productivity by 40% using ASDM principles."
+    category: "Productivity"
+    author: "Mike Johnson"
+    date: "2025-01-05"
+    readTime: "6 min read"
+    tags: ["productivity", "case-study", "teams"]
+    icon: "zap"
+    
+  - title: "Human-AI Collaboration in Development"
+    path: "20241228/human-ai-collaboration"
+    description: "How AI tools are transforming team collaboration and communication in modern software development."
+    category: "Collaboration"
+    author: "Emily Rodriguez"
+    date: "2024-12-28"
+    readTime: "7 min read"
+    tags: ["collaboration", "ai-tools", "teamwork"]
+    icon: "users"
+    
+  - title: "Enterprise Implementation Guide"
+    path: "20241220/implementation-guide"
+    description: "A comprehensive guide to rolling out ASDM methodology in large-scale enterprise environments."
+    category: "Implementation"
+    author: "David Kim"
+    date: "2024-12-20"
+    readTime: "10 min read"
+    tags: ["enterprise", "implementation", "scaling"]
+    icon: "code"

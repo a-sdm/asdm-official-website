@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "ASDM Blog",
+    "subtitle": "Insights, updates, and best practices for AI-powered development methodology."
+  },
+  "categories": {
+    "title": "Categories",
+    "all": "All"
+  },
+  "date": {
+    "title": "Date",
+    "all": "All"
+  },
+  "filters": {
+    "allPosts": "All Posts",
+    "clearFilters": "Clear all filters",
+    "post": "post",
+    "posts": "posts"
+  },
+  "post": {
+    "readMore": "Read More"
+  },
+  "loadMore": "Load More Posts",
+  "noPostsFound": "No posts found in this category.",
+  "loading": "Loading blog posts...",
+  "newsletter": {
+    "title": "Stay Updated",
+    "description": "Subscribe to our newsletter to get the latest insights on AI-powered development methodology delivered to your inbox.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe"
+  }
+}

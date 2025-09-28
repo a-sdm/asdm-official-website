@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useLanguage } from '../context/LanguageContext';
+import { 
+  BlogReaderLanguageProvider, 
+  useBlogReaderLanguage 
+} from '../components/blogReader';
 
 interface BlogPost {
   title: string;
@@ -33,9 +36,10 @@ interface BlogData {
   }[];
 }
 
-export default function Blogs() {
+// Create a wrapper component that uses the language context
+const BlogsContent = () => {
   const navigate = useNavigate();
-  const { t, loadTranslations, isLoaded, language } = useLanguage();
+  const { t, loadTranslations, isLoaded, language, getBlogRoot } = useBlogReaderLanguage();
   const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = React.useState<BlogPost[]>([]);
   const [selectedCategory, setSelectedCategory] = React.useState<string>('All');
@@ -53,7 +57,8 @@ export default function Blogs() {
   useEffect(() => {
     const loadBlogPosts = async () => {
       try {
-        const response = await fetch('/blogs/content/site-tree.yml');
+        // Use language-specific blog root
+        const response = await fetch(`${getBlogRoot()}/content/site-tree.yml`);
         const yamlText = await response.text();
         
         // Simple YAML parser for our specific structure
@@ -78,7 +83,7 @@ export default function Blogs() {
             }
             currentDoc = { title: trimmed.replace('- title:', '').replace(/"/g, '').trim() };
           } else if (trimmed.startsWith('path:')) {
-            currentDoc.path = trimmed.replace('path:', '').trim();
+            currentDoc.path = trimmed.replace('path:', '').replace(/"/g, '').trim();
           } else if (trimmed.startsWith('description:')) {
             currentDoc.description = trimmed.replace('description:', '').replace(/"/g, '').trim();
           } else if (trimmed.startsWith('category:')) {
@@ -139,7 +144,7 @@ export default function Blogs() {
     };
 
     loadBlogPosts();
-  }, []);
+  }, [language, getBlogRoot]);
 
   // Filter posts when category or month selection changes
   useEffect(() => {
@@ -251,7 +256,7 @@ export default function Blogs() {
             {loading ? (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-300"></div>
-                <p className="text-gray-300 mt-4">Loading blog posts...</p>
+                <p className="text-gray-300 mt-4">{isLoaded('Blogs') ? t('loading', 'Blogs') : 'Loading blog posts...'}</p>
               </div>
             ) : (
               <div className="flex flex-col lg:flex-row gap-8">
@@ -260,7 +265,7 @@ export default function Blogs() {
                   <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800 sticky top-6 space-y-6">
                     {/* Categories Filter */}
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-4">Categories</h3>
+                      <h3 className="text-lg font-semibold text-white mb-4">{isLoaded('Blogs') ? t('categories.title', 'Blogs') : 'Categories'}</h3>
                       <div className="space-y-2">
                         {categories.map((category) => (
                           <button
@@ -288,7 +293,7 @@ export default function Blogs() {
 
                     {/* Date Filter */}
                     <div>
-                      <h3 className="text-lg font-semibold text-white mb-4">Date</h3>
+                      <h3 className="text-lg font-semibold text-white mb-4">{isLoaded('Blogs') ? t('date.title', 'Blogs') : 'Date'}</h3>
                       <div className="space-y-2">
                         {months.map((month) => (
                           <button
@@ -318,11 +323,11 @@ export default function Blogs() {
                   <div className="mb-6">
                     <h2 className="text-xl font-semibold text-white">
                       {selectedCategory === 'All' && selectedMonth === 'All' 
-                        ? 'All Posts'
-                        : `${selectedCategory !== 'All' ? selectedCategory : 'All'} ${selectedMonth !== 'All' ? `- ${formatMonthDisplay(selectedMonth)}` : ''}`
+                        ? (isLoaded('Blogs') ? t('filters.allPosts', 'Blogs') : 'All Posts')
+                        : `${selectedCategory !== 'All' ? selectedCategory : (isLoaded('Blogs') ? t('categories.all', 'Blogs') : 'All')} ${selectedMonth !== 'All' ? `- ${formatMonthDisplay(selectedMonth)}` : ''}`
                       }
                       <span className="text-gray-400 text-base ml-2">
-                        ({filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'})
+                        ({filteredPosts.length} {filteredPosts.length === 1 ? (isLoaded('Blogs') ? t('filters.post', 'Blogs') : 'post') : (isLoaded('Blogs') ? t('filters.posts', 'Blogs') : 'posts')})
                       </span>
                     </h2>
                     
@@ -335,7 +340,7 @@ export default function Blogs() {
                         }}
                         className="mt-2 text-sm text-yellow-300 hover:text-yellow-400 transition-colors"
                       >
-                        Clear all filters
+                        {isLoaded('Blogs') ? t('filters.clearFilters', 'Blogs') : 'Clear all filters'}
                       </button>
                     )}
                   </div>
@@ -346,9 +351,9 @@ export default function Blogs() {
                         key={index}
                         className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-[1.02] cursor-pointer group"
                         onClick={() => {
-                          // Navigate to the individual blog post
+                          // Navigate to the individual blog post with language prefix
                           const routePath = post.path.replace(/\.md$/, '');
-                          navigate(`/blog/${routePath}`);
+                          navigate(`/blog/${language}/${routePath}`);
                         }}
                       >
                         <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
@@ -385,7 +390,7 @@ export default function Blogs() {
 
                             {/* Read More */}
                             <div className="flex items-center space-x-2 text-yellow-300 group-hover:text-yellow-400 transition-colors">
-                              <span className="font-medium">Read More</span>
+                              <span className="font-medium">{isLoaded('Blogs') ? t('post.readMore', 'Blogs') : 'Read More'}</span>
                               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </div>
                           </div>
@@ -417,7 +422,7 @@ export default function Blogs() {
                   {/* No Posts Message */}
                   {filteredPosts.length === 0 && !loading && (
                     <div className="text-center py-12">
-                      <p className="text-gray-400 text-lg">No posts found in this category.</p>
+                      <p className="text-gray-400 text-lg">{isLoaded('Blogs') ? t('noPostsFound', 'Blogs') : 'No posts found in this category.'}</p>
                     </div>
                   )}
                 </div>
@@ -451,5 +456,14 @@ export default function Blogs() {
         <Footer />
       </div>
     </div>
+  );
+};
+
+// Main component that provides the language context
+export default function Blogs() {
+  return (
+    <BlogReaderLanguageProvider>
+      <BlogsContent />
+    </BlogReaderLanguageProvider>
   );
 }

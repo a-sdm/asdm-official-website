@@ -44,9 +44,11 @@ export const loadBlogContent = async (
   }
   
   try {
-    const response = await fetch(`${docRoot}/${blog.path}`);
+    // Add .md extension if not present
+    const blogPath = blog.path.endsWith('.md') ? blog.path : `${blog.path}.md`;
+    const response = await fetch(`${docRoot}/${blogPath}`);
     if (!response.ok) {
-      throw new Error(`Failed to load ${blog.path}: ${response.status}`);
+      throw new Error(`Failed to load ${blogPath}: ${response.status}`);
     }
     
     const content = await response.text();
