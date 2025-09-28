@@ -163,14 +163,14 @@ const BlogReaderLanguageProviderComponent: React.FC<BlogReaderLanguageProviderPr
 // Export the provider component
 export const BlogReaderLanguageProvider = BlogReaderLanguageProviderComponent;
 
-// Custom hook to use the language context
-export function useBlogReaderLanguage() {
+// Export the context value
+export { BlogReaderLanguageContextValue as BlogReaderLanguageContext };
+
+// Create a hook to use the blog reader language context
+export const useBlogReaderLanguage = () => {
   const context = useContext(BlogReaderLanguageContextValue);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useBlogReaderLanguage must be used within a BlogReaderLanguageProvider');
   }
   return context;
-}
-
-// Export the context for use in other files
-export const BlogReaderLanguageContext = BlogReaderLanguageContextValue;
+};

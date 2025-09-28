@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Calendar, User, Clock, Tag } from 'lucide-react';
 import { BlogPost } from './types';
 import BlogMarkdownRenderer from './BlogMarkdownRenderer';
-import { useTheme } from '../../context/ThemeContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useBlogReaderLanguage } from './context/BlogReaderLanguageContext';
 import { formatDate, getCategoryColor } from './BlogUtils';
 import './BlogMarkdownStyles.css';
 
@@ -18,13 +17,30 @@ const BlogContent: React.FC<BlogContentProps> = ({
   contentLoading,
   onBack
 }) => {
-  const { theme } = useTheme();
-  const { t, loadTranslations, isLoaded } = useLanguage();
+  const { t, loadTranslations } = useBlogReaderLanguage();
+  const [translationsLoaded, setTranslationsLoaded] = useState(false);
   
   // Load translations for this component
   useEffect(() => {
-    loadTranslations('BlogContent');
+    const loadAndSetTranslations = async () => {
+      await loadTranslations('Blogs');
+      setTranslationsLoaded(true);
+    };
+    loadAndSetTranslations();
   }, [loadTranslations]);
+
+  // Wait for translations to load
+  if (!translationsLoaded) {
+    return (
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-300 mx-auto mb-4"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (contentLoading) {
     return (
@@ -32,7 +48,7 @@ const BlogContent: React.FC<BlogContentProps> = ({
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-300 mx-auto mb-4"></div>
-            <p className="text-gray-300">Loading blog post...</p>
+            <p className="text-gray-300">{t('loadingBlogPost')}</p>
           </div>
         </div>
       </div>
@@ -44,12 +60,12 @@ const BlogContent: React.FC<BlogContentProps> = ({
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
-            <p className="text-gray-300 mb-4">Blog post not found</p>
+            <p className="text-gray-300 mb-4">{t('blogPostNotFound')}</p>
             <button
               onClick={onBack}
               className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-6 py-3 rounded-lg hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold"
             >
-              Back to Blog
+              {t('backToBlog')}
             </button>
           </div>
         </div>
@@ -70,7 +86,7 @@ const BlogContent: React.FC<BlogContentProps> = ({
               className="flex items-center space-x-2 text-gray-300 hover:text-yellow-300 transition-colors mb-6 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span>Back to Blog</span>
+              <span>{t('backToBlog')}</span>
             </button>
 
             {/* Blog Meta */}
