@@ -11,14 +11,12 @@ interface CodeBlockRendererProps {
 
 const CodeBlockRenderer: React.FC<CodeBlockRendererProps> = ({ language, children, theme }) => {
   const [copied, setCopied] = useState(false);
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language: uiLanguage } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('CodeBlockRenderer')) {
-      loadTranslations('CodeBlockRenderer');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('CodeBlockRenderer');
+  }, [loadTranslations, uiLanguage]);
   
   // Clean the code content to ensure it's plain text
   const codeText = children.replace(/\n$/, '');

@@ -25,8 +25,8 @@ export const getDocPathFromRoutePath = (routePath: string): string => {
 
 // Find document by route path
 export const findDocByRoutePath = (routePath: string, docsList: DocFile[]): DocFile | undefined => {
-  // Remove leading /docs/ if present
-  const normalizedPath = routePath.replace(/^\/docs\//, '');
+  // Remove leading /docs/ and language code if present
+  const normalizedPath = routePath.replace(/^\/docs\/[a-z]{2}-[a-z]{2}\//, '').replace(/^\/docs\//, '');
   
   if (!normalizedPath) {
     // If we're at /docs/, find the first document in the menu tree

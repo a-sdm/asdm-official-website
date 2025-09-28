@@ -29,14 +29,12 @@ const DocSidebar: React.FC<DocSidebarProps> = ({
   onNavigateHome
 }) => {
   const { theme } = useTheme();
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('DocSidebar')) {
-      loadTranslations('DocSidebar');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('DocSidebar');
+  }, [loadTranslations, language]);
   return (
     <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 flex flex-col overflow-hidden h-full sticky top-0 sidebar theme-aware theme-transition ${
       theme === 'dark' 

@@ -16,7 +16,7 @@ export default function Home() {
   }, [language, loadTranslations]);
 
   const handleNavigate = () => {
-    navigate('/docs');
+    navigate(`/docs/${language}`);
   };
 
   return (
@@ -44,7 +44,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={() => navigate('/docs')}
+                onClick={() => navigate(`/docs/${language}`)}
                 className="w-full sm:w-auto bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold text-base flex items-center justify-center space-x-2"
               >
                 <span>{isLoaded('Home') ? t('hero.getStarted', 'Home') : 'Get Started'}</span>
@@ -158,7 +158,7 @@ export default function Home() {
                     {isLoaded('Home') ? t('methodology.cta.description', 'Home') : 'Join us in building this revolutionary framework and be part of the early community.'}
                   </p>
                   <button
-                    onClick={() => navigate('/docs')}
+                    onClick={() => navigate(`/docs/${language}`)}
                     className="w-full sm:w-auto bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-5 sm:px-6 py-2 sm:py-3 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold"
                   >
                     {isLoaded('Home') ? t('methodology.cta.button', 'Home') : 'Explore Docs'}

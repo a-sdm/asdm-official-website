@@ -24,14 +24,12 @@ const MenuTreeView: React.FC<MenuTreeViewProps> = ({
   level = 0 
 }) => {
   const { theme } = useTheme();
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('MenuTreeView')) {
-      loadTranslations('MenuTreeView');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('MenuTreeView');
+  }, [loadTranslations, language]);
   // Find doc by path
   const findDocByPath = (path: string): DocFile | undefined => {
     return docs.find(doc => doc.path === path);

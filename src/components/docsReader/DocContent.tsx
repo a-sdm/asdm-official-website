@@ -21,14 +21,12 @@ const DocContent: React.FC<DocContentProps> = ({
   onNavigate
 }) => {
   const { theme } = useTheme();
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('DocContent')) {
-      loadTranslations('DocContent');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('DocContent');
+  }, [loadTranslations, language]);
   
   // Function to handle breadcrumb navigation
   const handleBreadcrumbClick = useCallback((index: number) => {

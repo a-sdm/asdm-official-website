@@ -1,4 +1,4 @@
-docRoot: /docs/content
+docRoot: content
 
 documents:
   - title: "ASDM简介"
