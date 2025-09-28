@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "ASDM 博客",
+    "subtitle": "AI驱动开发方法论的见解、更新和最佳实践。"
+  },
+  "categories": {
+    "title": "分类",
+    "all": "全部"
+  },
+  "date": {
+    "title": "日期",
+    "all": "全部"
+  },
+  "filters": {
+    "allPosts": "全部文章",
+    "clearFilters": "清除所有筛选",
+    "post": "篇文章",
+    "posts": "篇文章"
+  },
+  "post": {
+    "readMore": "阅读更多"
+  },
+  "loadMore": "加载更多文章",
+  "noPostsFound": "在此分类中未找到文章。",
+  "loading": "正在加载博客文章...",
+  "newsletter": {
+    "title": "保持更新",
+    "description": "订阅我们的新闻通讯，获取AI驱动开发方法论的最新见解，直接发送到您的收件箱。",
+    "placeholder": "输入您的邮箱",
+    "subscribe": "订阅"
+  }
+}

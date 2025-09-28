@@ -24,7 +24,7 @@ const DocumentsContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
-  const { language, getDocRoot } = useDocsReaderLanguage();
+  const { language, getDocRoot, setLanguage } = useDocsReaderLanguage();
   const [docs, setDocs] = useState<DocFile[]>([]);
   const [currentDoc, setCurrentDoc] = useState<DocFile | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -34,6 +34,28 @@ const DocumentsContent = () => {
   const [menuTree, setMenuTree] = useState<DocMenuItem[]>([]);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [docRoot, setDocRoot] = useState<string>(`${getDocRoot()}/content`);
+  
+  // Sync language with route: /docs/{language}/...
+  useEffect(() => {
+    const segments = location.pathname.split('/').filter(Boolean);
+    if (segments[0] === 'docs') {
+      const urlLang = segments[1];
+      // If missing language, redirect to /docs/{current}
+      if (!urlLang) {
+        navigate(`/docs/${language}`, { replace: true });
+        return;
+      }
+      if (urlLang === 'en-us' || urlLang === 'zh-cn') {
+        if (urlLang !== language) {
+          setLanguage(urlLang as any);
+        }
+      } else {
+        // If invalid language in URL, redirect to valid language
+        navigate(`/docs/${language}`, { replace: true });
+        return;
+      }
+    }
+  }, [location.pathname, language, navigate, setLanguage]);
   
   // Function to load document content with state updates
   const handleLoadDocumentContent = async (doc: DocFile): Promise<DocFile> => {
@@ -172,7 +194,7 @@ const DocumentsContent = () => {
       try {
         const pathSegments = location.pathname.split('/').filter(Boolean);
         
-        if (pathSegments.length <= 1) {
+        if (pathSegments.length <= 2) {
           // We're at /docs/ or /, show the first document in the menu tree
           if (menuTree.length > 0) {
             const firstMenuPath = menuTree[0].path;
@@ -184,7 +206,7 @@ const DocumentsContent = () => {
           }
         } else {
           // We have a specific document path in the URL
-          const docPath = pathSegments.slice(1).join('/');
+          const docPath = pathSegments.slice(2).join('/');
           const docToLoad = findDocByRoutePath(docPath, docs);
           
           if (docToLoad) {
@@ -213,9 +235,8 @@ const DocumentsContent = () => {
   const handleDocumentSelect = async (doc: DocFile) => {
     // Update the URL based on the document path
     const routePath = getRoutePathFromDocPath(doc.path);
-    // Extract language code from the doc root path
-    const langCode = getDocRoot().split('/').pop();
-    navigate(`/docs/${langCode}/${routePath}`);
+    // Use current language from context
+    navigate(`/docs/${language}/${routePath}`);
     
     // Load document content if not already loaded
     if (!doc.content) {

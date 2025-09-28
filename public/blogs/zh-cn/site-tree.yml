@@ -1,0 +1,52 @@
+docRoot: "/blogs/zh-cn/content"
+
+documents:
+  - title: "ASDM介绍：AI驱动开发的未来"
+    path: "20250115/introducing-asdm"
+    description: "学习AI驱动软件开发方法论的基础知识，以及如何在您的项目中实施它。"
+    category: "框架"
+    author: "ASDM团队"
+    date: "2025-01-15"
+    readTime: "5分钟阅读"
+    tags: ["框架", "入门", "人工智能"]
+    icon: "brain"
+    
+  - title: "AI优先的开发工作流程"
+    path: "20250110/ai-first-workflows"
+    description: "发现将AI有效集成到开发工作流程中的经过验证的策略和方法论。"
+    category: "最佳实践"
+    author: "陈莎拉"
+    date: "2025-01-10"
+    readTime: "8分钟阅读"
+    tags: ["最佳实践", "人工智能", "工作流程"]
+    icon: "lightbulb"
+    
+  - title: "通过自动化提升生产力"
+    path: "20250105/productivity-automation"
+    description: "真实案例研究显示团队如何使用ASDM原则将生产力提高40%。"
+    category: "生产力"
+    author: "迈克·约翰逊"
+    date: "2025-01-05"
+    readTime: "6分钟阅读"
+    tags: ["生产力", "案例研究", "团队"]
+    icon: "zap"
+    
+  - title: "开发中的人机协作"
+    path: "20241228/human-ai-collaboration"
+    description: "AI工具如何改变现代软件开发中的团队协作和沟通。"
+    category: "协作"
+    author: "艾米莉·罗德里格斯"
+    date: "2024-12-28"
+    readTime: "7分钟阅读"
+    tags: ["协作", "AI工具", "团队合作"]
+    icon: "users"
+    
+  - title: "企业实施指南"
+    path: "20241220/implementation-guide"
+    description: "在大规模企业环境中推出ASDM方法论的综合指南。"
+    category: "实施"
+    author: "大卫·金"
+    date: "2024-12-20"
+    readTime: "10分钟阅读"
+    tags: ["企业", "实施", "扩展"]
+    icon: "code"

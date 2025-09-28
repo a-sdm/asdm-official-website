@@ -10,14 +10,12 @@ const LoadingState: React.FC<LoadingStateProps> = ({
   message, 
   size = 'medium' 
 }) => {
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('LoadingState')) {
-      loadTranslations('LoadingState');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('LoadingState');
+  }, [loadTranslations, language]);
   
   // Use provided message or default translation
   const displayMessage = message || t('loading', 'LoadingState');

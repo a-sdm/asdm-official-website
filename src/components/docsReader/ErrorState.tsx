@@ -12,14 +12,12 @@ const ErrorState: React.FC<ErrorStateProps> = ({
   onRetry, 
   onNavigateHome 
 }) => {
-  const { t, loadTranslations, isLoaded } = useDocsReaderLanguage();
+  const { t, loadTranslations, isLoaded, language } = useDocsReaderLanguage();
   
   // Load translations for this component
   useEffect(() => {
-    if (!isLoaded('ErrorState')) {
-      loadTranslations('ErrorState');
-    }
-  }, [loadTranslations, isLoaded]);
+    loadTranslations('ErrorState');
+  }, [loadTranslations, language]);
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
       <div className="text-center max-w-md">

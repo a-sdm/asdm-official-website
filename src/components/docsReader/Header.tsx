@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Brain, Menu, X, Book, ChevronLeft, ChevronDown, ChevronRight, FileText, Sun, Moon, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DocFile, DocMenuItem } from './types';
+import { getRoutePathFromDocPath } from './DocUtils';
 import { useTheme } from '../../context/ThemeContext';
 import { useDocsReaderLanguage, LanguageCode } from './context/DocsReaderLanguageContext';
 
@@ -73,6 +74,13 @@ export default function Header({
   const changeLanguage = (lang: LanguageCode) => {
     setLanguage(lang);
     setLanguageMenuOpen(false);
+    // Navigate to language-specific docs, preserving current doc if available
+    try {
+      const routePath = currentDoc ? getRoutePathFromDocPath(currentDoc.path) : '';
+      navigate(routePath ? `/docs/${lang}/${routePath}` : `/docs/${lang}`);
+    } catch {
+      navigate(`/docs/${lang}`);
+    }
   };
 
   // Close dropdowns when clicking outside
