@@ -37,6 +37,11 @@ export default function Blogs() {
   const navigate = useNavigate();
   const { t, loadTranslations, isLoaded, language } = useLanguage();
   const [blogPosts, setBlogPosts] = React.useState<BlogPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = React.useState<BlogPost[]>([]);
+  const [selectedCategory, setSelectedCategory] = React.useState<string>('All');
+  const [selectedMonth, setSelectedMonth] = React.useState<string>('All');
+  const [categories, setCategories] = React.useState<string[]>([]);
+  const [months, setMonths] = React.useState<string[]>([]);
   const [loading, setLoading] = React.useState(true);
   
   // Load blog page translations
@@ -99,10 +104,35 @@ export default function Blogs() {
         }
         
         setBlogPosts(documents);
+        setFilteredPosts(documents);
+        
+        // Extract unique categories
+        const uniqueCategories = Array.from(new Set(documents.map(post => post.category)));
+        setCategories(['All', ...uniqueCategories]);
+        
+        // Extract unique months and sort in descending order
+        const uniqueMonths = Array.from(new Set(documents.map(post => {
+          const date = new Date(post.date);
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        })));
+        
+        // Sort months in descending order and format for display
+        const sortedMonths = uniqueMonths.sort((a, b) => b.localeCompare(a));
+        const formattedMonths = sortedMonths.map(month => {
+          const [year, monthNum] = month.split('-');
+          const date = new Date(parseInt(year), parseInt(monthNum) - 1);
+          return {
+            value: month,
+            display: date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+          };
+        });
+        
+        setMonths(['All', ...formattedMonths.map(m => m.value)]);
       } catch (error) {
         console.error('Error loading blog posts:', error);
         // Fallback to empty array
         setBlogPosts([]);
+        setFilteredPosts([]);
       } finally {
         setLoading(false);
       }
@@ -110,6 +140,27 @@ export default function Blogs() {
 
     loadBlogPosts();
   }, []);
+
+  // Filter posts when category or month selection changes
+  useEffect(() => {
+    let filtered = blogPosts;
+    
+    // Filter by category
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(post => post.category === selectedCategory);
+    }
+    
+    // Filter by month
+    if (selectedMonth !== 'All') {
+      filtered = filtered.filter(post => {
+        const date = new Date(post.date);
+        const postMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        return postMonth === selectedMonth;
+      });
+    }
+    
+    setFilteredPosts(filtered);
+  }, [selectedCategory, selectedMonth, blogPosts]);
 
   const createBlogPost = (doc: any): BlogPost => {
     const getIconComponent = (iconName: string) => {
@@ -156,6 +207,22 @@ export default function Blogs() {
     return colors[category as keyof typeof colors] || 'bg-gray-300/10 text-gray-300 border-gray-300/20';
   };
 
+  const formatMonthDisplay = (monthValue: string) => {
+    if (monthValue === 'All') return 'All';
+    const [year, monthNum] = monthValue.split('-');
+    const date = new Date(parseInt(year), parseInt(monthNum) - 1);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  };
+
+  const getPostCountForMonth = (monthValue: string) => {
+    if (monthValue === 'All') return blogPosts.length;
+    return blogPosts.filter(post => {
+      const date = new Date(post.date);
+      const postMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      return postMonth === monthValue;
+    }).length;
+  };
+
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <AnimatedBackground />
@@ -187,78 +254,175 @@ export default function Blogs() {
                 <p className="text-gray-300 mt-4">Loading blog posts...</p>
               </div>
             ) : (
-              <div className="grid gap-8 md:gap-12">
-                {blogPosts.map((post, index) => (
-                <article 
-                  key={index}
-                  className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-[1.02] cursor-pointer group"
-                  onClick={() => {
-                    // Navigate to the individual blog post
-                    const routePath = post.path.replace(/\.md$/, '');
-                    navigate(`/blog/${routePath}`);
-                  }}
-                >
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
-                    {/* Content */}
-                    <div className="flex-1">
-                      {/* Category and Meta */}
-                      <div className="flex flex-wrap items-center gap-4 mb-4">
-                        <span className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(post.category)}`}>
-                          {post.icon}
-                          <span>{post.category}</span>
-                        </span>
-                        <div className="flex items-center space-x-4 text-sm text-gray-400">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{formatDate(post.date)}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <User className="w-4 h-4" />
-                            <span>{post.author}</span>
-                          </div>
-                          <span>{post.readTime}</span>
-                        </div>
-                      </div>
-
-                      {/* Title */}
-                      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white group-hover:text-yellow-300 transition-colors">
-                        {post.title}
-                      </h2>
-
-                      {/* Excerpt */}
-                      <p className="text-gray-300 mb-6 leading-relaxed">
-                        {post.description}
-                      </p>
-
-                      {/* Read More */}
-                      <div className="flex items-center space-x-2 text-yellow-300 group-hover:text-yellow-400 transition-colors">
-                        <span className="font-medium">Read More</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Category Sidebar */}
+                <div className="lg:w-64 lg:flex-shrink-0">
+                  <div className="bg-black/40 backdrop-blur-sm p-6 rounded-xl border border-gray-800 sticky top-6 space-y-6">
+                    {/* Categories Filter */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4">Categories</h3>
+                      <div className="space-y-2">
+                        {categories.map((category) => (
+                          <button
+                            key={category}
+                            onClick={() => setSelectedCategory(category)}
+                            className={`w-full text-left px-4 py-2 rounded-lg transition-all ${
+                              selectedCategory === category
+                                ? 'bg-yellow-300/20 text-yellow-300 border border-yellow-300/30'
+                                : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{category}</span>
+                              <span className="text-xs text-gray-400">
+                                {category === 'All' 
+                                  ? blogPosts.length 
+                                  : blogPosts.filter(post => post.category === category).length
+                                }
+                              </span>
+                            </div>
+                          </button>
+                        ))}
                       </div>
                     </div>
 
-                    {/* Visual Element */}
-                    <div className="lg:w-48 lg:flex-shrink-0 mt-6 lg:mt-0">
-                      <div className="bg-gradient-to-br from-yellow-300/10 to-amber-400/10 p-6 rounded-xl border border-yellow-300/20 backdrop-blur-sm h-32 lg:h-40 flex items-center justify-center">
-                        <div className="text-yellow-300 opacity-50">
-                          {React.cloneElement(post.icon as React.ReactElement, { 
-                            className: "w-12 h-12 lg:w-16 lg:h-16" 
-                          })}
-                        </div>
+                    {/* Date Filter */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-white mb-4">Date</h3>
+                      <div className="space-y-2">
+                        {months.map((month) => (
+                          <button
+                            key={month}
+                            onClick={() => setSelectedMonth(month)}
+                            className={`w-full text-left px-4 py-2 rounded-lg transition-all ${
+                              selectedMonth === month
+                                ? 'bg-blue-300/20 text-blue-300 border border-blue-300/30'
+                                : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">{formatMonthDisplay(month)}</span>
+                              <span className="text-xs text-gray-400">
+                                {getPostCountForMonth(month)}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
                       </div>
                     </div>
                   </div>
-                </article>
-                ))}
+                </div>
+
+                {/* Blog Posts Grid */}
+                <div className="flex-1">
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold text-white">
+                      {selectedCategory === 'All' && selectedMonth === 'All' 
+                        ? 'All Posts'
+                        : `${selectedCategory !== 'All' ? selectedCategory : 'All'} ${selectedMonth !== 'All' ? `- ${formatMonthDisplay(selectedMonth)}` : ''}`
+                      }
+                      <span className="text-gray-400 text-base ml-2">
+                        ({filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'})
+                      </span>
+                    </h2>
+                    
+                    {/* Clear Filters */}
+                    {(selectedCategory !== 'All' || selectedMonth !== 'All') && (
+                      <button
+                        onClick={() => {
+                          setSelectedCategory('All');
+                          setSelectedMonth('All');
+                        }}
+                        className="mt-2 text-sm text-yellow-300 hover:text-yellow-400 transition-colors"
+                      >
+                        Clear all filters
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="grid gap-8 md:gap-12">
+                    {filteredPosts.map((post, index) => (
+                      <article 
+                        key={index}
+                        className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-[1.02] cursor-pointer group"
+                        onClick={() => {
+                          // Navigate to the individual blog post
+                          const routePath = post.path.replace(/\.md$/, '');
+                          navigate(`/blog/${routePath}`);
+                        }}
+                      >
+                        <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8">
+                          {/* Content */}
+                          <div className="flex-1">
+                            {/* Category and Meta */}
+                            <div className="flex flex-wrap items-center gap-4 mb-4">
+                              <span className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(post.category)}`}>
+                                {post.icon}
+                                <span>{post.category}</span>
+                              </span>
+                              <div className="flex items-center space-x-4 text-sm text-gray-400">
+                                <div className="flex items-center space-x-1">
+                                  <Calendar className="w-4 h-4" />
+                                  <span>{formatDate(post.date)}</span>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                  <User className="w-4 h-4" />
+                                  <span>{post.author}</span>
+                                </div>
+                                <span>{post.readTime}</span>
+                              </div>
+                            </div>
+
+                            {/* Title */}
+                            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white group-hover:text-yellow-300 transition-colors">
+                              {post.title}
+                            </h2>
+
+                            {/* Excerpt */}
+                            <p className="text-gray-300 mb-6 leading-relaxed">
+                              {post.description}
+                            </p>
+
+                            {/* Read More */}
+                            <div className="flex items-center space-x-2 text-yellow-300 group-hover:text-yellow-400 transition-colors">
+                              <span className="font-medium">Read More</span>
+                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                          </div>
+
+                          {/* Visual Element */}
+                          <div className="lg:w-48 lg:flex-shrink-0 mt-6 lg:mt-0">
+                            <div className="bg-gradient-to-br from-yellow-300/10 to-amber-400/10 p-6 rounded-xl border border-yellow-300/20 backdrop-blur-sm h-32 lg:h-40 flex items-center justify-center">
+                              <div className="text-yellow-300 opacity-50">
+                                {React.cloneElement(post.icon as React.ReactElement, { 
+                                  className: "w-12 h-12 lg:w-16 lg:h-16" 
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  
+                  {/* Load More Section */}
+                  {filteredPosts.length > 0 && (
+                    <div className="text-center mt-12">
+                      <button className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-8 py-4 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold">
+                        {isLoaded('Blogs') ? t('loadMore', 'Blogs') : 'Load More Posts'}
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* No Posts Message */}
+                  {filteredPosts.length === 0 && !loading && (
+                    <div className="text-center py-12">
+                      <p className="text-gray-400 text-lg">No posts found in this category.</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
-
-            {/* Load More Section */}
-            <div className="text-center mt-12">
-              <button className="bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-8 py-4 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold">
-                {isLoaded('Blogs') ? t('loadMore', 'Blogs') : 'Load More Posts'}
-              </button>
-            </div>
           </div>
         </section>
 
