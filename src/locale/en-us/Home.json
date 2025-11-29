@@ -1,49 +1,49 @@
 {
   "hero": {
-    "title1": "AI Powered System",
+    "title1": "AI-First System",
     "title2": "Development Methodology",
-    "subtitle": "A new framework revolutionizing development with AI-first principles.",
+    "subtitle": "Transforming system development from 'designing for humans' to 'designing for AI' - a fundamental paradigm shift for the AI era.",
     "getStarted": "Get Started",
     "watchDemo": "Watch Demo"
   },
   "features": {
-    "title": "Building the Future with ASDM",
-    "aiFirst": {
-      "title": "AI-First Development",
-      "description": "We're building a framework that integrates AI capabilities from the ground up, designing systems that naturally incorporate generative AI and intelligent automation."
+    "title": "Three Foundational Capabilities",
+    "contextual": {
+      "title": "Contextual Awareness",
+      "description": "Providing AI with appropriate contextual environments. Building effective context is key to improving AI generation accuracy through text-based inputs."
     },
-    "productivity": {
-      "title": "Enhanced Productivity",
-      "description": "Help us accelerate development cycles with intelligent code generation, automated testing, and smart debugging assistance as we build this framework."
+    "autonomous": {
+      "title": "Autonomous Execution",
+      "description": "Providing AI with appropriate toolchains. AI excels with command-line tools and prefers text-based logging information for direct development participation."
     },
-    "collaboration": {
-      "title": "Team Collaboration",
-      "description": "Join us in fostering collaboration between human developers and AI systems, creating synergistic workflows as we develop this framework together."
+    "selfIteration": {
+      "title": "Self-Iteration Capability",
+      "description": "Maintaining project state synchronization and tool adaptation. Continuously updating capabilities as projects evolve to ensure sustained effectiveness."
     }
   },
   "methodology": {
-    "title": "A Comprehensive Framework",
-    "description": "ASDM is a comprehensive framework we're building to integrate AI throughout the development lifecycle, from planning to deployment and maintenance.",
+    "title": "AI-First Development Framework",
+    "description": "ASDM represents a fundamental paradigm shift from human-centric to AI-centric development, where AI assumes responsibility for most output tasks while humans guide and make critical decisions.",
     "step1": {
-      "title": "Assessment & Planning",
-      "description": "Evaluate current processes and identify AI integration opportunities."
+      "title": "Value Creation Shift",
+      "description": "Transform from human-only to 'AI + Human' collaboration where majority of deliverables are AI-generated."
     },
     "step2": {
-      "title": "Foundation Setup",
-      "description": "Establish infrastructure and train teams on AI-assisted development."
+      "title": "Capability Architecture",
+      "description": "Establish foundational capabilities that support scenario-specific tools across the software lifecycle."
     },
     "step3": {
-      "title": "Implementation & Scaling",
-      "description": "Deploy AI tools and scale successful practices across the organization."
+      "title": "AI-Enabled Scenarios",
+      "description": "Deploy AI tools for specific tasks like writing requirements, generating code, designing tests, and code reviews."
     },
     "cta": {
       "title": "Ready to Transform?",
-      "description": "Join us in building this revolutionary framework and be part of the early community.",
+      "description": "Join the AI-first development revolution and be part of the community shaping the future of system development.",
       "button": "Explore Docs"
     }
   },
   "community": {
     "title": "Join Our Community",
-    "description": "Join our growing community of early adopters, share feedback, and help shape the future of AI-powered development methodologies as we build this framework together."
+    "description": "Join our growing community of developers and organizations adopting AI-first development methodologies. Share experiences and shape the future of AI-powered system development."
   }
 }

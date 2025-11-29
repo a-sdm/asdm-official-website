@@ -1,49 +1,49 @@
 {
   "hero": {
-    "title1": "AI 驱动的系统",
+    "title1": "AI优先的系统化",
     "title2": "开发方法论",
-    "subtitle": "一个以 AI 为先的全新框架，彻底革新开发流程。",
+    "subtitle": "将系统开发从\"为人类设计流程\"转向\"为AI设计流程\"——AI时代的基础范式转变。",
     "getStarted": "开始使用",
     "watchDemo": "观看演示"
   },
   "features": {
-    "title": "与 ASDM 共建未来",
-    "aiFirst": {
-      "title": "AI 优先开发",
-      "description": "我们正在构建一个从底层集成 AI 能力的框架，设计能自然融合生成式 AI 和智能自动化的系统。"
+    "title": "三项基础能力",
+    "contextual": {
+      "title": "场景认知能力",
+      "description": "为AI提供合适的上下文环境。构建有效的上下文是提高AI生成准确性的关键，AI更适合文本化输入。"
     },
-    "productivity": {
-      "title": "提升生产力",
-      "description": "通过智能代码生成、自动化测试和智能调试辅助，帮助我们加速开发周期，共同构建这个框架。"
+    "autonomous": {
+      "title": "自主执行能力",
+      "description": "为AI提供合适的工具链。AI更擅长使用命令行工具，更喜欢文字日志信息，直接参与开发解决实际问题。"
     },
-    "collaboration": {
-      "title": "团队协作",
-      "description": "加入我们，促进人类开发者与 AI 系统之间的协作，在共同开发这个框架的过程中创建协同工作流。"
+    "selfIteration": {
+      "title": "自我迭代能力",
+      "description": "保持项目状态同步和工具适配。这些基础能力建成后，需要随着项目发展及时更新，确保持续有效。"
     }
   },
   "methodology": {
-    "title": "全面的框架",
-    "description": "ASDM 是我们正在构建的全面框架，将 AI 集成到开发生命周期的各个阶段，从规划到部署和维护。",
+    "title": "AI优先开发框架",
+    "description": "ASDM代表了从以人为中心到以AI为中心的开发的基础范式转变，AI承担大部分产出任务，人在关键节点做决策。",
     "step1": {
-      "title": "评估与规划",
-      "description": "评估当前流程并识别 AI 集成机会。"
+      "title": "价值创造主体转变",
+      "description": "从单纯的人转向\"AI+人\"的协作模式，大部分产出物由AI生成。"
     },
     "step2": {
-      "title": "基础设置",
-      "description": "建立基础设施并培训团队进行 AI 辅助开发。"
+      "title": "能力体系结构",
+      "description": "建立贯穿整个软件生命周期的基础能力，为具体场景提供标准化支持。"
     },
     "step3": {
-      "title": "实施与扩展",
-      "description": "部署 AI 工具并在整个组织中推广成功实践。"
+      "title": "AI化场景",
+      "description": "部署AI工具执行具体任务，如写需求文档、生成代码、设计测试用例、做代码评审等。"
     },
     "cta": {
       "title": "准备好转型了吗？",
-      "description": "加入我们构建这个革命性框架，成为早期社区的一部分。",
+      "description": "加入AI优先开发革命，成为塑造系统开发未来的社区一员。",
       "button": "探索文档"
     }
   },
   "community": {
     "title": "加入我们的社区",
-    "description": "加入我们不断壮大的早期采用者社区，分享反馈，并帮助塑造 AI 驱动开发方法论的未来，与我们一起构建这个框架。"
+    "description": "加入我们不断壮大的开发者和组织社区，采用AI优先开发方法论。分享经验，共同塑造AI驱动系统开发的未来。"
   }
 }

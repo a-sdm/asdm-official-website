@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Code, Zap, Users, ArrowRight, Brain, Github, Twitter, Linkedin } from 'lucide-react';
+import { Code, Zap, ArrowRight, Brain, Github, Twitter, Linkedin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Header from '../components/Header';
@@ -14,10 +14,6 @@ export default function Home() {
   useEffect(() => {
     loadTranslations('Home');
   }, [language, loadTranslations]);
-
-  const handleNavigate = () => {
-    navigate(`/docs/${language}`);
-  };
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -61,34 +57,34 @@ export default function Home() {
         <section id="features" className="px-4 sm:px-6 py-12 sm:py-20 bg-gray-900/30 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16 text-white">
-              {isLoaded('Home') ? t('features.title', 'Home') : 'Building the Future with ASDM'}
+              {isLoaded('Home') ? t('features.title', 'Home') : 'Three Foundational Capabilities'}
             </h2>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
               <div className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105">
-                <Code className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
+                <Brain className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
                 <h3 className="text-lg font-semibold mb-3 sm:mb-4 text-white">
-                  {isLoaded('Home') ? t('features.aiFirst.title', 'Home') : 'AI-First Development'}
+                  {isLoaded('Home') ? t('features.contextual.title', 'Home') : 'Contextual Awareness'}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                  {isLoaded('Home') ? t('features.aiFirst.description', 'Home') : 'We\'re building a framework that integrates AI capabilities from the ground up, designing systems that naturally incorporate generative AI and intelligent automation.'}
+                  {isLoaded('Home') ? t('features.contextual.description', 'Home') : 'Providing AI with appropriate contextual environments. Building effective context is key to improving AI generation accuracy through text-based inputs.'}
                 </p>
               </div>
               <div className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105">
-                <Zap className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
+                <Code className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
                 <h3 className="text-lg font-semibold mb-3 sm:mb-4 text-white">
-                  {isLoaded('Home') ? t('features.productivity.title', 'Home') : 'Enhanced Productivity'}
+                  {isLoaded('Home') ? t('features.autonomous.title', 'Home') : 'Autonomous Execution'}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                  {isLoaded('Home') ? t('features.productivity.description', 'Home') : 'Help us accelerate development cycles with intelligent code generation, automated testing, and smart debugging assistance as we build this framework.'}
+                  {isLoaded('Home') ? t('features.autonomous.description', 'Home') : 'Providing AI with appropriate toolchains. AI excels with command-line tools and prefers text-based logging information for direct development participation.'}
                 </p>
               </div>
               <div className="bg-black/40 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-gray-800 hover:border-yellow-300/50 transition-all transform hover:scale-105 sm:col-span-2 md:col-span-1">
-                <Users className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
+                <Zap className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 mb-4" />
                 <h3 className="text-lg font-semibold mb-3 sm:mb-4 text-white">
-                  {isLoaded('Home') ? t('features.collaboration.title', 'Home') : 'Team Collaboration'}
+                  {isLoaded('Home') ? t('features.selfIteration.title', 'Home') : 'Self-Iteration Capability'}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                  {isLoaded('Home') ? t('features.collaboration.description', 'Home') : 'Join us in fostering collaboration between human developers and AI systems, creating synergistic workflows as we develop this framework together.'}
+                  {isLoaded('Home') ? t('features.selfIteration.description', 'Home') : 'Maintaining project state synchronization and tool adaptation. Continuously updating capabilities as projects evolve to ensure sustained effectiveness.'}
                 </p>
               </div>
             </div>
@@ -101,10 +97,10 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white">
-                  {isLoaded('Home') ? t('methodology.title', 'Home') : 'A Comprehensive Framework'}
+                  {isLoaded('Home') ? t('methodology.title', 'Home') : 'AI-First Development Framework'}
                 </h2>
                 <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8 leading-relaxed">
-                  {isLoaded('Home') ? t('methodology.description', 'Home') : 'ASDM is a comprehensive framework we\'re building to integrate AI throughout the development lifecycle, from planning to deployment and maintenance.'}
+                  {isLoaded('Home') ? t('methodology.description', 'Home') : 'ASDM represents a fundamental paradigm shift from human-centric to AI-centric development, where AI assumes responsibility for most output tasks while humans guide and make critical decisions.'}
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3 sm:space-x-4">
@@ -113,10 +109,10 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-white mb-1 sm:mb-2">
-                        {isLoaded('Home') ? t('methodology.step1.title', 'Home') : 'Assessment & Planning'}
+                        {isLoaded('Home') ? t('methodology.step1.title', 'Home') : 'Value Creation Shift'}
                       </h4>
                       <p className="text-sm sm:text-base text-gray-300">
-                        {isLoaded('Home') ? t('methodology.step1.description', 'Home') : 'Evaluate current processes and identify AI integration opportunities.'}
+                        {isLoaded('Home') ? t('methodology.step1.description', 'Home') : 'Transform from human-only to \'AI + Human\' collaboration where majority of deliverables are AI-generated.'}
                       </p>
                     </div>
                   </div>
@@ -126,10 +122,10 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-white mb-1 sm:mb-2">
-                        {isLoaded('Home') ? t('methodology.step2.title', 'Home') : 'Foundation Setup'}
+                        {isLoaded('Home') ? t('methodology.step2.title', 'Home') : 'Capability Architecture'}
                       </h4>
                       <p className="text-sm sm:text-base text-gray-300">
-                        {isLoaded('Home') ? t('methodology.step2.description', 'Home') : 'Establish infrastructure and train teams on AI-assisted development.'}
+                        {isLoaded('Home') ? t('methodology.step2.description', 'Home') : 'Establish foundational capabilities that support scenario-specific tools across the software lifecycle.'}
                       </p>
                     </div>
                   </div>
@@ -139,10 +135,10 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-white mb-1 sm:mb-2">
-                        {isLoaded('Home') ? t('methodology.step3.title', 'Home') : 'Implementation & Scaling'}
+                        {isLoaded('Home') ? t('methodology.step3.title', 'Home') : 'AI-Enabled Scenarios'}
                       </h4>
                       <p className="text-sm sm:text-base text-gray-300">
-                        {isLoaded('Home') ? t('methodology.step3.description', 'Home') : 'Deploy AI tools and scale successful practices across the organization.'}
+                        {isLoaded('Home') ? t('methodology.step3.description', 'Home') : 'Deploy AI tools for specific tasks like writing requirements, generating code, designing tests, and code reviews.'}
                       </p>
                     </div>
                   </div>
@@ -155,7 +151,7 @@ export default function Home() {
                     {isLoaded('Home') ? t('methodology.cta.title', 'Home') : 'Ready to Transform?'}
                   </h3>
                   <p className="text-sm sm:text-base text-gray-300 mb-5 sm:mb-6">
-                    {isLoaded('Home') ? t('methodology.cta.description', 'Home') : 'Join us in building this revolutionary framework and be part of the early community.'}
+                    {isLoaded('Home') ? t('methodology.cta.description', 'Home') : 'Join the AI-first development revolution and be part of the community shaping the future of system development.'}
                   </p>
                   <button
                     onClick={() => navigate(`/docs/${language}`)}
@@ -176,7 +172,7 @@ export default function Home() {
               {isLoaded('Home') ? t('community.title', 'Home') : 'Join Our Community'}
             </h2>
             <p className="text-base sm:text-lg text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto">
-              {isLoaded('Home') ? t('community.description', 'Home') : 'Join our growing community of early adopters, share feedback, and help shape the future of AI-powered development methodologies as we build this framework together.'}
+              {isLoaded('Home') ? t('community.description', 'Home') : 'Join our growing community of developers and organizations adopting AI-first development methodologies. Share experiences and shape the future of AI-powered system development.'}
             </p>
             <div className="flex justify-center space-x-4 sm:space-x-6">
               <a
