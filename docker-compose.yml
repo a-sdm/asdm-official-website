@@ -7,7 +7,7 @@ services:
     container_name: asdm-web
     image: ghcr.io/a-sdm/asdm-official-website:latest
     ports:
-      - "6174:3000"
+      - "6184:3000"
     environment:
       - NODE_ENV=production
     restart: unless-stopped

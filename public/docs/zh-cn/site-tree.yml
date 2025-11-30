@@ -3,120 +3,40 @@ docRoot: content
 documents:
   - title: "ASDM简介"
     path: introduction.md
-    description: "人工智能支持开发方法论（ASDM）的全面介绍"
+    description: "AI优先的系统化开发方法论——ASDM简介"
     category: "介绍"
     tags: ["ASDM", "人工智能", "开发", "方法论"]
     lastUpdated: "2025-09-13"
 
-  - title: "ASDM核心原则"
-    path: core-principles/_index.md
-    description: "详细探讨构成ASDM基础的六大核心原则"
-    category: "原则"
-    tags: ["ASDM", "人工智能", "开发", "原则", "方法论"]
-    lastUpdated: "2025-09-13"
-    weight: 1
+  - title: "快速入门"
+    path: get-started/_index.md
+    description: "ASDM Bootstrapper的快速入门指南"
+    category: "快速入门"
+    tags: ["ASDM", "Bootstrapper", "入门", "工具"]
+    lastUpdated: "2025-11-30"
 
-  - title: "ASDM最佳实践"
-    path: best-practices/_index.md
-    description: "人工智能辅助软件开发方法论和最佳实践的综合指南"
-    category: "开发"
-    tags: ["人工智能", "开发", "最佳实践", "代码质量", "测试"]
-    lastUpdated: "2025-09-15"
+  - title: "手动安装指南"
+    path: get-started/manual_install.md
+    description: "手动安装和配置ASDM Bootstrapper的详细步骤"
+    category: "快速入门"
+    tags: ["ASDM", "Bootstrapper", "安装", "配置"]
+    lastUpdated: "2025-11-30"
 
-  - title: "代码质量与人工智能辅助"
-    path: best-practices/code-quality.md
-    description: "利用人工智能工具提高代码质量同时保持人工监督的最佳实践"
-    category: "最佳实践"
-    tags: ["人工智能", "代码质量", "代码审查", "测试"]
-    lastUpdated: "2025-09-15"
-
-  - title: "开发工作流集成"
-    path: best-practices/development-workflow.md
-    description: "将人工智能集成到开发工作流中以提高生产力和效率的指南"
-    category: "最佳实践"
-    tags: ["人工智能", "开发工作流", "任务管理", "文档"]
-    lastUpdated: "2025-09-15"
-
-  - title: "人工智能辅助质量保证"
-    path: best-practices/quality-assurance.md
-    description: "利用人工智能增强软件开发中的质量保证流程"
-    category: "最佳实践"
-    tags: ["人工智能", "质量保证", "调试", "性能"]
-    lastUpdated: "2025-09-15"
-
-  - title: "安全与合规"
-    path: best-practices/security-compliance.md
-    description: "使用人工智能增强安全实践和确保合规性的最佳实践"
-    category: "最佳实践"
-    tags: ["人工智能", "安全", "合规", "道德人工智能"]
-    lastUpdated: "2025-09-15"
-
-  - title: "协作与沟通"
-    path: best-practices/collaboration.md
-    description: "通过人工智能增强软件开发中的团队协作和沟通"
-    category: "最佳实践"
-    tags: ["人工智能", "协作", "沟通", "团队管理"]
-    lastUpdated: "2025-09-15"
-
-  - title: "持续改进"
-    path: best-practices/continuous-improvement.md
-    description: "建立指标和促进持续学习以提高ASDM有效性"
-    category: "最佳实践"
-    tags: ["人工智能", "指标", "学习", "改进"]
-    lastUpdated: "2025-09-15"
-
-  - title: "ASDM实施指南"
-    path: core-principles/implementation-guide.md
-    description: "在软件开发团队中实施人工智能支持开发方法论的综合指南"
-    category: "实施"
-    tags: ["ASDM", "人工智能", "开发", "方法论", "实施"]
-    created: "2025-09-13"
-    updated: "2025-09-15"
-    author: "ASDM团队"
-
-  - title: "ASDM最佳实践指南"
-    path: core-principles/best-practices.md
-    description: "在开发工作流中实施每个ASDM核心原则的详细最佳实践"
-    category: "实施"
-    tags: ["ASDM", "人工智能", "开发", "最佳实践", "方法论"]
-    created: "2025-09-15"
-    updated: "2025-09-15"
-    author: "ASDM团队"
-
-  - title: "ASDM案例研究"
-    path: core-principles/case-studies.md
-    description: "成功实施ASDM核心原则的组织的真实案例"
-    category: "实施"
-    tags: ["ASDM", "人工智能", "开发", "案例研究", "示例"]
-    created: "2025-09-15"
-    updated: "2025-09-15"
-    author: "ASDM团队"
+  - title: "使用指南"
+    path: get-started/usage.md
+    description: "如何使用已安装的ASDM Bootstrapper工具"
+    category: "快速入门"
+    tags: ["ASDM", "Bootstrapper", "使用", "命令"]
+    lastUpdated: "2025-11-30"
 
 # Menu tree structure for hierarchical navigation
 menu-tree:
   - path: introduction.md
     menu-title: "简介"
-  - path: core-principles/_index.md
-    menu-title: "核心原则"
+  - path: get-started/_index.md
+    menu-title: "快速入门"
     children:
-      - path: core-principles/implementation-guide.md
-        menu-title: "实施指南"
-      - path: core-principles/best-practices.md
-        menu-title: "最佳实践"
-      - path: core-principles/case-studies.md
-        menu-title: "案例研究"
-  - path: best-practices/_index.md
-    menu-title: "最佳实践"
-    children:
-      - path: best-practices/code-quality.md
-        menu-title: "代码质量"
-      - path: best-practices/development-workflow.md
-        menu-title: "开发工作流"
-      - path: best-practices/quality-assurance.md
-        menu-title: "质量保证"
-      - path: best-practices/security-compliance.md
-        menu-title: "安全与合规"
-      - path: best-practices/collaboration.md
-        menu-title: "协作"
-      - path: best-practices/continuous-improvement.md
-        menu-title: "持续改进"
+      - path: get-started/manual_install.md
+        menu-title: "手动安装"
+      - path: get-started/usage.md
+        menu-title: "使用指南"

@@ -1,0 +1,29 @@
+{
+  "title": "ASDM",
+  "subtitle": "Toolset Library",
+  "description": "Discover and download toolsets to enhance your ASDM development workflow. Each toolset is carefully crafted to address specific development needs.",
+  "detailedDescription": "A Toolset is the delivery unit of ASDM. Each toolset is a module that can be independently developed, tested, packaged, and continuously delivered. Toolsets are designed to be independent of workspaces and do not rely on any specific workspace.",
+  "compatibility": "Any ASDM toolset can run in various AI Coding tools, including: Claude Code CLI/Plugins, GitHub Copilot, OpenAI Codex, Cursor, Cline, Trae, CodeBuddy, Tongyi, etc. They can also run in non-AI Coding environments, such as: Claude Desktop, Claude.ai, GitHub Coding Agent, Cursor Background Agent, etc.",
+  "searchPlaceholder": "Search toolsets...",
+  "refresh": "Refresh",
+  "category.all": "All",
+  "category.development": "Development",
+  "category.testing": "Testing",
+  "category.deployment": "Deployment",
+  "category.monitoring": "Monitoring",
+  "loading": "Loading toolsets...",
+  "fetchError": "Failed to load toolsets. Please try again later.",
+  "tryAgain": "Try Again",
+  "noResults": {
+    "title": "No toolsets found",
+    "description": "Try adjusting your search or filter criteria"
+  },
+  "clearFilters": "Clear Filters",
+  "download": "Download",
+  "viewHomepage": "View Homepage",
+  "cta": {
+    "title": "Looking for Something Specific?",
+    "description": "Can't find the toolset you need? Let us know what you're looking for, and we'll consider adding it to our library.",
+    "button": "Request a Toolset"
+  }
+}

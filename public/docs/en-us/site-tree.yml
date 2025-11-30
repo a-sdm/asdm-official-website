@@ -3,120 +3,40 @@ docRoot: content
 documents:
   - title: "Introduction to ASDM"
     path: introduction.md
-    description: "A comprehensive introduction to AI-Supported Development Methodology (ASDM)"
+    description: "AI-First System Development Methodology Introduction"
     category: "Introduction"
     tags: ["ASDM", "AI", "Development", "Methodology"]
     lastUpdated: "2025-09-13"
 
-  - title: "ASDM Core Principles"
-    path: core-principles/_index.md
-    description: "Detailed exploration of the six core principles that form the foundation of ASDM"
-    category: "Principles"
-    tags: ["ASDM", "AI", "Development", "Principles", "Methodology"]
-    lastUpdated: "2025-09-13"
-    weight: 1
+  - title: "Quick Start"
+    path: get-started/_index.md
+    description: "Quick start guide for ASDM Bootstrapper"
+    category: "Quick Start"
+    tags: ["ASDM", "Bootstrapper", "Getting Started", "Tools"]
+    lastUpdated: "2025-11-30"
 
-  - title: "ASDM Best Practices"
-    path: best-practices/_index.md
-    description: "Comprehensive guide to AI-assisted software development methodologies and best practices"
-    category: "Development"
-    tags: ["AI", "Development", "Best Practices", "Code Quality", "Testing"]
-    lastUpdated: "2025-09-15"
+  - title: "Manual Installation Guide"
+    path: get-started/manual_install.md
+    description: "Detailed steps for manually installing and configuring ASDM Bootstrapper"
+    category: "Quick Start"
+    tags: ["ASDM", "Bootstrapper", "Installation", "Configuration"]
+    lastUpdated: "2025-11-30"
 
-  - title: "Code Quality and AI Assistance"
-    path: best-practices/code-quality.md
-    description: "Best practices for leveraging AI tools to enhance code quality while maintaining human oversight"
-    category: "Best Practices"
-    tags: ["AI", "Code Quality", "Code Review", "Testing"]
-    lastUpdated: "2025-09-15"
-
-  - title: "Development Workflow Integration"
-    path: best-practices/development-workflow.md
-    description: "Guidance on integrating AI into development workflows to enhance productivity and efficiency"
-    category: "Best Practices"
-    tags: ["AI", "Development Workflow", "Task Management", "Documentation"]
-    lastUpdated: "2025-09-15"
-
-  - title: "Quality Assurance with AI"
-    path: best-practices/quality-assurance.md
-    description: "Leveraging AI to enhance quality assurance processes in software development"
-    category: "Best Practices"
-    tags: ["AI", "Quality Assurance", "Debugging", "Performance"]
-    lastUpdated: "2025-09-15"
-
-  - title: "Security and Compliance"
-    path: best-practices/security-compliance.md
-    description: "Best practices for using AI to enhance security practices and ensure compliance"
-    category: "Best Practices"
-    tags: ["AI", "Security", "Compliance", "Ethical AI"]
-    lastUpdated: "2025-09-15"
-
-  - title: "Collaboration and Communication"
-    path: best-practices/collaboration.md
-    description: "Enhancing team collaboration and communication in software development with AI"
-    category: "Best Practices"
-    tags: ["AI", "Collaboration", "Communication", "Team Management"]
-    lastUpdated: "2025-09-15"
-
-  - title: "Continuous Improvement"
-    path: best-practices/continuous-improvement.md
-    description: "Establishing metrics and fostering continuous learning to improve ASDM effectiveness"
-    category: "Best Practices"
-    tags: ["AI", "Metrics", "Learning", "Improvement"]
-    lastUpdated: "2025-09-15"
-
-  - title: "ASDM Implementation Guide"
-    path: core-principles/implementation-guide.md
-    description: "Comprehensive guide for implementing AI-Supported Development Methodology in software development teams"
-    category: "Implementation"
-    tags: ["ASDM", "AI", "Development", "Methodology", "Implementation"]
-    created: "2025-09-13"
-    updated: "2025-09-15"
-    author: "ASDM Team"
-
-  - title: "ASDM Best Practices Guide"
-    path: core-principles/best-practices.md
-    description: "Detailed best practices for implementing each of the ASDM core principles in your development workflow"
-    category: "Implementation"
-    tags: ["ASDM", "AI", "Development", "Best Practices", "Methodology"]
-    created: "2025-09-15"
-    updated: "2025-09-15"
-    author: "ASDM Team"
-
-  - title: "ASDM Case Studies"
-    path: core-principles/case-studies.md
-    description: "Real-world examples of organizations that have successfully implemented ASDM core principles"
-    category: "Implementation"
-    tags: ["ASDM", "AI", "Development", "Case Studies", "Examples"]
-    created: "2025-09-15"
-    updated: "2025-09-15"
-    author: "ASDM Team"
+  - title: "Usage Guide"
+    path: get-started/usage.md
+    description: "How to use the installed ASDM Bootstrapper tool"
+    category: "Quick Start"
+    tags: ["ASDM", "Bootstrapper", "Usage", "Commands"]
+    lastUpdated: "2025-11-30"
 
 # Menu tree structure for hierarchical navigation
 menu-tree:
   - path: introduction.md
     menu-title: "Introduction"
-  - path: core-principles/_index.md
-    menu-title: "Core Principles"
+  - path: get-started/_index.md
+    menu-title: "Quick Start"
     children:
-      - path: core-principles/implementation-guide.md
-        menu-title: "Implementation Guide"
-      - path: core-principles/best-practices.md
-        menu-title: "Best Practices"
-      - path: core-principles/case-studies.md
-        menu-title: "Case Studies"
-  - path: best-practices/_index.md
-    menu-title: "Best Practices"
-    children:
-      - path: best-practices/code-quality.md
-        menu-title: "Code Quality"
-      - path: best-practices/development-workflow.md
-        menu-title: "Development Workflow"
-      - path: best-practices/quality-assurance.md
-        menu-title: "Quality Assurance"
-      - path: best-practices/security-compliance.md
-        menu-title: "Security & Compliance"
-      - path: best-practices/collaboration.md
-        menu-title: "Collaboration"
-      - path: best-practices/continuous-improvement.md
-        menu-title: "Continuous Improvement"
+      - path: get-started/manual_install.md
+        menu-title: "Manual Installation"
+      - path: get-started/usage.md
+        menu-title: "Usage Guide"
