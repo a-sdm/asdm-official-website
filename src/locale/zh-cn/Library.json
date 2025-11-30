@@ -19,7 +19,9 @@
     "description": "尝试调整您的搜索或筛选条件"
   },
   "clearFilters": "清除筛选",
-  "download": "下载",
+  "copyCommand": "复制命令",
+  "commandCopied": "已复制！",
+  "installCommand": "安装命令",
   "viewHomepage": "查看主页",
   "cta": {
     "title": "寻找特定工具包？",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, ExternalLink, Package, Search, ArrowRight, RefreshCw } from 'lucide-react';
+import { ExternalLink, Package, Search, ArrowRight, RefreshCw, Copy, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Header from '../components/Header';
@@ -32,6 +32,7 @@ export default function Library() {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
 
   // Helper function to get translation or fallback
   const getText = (key: string, fallback: string) => {
@@ -85,8 +86,14 @@ export default function Library() {
     setFilteredToolsets(result);
   }, [toolsets, searchTerm, selectedCategory]);
 
-  const handleDownload = (toolset: Toolset) => {
-    window.open(`https://asdm.ai/repo/toolsets-repo/${toolset.downloadUrl}`, '_blank');
+  const handleCopyCommand = (toolsetId: string) => {
+    const command = `asdm install ${toolsetId}`;
+    navigator.clipboard.writeText(command).then(() => {
+      setCopiedCommand(toolsetId);
+      setTimeout(() => setCopiedCommand(null), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy command: ', err);
+    });
   };
 
   const handleRefresh = () => {
@@ -269,24 +276,41 @@ export default function Library() {
                         </div>
                       )}
                       
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleDownload(toolset)}
-                          className="flex-1 bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 py-2 px-4 rounded-lg hover:from-yellow-400 hover:to-amber-500 transition-all flex items-center justify-center font-medium"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          {getText('download', 'Download')}
-                        </button>
-                        
-                        {toolset.homepage && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-300">
+                            {getText('installCommand', 'Install Command')}
+                          </span>
+                        </div>
+                        <div className="relative">
+                          <code className="block bg-gray-800 text-green-400 p-3 rounded-lg text-sm font-mono break-all">
+                            asdm install {toolset.id}
+                          </code>
                           <button
-                            onClick={() => window.open(toolset.homepage, '_blank')}
-                            className="bg-gray-800 text-white py-2 px-3 rounded-lg hover:bg-gray-700 transition-colors"
-                            title={getText('viewHomepage', 'View Homepage')}
+                            onClick={() => handleCopyCommand(toolset.id)}
+                            className="absolute top-2 right-2 p-2 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors"
+                            title={copiedCommand === toolset.id ? getText('commandCopied', 'Copied!') : getText('copyCommand', 'Copy Command')}
                           >
-                            <ExternalLink className="w-4 h-4" />
+                            {copiedCommand === toolset.id ? (
+                              <Check className="w-4 h-4 text-green-400" />
+                            ) : (
+                              <Copy className="w-4 h-4" />
+                            )}
                           </button>
-                        )}
+                        </div>
+                        
+                        <div className="flex space-x-2">
+                          {toolset.homepage && (
+                            <button
+                              onClick={() => window.open(toolset.homepage, '_blank')}
+                              className="flex-1 bg-gray-800 text-white py-2 px-3 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center"
+                              title={getText('viewHomepage', 'View Homepage')}
+                            >
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              {getText('viewHomepage', 'View Homepage')}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
