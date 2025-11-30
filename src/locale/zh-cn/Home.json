@@ -70,6 +70,22 @@
       "button": "探索文档"
     }
   },
+  "quickStart": {
+    "title": "快速开始指南",
+    "aiGuided": {
+      "title": "AI引导安装",
+      "description": "通过AI代理引导完成整个安装过程，无需手动执行命令。",
+      "stepsTitle": "简单步骤：",
+      "step1": "打开您喜欢的AI助手工具（如GitHub Copilot、Cursor、Claude Code、Codebuddy或其他兼容的AI开发工具）",
+      "step2": "输入以下提示："
+    },
+    "viewFullGuide": "查看完整指南",
+    "copy": {
+      "button": "复制提示",
+      "copied": "已复制！",
+      "prompt": "按以下文档中的指令操作完成ASDM的安装配置过程"
+    }
+  },
   "community": {
     "title": "加入我们的社区",
     "description": "加入我们不断壮大的开发者和组织社区，采用AI优先开发方法论。分享经验，共同塑造AI驱动系统开发的未来。"

@@ -59,3 +59,13 @@ Once foundational capabilities are established, every aspect of software develop
 These AI-led development tasks are called **AI-Enabled Scenarios**, each representing an independently deliverable, quantifiable efficiency improvement unit. ASDM's goal is to produce more AI-enabled scenarios and enhance effectiveness within each scenario.
 
 ASDM effectiveness is evaluated using two metrics: the number of AI-enabled scenarios and the efficiency improvement magnitude of individual scenarios.
+
+## Get Started
+
+Ready to start using ASDM? We provide detailed getting started guides to help you get up and running quickly:
+
+- [Quick Start Guide](get-started/) - Learn about the basic concepts and installation methods for ASDM Bootstrapper
+- [Manual Installation Guide](get-started/manual_install) - Detailed step-by-step manual installation and configuration
+- [Usage Guide](get-started/usage) - Learn how to use the installed ASDM Bootstrapper tool
+
+Begin your ASDM journey today!

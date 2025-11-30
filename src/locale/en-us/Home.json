@@ -70,6 +70,22 @@
       "button": "Explore Docs"
     }
   },
+  "quickStart": {
+    "title": "Quick Start Guide",
+    "aiGuided": {
+      "title": "AI-Guided Installation",
+      "description": "Complete the entire installation process through AI agent guidance without manual command execution.",
+      "stepsTitle": "Simple Steps:",
+      "step1": "Open your preferred AI assistant tool (such as GitHub Copilot, Cursor, Claude Code, Codebuddy, or other compatible AI development tools)",
+      "step2": "Enter the following prompt:"
+    },
+    "viewFullGuide": "View Full Guide",
+    "copy": {
+      "button": "Copy prompt",
+      "copied": "Copied!",
+      "prompt": "Follow the instructions in the document below to complete the ASDM installation and configuration process"
+    }
+  },
   "community": {
     "title": "Join Our Community",
     "description": "Join our growing community of developers and organizations adopting AI-first development methodologies. Share experiences and shape the future of AI-powered system development."

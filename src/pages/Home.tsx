@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Code, Zap, ArrowRight, Brain, Github, Twitter, Linkedin } from 'lucide-react';
+import { useEffect } from 'react';
+import { Code, Zap, ArrowRight, Brain, Github, Twitter, Linkedin, Copy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Header from '../components/Header';
@@ -74,7 +74,7 @@ export default function Home() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={() => navigate(`/docs/${language}`)}
+                onClick={() => navigate(`/docs/${language}/get-started`)}
                 className="w-full sm:w-auto bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold text-base flex items-center justify-center space-x-2"
               >
                 <span>{isLoaded('Home') ? t('hero.getStarted', 'Home') : 'Get Started'}</span>
@@ -83,6 +83,87 @@ export default function Home() {
               <button className="w-full sm:w-auto border border-gray-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-gray-800 transition-all transform hover:scale-105 font-semibold text-base">
                 {isLoaded('Home') ? t('hero.watchDemo', 'Home') : 'Watch Demo'}
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Start Guide Section */}
+        <section className="px-4 sm:px-6 py-12 sm:py-20 bg-gray-800/50">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12 text-white">
+              {isLoaded('Home') ? t('quickStart.title', 'Home') || 'Quick Start Guide' : 'Quick Start Guide'}
+            </h2>
+            
+            <div className="bg-gray-900/70 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 sm:p-8 mb-8">
+              <div className="flex items-center mb-6">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 rounded-full mr-4">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">
+                  {isLoaded('Home') ? t('quickStart.aiGuided.title', 'Home') || 'AI-Guided Installation' : 'AI-Guided Installation'}
+                </h3>
+              </div>
+              
+              <p className="text-gray-300 mb-6 text-lg">
+                {isLoaded('Home') ? t('quickStart.aiGuided.description', 'Home') || 'Complete the entire installation process through AI agent guidance without manual command execution.' : 'Complete the entire installation process through AI agent guidance without manual command execution.'}
+              </p>
+              
+              <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6 mb-6">
+                <h4 className="text-lg font-semibold text-white mb-4">
+                  {isLoaded('Home') ? t('quickStart.aiGuided.stepsTitle', 'Home') || 'Simple Steps:' : 'Simple Steps:'}
+                </h4>
+                <ol className="space-y-3">
+                  <li className="flex items-start">
+                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 flex-shrink-0 mt-0.5">1</span>
+                    <p className="text-gray-300">
+                      {isLoaded('Home') ? t('quickStart.aiGuided.step1', 'Home') || 'Open your preferred AI assistant tool (such as GitHub Copilot, Cursor, Claude Code, Codebuddy, or other compatible AI development tools)' : 'Open your preferred AI assistant tool (such as GitHub Copilot, Cursor, Claude Code, Codebuddy, or other compatible AI development tools)'}
+                    </p>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 flex-shrink-0 mt-0.5">2</span>
+                    <p className="text-gray-300">
+                      {isLoaded('Home') ? t('quickStart.aiGuided.step2', 'Home') || 'Enter the following prompt:' : 'Enter the following prompt:'}
+                    </p>
+                  </li>
+                </ol>
+                
+                <div className="mt-4 p-3 sm:p-4 bg-gray-900 rounded-lg border border-gray-700 relative">
+                  <button
+                    onClick={() => {
+                      const promptText = isLoaded('Home') ? t('quickStart.copy.prompt', 'Home') || 'Follow the instructions in the document below to complete the ASDM installation and configuration process' : 'Follow the instructions in the document below to complete the ASDM installation and configuration process';
+                      navigator.clipboard.writeText(`${promptText}\nhttps://asdm.ai/repo/toolsets-repo/INSTALL.md`);
+                      // Show a temporary success message
+                      const button = document.getElementById('copy-prompt-button');
+                      if (button) {
+                        const originalHTML = button.innerHTML;
+                        button.innerHTML = `<span class="text-green-400">${isLoaded('Home') ? t('quickStart.copy.copied', 'Home') || 'Copied!' : 'Copied!'}</span>`;
+                        setTimeout(() => {
+                          button.innerHTML = originalHTML;
+                        }, 2000);
+                      }
+                    }}
+                    id="copy-prompt-button"
+                    className="absolute -top-3 -right-3 p-2.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg transition-all transform hover:scale-110 z-10"
+                    title={isLoaded('Home') ? t('quickStart.copy.button', 'Home') || 'Copy prompt' : 'Copy prompt'}
+                  >
+                    <Copy className="w-5 h-5" />
+                  </button>
+                  <code className="text-green-400 text-sm sm:text-base break-all">
+                    {isLoaded('Home') ? t('quickStart.copy.prompt', 'Home') || 'Follow the instructions in the document below to complete the ASDM installation and configuration process' : 'Follow the instructions in the document below to complete the ASDM installation and configuration process'}<br/>
+                    https://asdm.ai/repo/toolsets-repo/INSTALL.md
+                  </code>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-center">
+                <button
+                  onClick={() => navigate(`/docs/${language}/get-started`)}
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-medium flex items-center space-x-2"
+                >
+                  <span>{isLoaded('Home') ? t('quickStart.viewFullGuide', 'Home') || 'View Full Guide' : 'View Full Guide'}</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -307,7 +388,7 @@ export default function Home() {
                     {isLoaded('Home') ? t('methodology.cta.description', 'Home') : 'Join the AI-first development revolution and be part of the community shaping the future of system development.'}
                   </p>
                   <button
-                    onClick={() => navigate(`/docs/${language}`)}
+                    onClick={() => navigate(`/docs/${language}/get-started`)}
                     className="w-full sm:w-auto bg-gradient-to-r from-yellow-300 to-amber-400 text-gray-900 px-5 sm:px-6 py-2 sm:py-3 rounded-lg border border-yellow-300 hover:from-yellow-400 hover:to-amber-500 transition-all transform hover:scale-105 font-semibold"
                   >
                     {isLoaded('Home') ? t('methodology.cta.button', 'Home') : 'Explore Docs'}
