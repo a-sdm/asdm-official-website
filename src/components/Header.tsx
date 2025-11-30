@@ -79,6 +79,12 @@ export default function Header({}: HeaderProps) {
             {isLoaded('Header') ? t('blog', 'Header') : 'Blog'}
           </button>
           <button
+            onClick={() => navigate(`/library`)}
+            className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm px-2 py-1"
+          >
+            {isLoaded('Header') ? t('library', 'Header') : 'Library'}
+          </button>
+          <button
             onClick={() => navigate(`/docs/${language}`)}
             className="text-gray-300 hover:text-yellow-300 transition-colors font-medium text-sm px-2 py-1"
           >
@@ -157,6 +163,15 @@ export default function Header({}: HeaderProps) {
               className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-sm"
             >
               {isLoaded('Header') ? t('blog', 'Header') : 'Blog'}
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/library`);
+                setMobileMenuOpen(false);
+              }}
+              className="text-gray-300 hover:text-yellow-300 transition-colors font-medium py-2 px-4 hover:bg-gray-800/50 rounded-md w-full text-left text-sm"
+            >
+              {isLoaded('Header') ? t('library', 'Header') : 'Library'}
             </button>
             <button
               onClick={() => {

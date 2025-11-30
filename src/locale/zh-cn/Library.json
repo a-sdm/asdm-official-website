@@ -1,0 +1,29 @@
+{
+  "title": "ASDM",
+  "subtitle": "工具包库",
+  "description": "发现并下载工具包以增强您的 ASDM 开发工作流程。每个工具包都是精心制作，以满足特定的开发需求。",
+  "detailedDescription": "工具包（Toolset）是ASDM的交付单元，每个工具包都是一个可以独立开发、测试、打包和持续交付的模块。工具包被设计成独立于工作空间（workspace）的模式，不依赖于任何特定的工作空间。",
+  "compatibility": "任何ASDM工具包都可以在各类AI Coding工具中运行，包括：Claude Code CLI/插件，GitHub Copilot，OpenAI Codex，Cursor，Cline, Trae，CodeBuddy，Tongyi等；同时也可以在非AI Coding环境中运行，比如：Claude Desktop，Claude.ai，GitHub Coding Agent，Cursor Background Agent等。",
+  "searchPlaceholder": "搜索工具包...",
+  "refresh": "刷新",
+  "category.all": "全部",
+  "category.development": "开发",
+  "category.testing": "测试",
+  "category.deployment": "部署",
+  "category.monitoring": "监控",
+  "loading": "正在加载工具包...",
+  "fetchError": "加载工具包失败，请稍后重试。",
+  "tryAgain": "重试",
+  "noResults": {
+    "title": "未找到工具包",
+    "description": "尝试调整您的搜索或筛选条件"
+  },
+  "clearFilters": "清除筛选",
+  "download": "下载",
+  "viewHomepage": "查看主页",
+  "cta": {
+    "title": "寻找特定工具包？",
+    "description": "找不到您需要的工具包？告诉我们您在寻找什么，我们将考虑将其添加到我们的库中。",
+    "button": "请求工具包"
+  }
+}
