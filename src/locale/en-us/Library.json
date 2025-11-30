@@ -19,7 +19,9 @@
     "description": "Try adjusting your search or filter criteria"
   },
   "clearFilters": "Clear Filters",
-  "download": "Download",
+  "copyCommand": "Copy Command",
+  "commandCopied": "Copied!",
+  "installCommand": "Install Command",
   "viewHomepage": "View Homepage",
   "cta": {
     "title": "Looking for Something Specific?",
