@@ -3,6 +3,8 @@
     "title1": "AI-First System",
     "title2": "Development Methodology",
     "subtitle": "Transforming system development from 'designing for humans' to 'designing for AI' - a fundamental paradigm shift for the AI era.",
+    "highlight": "From Human-Centric to AI-Centric",
+    "paradigmShift": "A fundamental paradigm shift for the AI era",
     "getStarted": "Get Started",
     "watchDemo": "Watch Demo"
   },
@@ -19,6 +21,32 @@
     "selfIteration": {
       "title": "Self-Iteration Capability",
       "description": "Maintaining project state synchronization and tool adaptation. Continuously updating capabilities as projects evolve to ensure sustained effectiveness."
+    }
+  },
+  "paradigm": {
+    "human": {
+      "title": "Human-Centric Design",
+      "point1": "Designed for human usability and comprehension",
+      "point2": "Human-driven decision making at every step",
+      "point3": "Visual interfaces prioritize human interaction",
+      "description": "Traditional system design focuses on human interaction experiences, meeting user needs through graphical interfaces and visual operations."
+    },
+    "ai": {
+      "title": "AI-Centric Design",
+      "point1": "Optimized for AI comprehension and processing",
+      "point2": "AI-driven execution with human guidance",
+      "point3": "Text-based interfaces maximize AI efficiency",
+      "description": "In the new paradigm, systems prioritize AI comprehension and processing efficiency, maximizing AI capabilities through text interfaces and structured data."
+    },
+    "transition": {
+      "title": "Paradigm Shift",
+      "description": "The AI era requires fundamentally rethinking system design, shifting from human usage to AI understanding and execution."
+    },
+    "benefits": {
+      "title": "Why This Shift Matters",
+      "speed": "10x Faster Development",
+      "automation": "80% Task Automation",
+      "consistency": "3x Consistency Improvement"
     }
   },
   "methodology": {

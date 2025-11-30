@@ -3,6 +3,8 @@
     "title1": "AI优先的系统化",
     "title2": "开发方法论",
     "subtitle": "将系统开发从\"为人类设计流程\"转向\"为AI设计流程\"——AI时代的基础范式转变。",
+    "highlight": "从以人为中心到以AI为中心",
+    "paradigmShift": "AI时代的基础范式转变",
     "getStarted": "开始使用",
     "watchDemo": "观看演示"
   },
@@ -19,6 +21,32 @@
     "selfIteration": {
       "title": "自我迭代能力",
       "description": "保持项目状态同步和工具适配。这些基础能力建成后，需要随着项目发展及时更新，确保持续有效。"
+    }
+  },
+  "paradigm": {
+    "human": {
+      "title": "以人为中心的设计",
+      "point1": "为人类的可用性和理解性而设计",
+      "point2": "每一步都是人类驱动的决策",
+      "point3": "可视化界面优先考虑人类交互",
+      "description": "传统系统设计专注于人类交互体验，通过图形界面和可视化操作来满足人类用户需求。"
+    },
+    "ai": {
+      "title": "以AI为中心的设计",
+      "point1": "优化AI的理解和处理能力",
+      "point2": "AI驱动的执行与人类指导相结合",
+      "point3": "基于文本的界面最大化AI效率",
+      "description": "新范式下，系统优先考虑AI的理解和处理效率，通过文本接口和结构化数据最大化AI能力。"
+    },
+    "transition": {
+      "title": "范式转变",
+      "description": "AI时代需要从根本上重新思考系统设计，从为人类使用转向为AI理解和执行而设计。"
+    },
+    "benefits": {
+      "title": "为什么这种转变很重要",
+      "speed": "开发速度提升10倍",
+      "automation": "80%任务自动化",
+      "consistency": "输出一致性提高3倍"
     }
   },
   "methodology": {

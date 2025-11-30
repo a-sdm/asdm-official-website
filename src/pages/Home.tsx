@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AnimatedBackground from '../components/AnimatedBackground';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ParadigmTransition from '../components/ParadigmTransition';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
@@ -35,9 +36,42 @@ export default function Home() {
                 {isLoaded('Home') ? t('hero.title2', 'Home') : 'Development Methodology'}
               </span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              {isLoaded('Home') ? t('hero.subtitle', 'Home') : 'A new framework revolutionizing development with AI-first principles.'}
-            </p>
+            
+            {/* Paradigm Shift Highlight with Animation */}
+            <div className="mb-8 sm:mb-12">
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 blur-xl opacity-20 animate-pulse"></div>
+                <h2 className="relative text-xl sm:text-2xl md:text-3xl font-bold mb-4">
+                  <span className="bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+                    {isLoaded('Home') ? t('hero.highlight', 'Home') : 'From Human-Centric to AI-Centric'}
+                  </span>
+                </h2>
+                <p className="relative text-lg sm:text-xl md:text-2xl text-gray-200 mb-6 max-w-4xl mx-auto leading-relaxed">
+                  {isLoaded('Home') ? t('hero.subtitle', 'Home') : 'Transforming system development from "designing for humans" to "designing for AI" - a fundamental paradigm shift for the AI era.'}
+                </p>
+                <div className="relative flex justify-center items-center mb-6">
+                  <div className="bg-gray-800 rounded-full p-3 mr-2">
+                    <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-24 sm:w-32 h-0.5 bg-gradient-to-r from-blue-400 to-purple-600"></div>
+                    </div>
+                    <div className="relative bg-gray-900 px-4 py-2 rounded-full border border-gray-700">
+                      <span className="text-sm sm:text-base font-medium text-gray-300">Transform</span>
+                    </div>
+                  </div>
+                  <div className="bg-gray-800 rounded-full p-3 ml-2">
+                    <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={() => navigate(`/docs/${language}`)}
@@ -53,8 +87,127 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Paradigm Shift Section */}
+        <section className="px-4 sm:px-6 py-12 sm:py-20 bg-gray-900/30 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16 text-white">
+              {isLoaded('Home') ? t('methodology.title', 'Home') : 'AI-First Development Framework'}
+            </h2>
+            
+            <div className="relative">
+              <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
+                {/* Human-Centric Design */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
+                  <div className="relative bg-gray-900/70 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-blue-500/30">
+                    <div className="flex items-center mb-6">
+                      <div className="bg-blue-500/20 p-3 rounded-full mr-4">
+                        <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-white">
+                        {isLoaded('Home') ? t('paradigm.human.title', 'Home') || 'Human-Centric Design' : 'Human-Centric Design'}
+                      </h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.human.point1', 'Home') || 'Designed for human usability and comprehension' : 'Designed for human usability and comprehension'}
+                        </p>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.human.point2', 'Home') || 'Human-driven decision making at every step' : 'Human-driven decision making at every step'}
+                        </p>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.human.point3', 'Home') || 'Visual interfaces prioritize human interaction' : 'Visual interfaces prioritize human interaction'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* AI-Centric Design */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl"></div>
+                  <div className="relative bg-gray-900/70 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-purple-500/30">
+                    <div className="flex items-center mb-6">
+                      <div className="bg-purple-500/20 p-3 rounded-full mr-4">
+                        <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold text-white">
+                        {isLoaded('Home') ? t('paradigm.ai.title', 'Home') || 'AI-Centric Design' : 'AI-Centric Design'}
+                      </h3>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.ai.point1', 'Home') || 'Optimized for AI comprehension and processing' : 'Optimized for AI comprehension and processing'}
+                        </p>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.ai.point2', 'Home') || 'AI-driven execution with human guidance' : 'AI-driven execution with human guidance'}
+                        </p>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-gray-300">
+                          {isLoaded('Home') ? t('paradigm.ai.point3', 'Home') || 'Text-based interfaces maximize AI efficiency' : 'Text-based interfaces maximize AI efficiency'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Paradigm Transition Animation */}
+            <div className="my-12 sm:my-16">
+              <ParadigmTransition />
+            </div>
+              
+              {/* Benefits of AI-Centric Approach */}
+              <div className="text-center">
+                <h3 className="text-xl sm:text-2xl font-bold mb-6 text-white">
+                  {isLoaded('Home') ? t('paradigm.benefits.title', 'Home') || 'Why This Shift Matters' : 'Why This Shift Matters'}
+                </h3>
+                <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+                  <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800 transform hover:scale-105 transition-transform">
+                    <div className="text-3xl font-bold text-purple-400 mb-2">10x</div>
+                    <p className="text-gray-300 text-sm">
+                      {isLoaded('Home') ? t('paradigm.benefits.speed', 'Home') : 'Development Speed'}
+                    </p>
+                  </div>
+                  <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800 transform hover:scale-105 transition-transform">
+                    <div className="text-3xl font-bold text-purple-400 mb-2">80%</div>
+                    <p className="text-gray-300 text-sm">
+                      {isLoaded('Home') ? t('paradigm.benefits.automation', 'Home') : 'Task Automation'}
+                    </p>
+                  </div>
+                  <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-800 transform hover:scale-105 transition-transform">
+                    <div className="text-3xl font-bold text-purple-400 mb-2">3x</div>
+                    <p className="text-gray-300 text-sm">
+                      {isLoaded('Home') ? t('paradigm.benefits.consistency', 'Home') : 'Output Consistency'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
-        <section id="features" className="px-4 sm:px-6 py-12 sm:py-20 bg-gray-900/30 backdrop-blur-sm">
+        <section id="features" className="px-4 sm:px-6 py-12 sm:py-20">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16 text-white">
               {isLoaded('Home') ? t('features.title', 'Home') : 'Three Foundational Capabilities'}
